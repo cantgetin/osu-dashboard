@@ -5,27 +5,15 @@ import (
 	"time"
 )
 
-type Mapset struct {
-	ID          int
-	Artist      string
-	Title       string
-	Created     string
-	Covers      map[string]string
-	Status      string
-	LastUpdated string
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-}
-
 type Beatmap struct {
 	ID               int
 	MapsetID         int
 	DifficultyRating int
 	Version          string
-	BeatmapStats     repository.JSON
+	BeatmapStats     repository.JSON //BeatmapStats struct marshaled as JSON
 }
 
-type BeatMapStats map[time.Time]MapStats
+type BeatmapStats map[time.Time]*MapStats
 
 type MapStats struct {
 	Playcount int `json:"plays"`
