@@ -5,7 +5,7 @@ import (
 	"github.com/ds248a/closer"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"playcount-monitor-backend/internal/app/userserviceapi"
 	"playcount-monitor-backend/internal/config"
 )
@@ -14,11 +14,11 @@ type Server struct {
 	cfg    *config.Config
 	server *echo.Echo
 	lg     *log.Logger
-	user   userserviceapi.ServiceImpl
+	user   *userserviceapi.ServiceImpl
 }
 
 func New(
-	cfg *config.Config, lg *log.Logger, user userserviceapi.ServiceImpl,
+	cfg *config.Config, lg *log.Logger, user *userserviceapi.ServiceImpl,
 ) (*Server, error) {
 	server := echo.New()
 	server.HideBanner = true

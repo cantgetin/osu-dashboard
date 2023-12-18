@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/caarlos0/env"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"playcount-monitor-backend/internal/app"
 	"playcount-monitor-backend/internal/config"
 )
@@ -14,7 +14,7 @@ func main() {
 		log.Fatalf("failed to retrieve env variables, %v", err)
 	}
 
-	lg := log.New(log.Default().Writer(), cfg.AppName, log.LstdFlags)
+	lg := log.New()
 
 	if err := app.Run(cfg, lg); err != nil {
 		log.Fatalf("error running grpc server, %v", err)

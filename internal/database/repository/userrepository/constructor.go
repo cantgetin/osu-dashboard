@@ -1,8 +1,8 @@
 package userrepository
 
 import (
+	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
-	"log"
 	"playcount-monitor-backend/internal/config"
 )
 

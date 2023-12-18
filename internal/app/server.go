@@ -4,16 +4,28 @@ import (
 	"context"
 	"fmt"
 	"github.com/ds248a/closer"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"os"
 	"os/signal"
+	"playcount-monitor-backend/internal/app/userserviceapi"
+	"playcount-monitor-backend/internal/bootstrap"
 	"playcount-monitor-backend/internal/config"
+	"playcount-monitor-backend/internal/database/repository/userrepository"
 	"playcount-monitor-backend/internal/http"
 	"syscall"
 )
 
 func Run(cfg *config.Config, lg *log.Logger) error {
-	httpServer, err := http.New(cfg, lg)
+
+	db, err := bootstrap.InitDB(cfg)
+	if err != nil {
+		return err
+	}
+
+	userRepo, err := userrepository.New(cfg, lg, db)
+	user := userserviceapi.New(lg, userRepo)
+
+	httpServer, err := http.New(cfg, lg, user)
 	if err != nil {
 		return err
 	}

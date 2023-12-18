@@ -2,8 +2,8 @@ package beatmapserviceapi
 
 import (
 	"context"
-	"log"
-	"playcount-monitor-backend/internal/repository/model"
+	log "github.com/sirupsen/logrus"
+	"playcount-monitor-backend/internal/database/repository/model"
 )
 
 type mapsetProvider interface {

@@ -2,7 +2,7 @@ package beatmaprepository
 
 import (
 	"context"
-	"playcount-monitor-backend/internal/repository/model"
+	"playcount-monitor-backend/internal/database/repository/model"
 )
 
 type Interface interface {

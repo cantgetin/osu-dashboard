@@ -2,7 +2,7 @@ package beatmapserviceapi
 
 import (
 	"github.com/labstack/echo/v4"
-	"playcount-monitor-backend/internal/repository/model"
+	"playcount-monitor-backend/internal/database/repository/model"
 )
 
 func (s *ServiceImpl) Create(c echo.Context) error {

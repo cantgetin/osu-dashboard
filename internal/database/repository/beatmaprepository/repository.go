@@ -3,7 +3,7 @@ package beatmaprepository
 import (
 	"context"
 	"fmt"
-	"playcount-monitor-backend/internal/repository/model"
+	"playcount-monitor-backend/internal/database/repository/model"
 )
 
 const beatmapsTableName = "beatmaps"
