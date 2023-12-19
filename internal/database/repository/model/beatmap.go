@@ -8,14 +8,21 @@ import (
 type Beatmap struct {
 	ID               int
 	MapsetID         int
-	DifficultyRating int
-	Version          string
+	DifficultyRating float64
+	Version          string // diff name
+	Accuracy         float64
+	AR               float64
+	BPM              float64
+	CS               float64
+	Status           string
+	URL              string
+	TotalLength      int
 	BeatmapStats     repository.JSON //BeatmapStats struct marshaled as JSON
 }
 
-type BeatmapStats map[time.Time]*MapStats
+type BeatmapStats map[time.Time]*BeatmapStatsModel
 
-type MapStats struct {
+type BeatmapStatsModel struct {
 	Playcount int `json:"plays"`
-	Likes     int `json:"likes"`
+	Passcount int `json:"passes"`
 }

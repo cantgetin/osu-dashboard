@@ -1,4 +1,4 @@
-package beatmapserviceapi
+package mapsetserviceapi
 
 import (
 	"github.com/labstack/echo/v4"
@@ -6,10 +6,10 @@ import (
 )
 
 func (s *ServiceImpl) Create(c echo.Context) error {
-	user := new(model.User)
-	if err := c.Bind(user); err != nil {
+	mapset := new(model.Mapset)
+	if err := c.Bind(mapset); err != nil {
 		return err
 	}
 
-	return s.userProvider.Create(c.Request().Context(), user)
+	return s.mapsetProvider.Create(c.Request().Context(), mapset)
 }

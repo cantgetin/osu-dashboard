@@ -1,4 +1,4 @@
-package beatmapserviceapi
+package mapsetserviceapi
 
 import (
 	"context"
