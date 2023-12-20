@@ -17,6 +17,6 @@ func main() {
 	lg := log.New()
 
 	if err := app.Run(cfg, lg); err != nil {
-		log.Fatalf("error running grpc server, %v", err)
+		log.Fatalf("failed to start app, %v", err)
 	}
 }

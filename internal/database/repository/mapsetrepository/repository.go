@@ -18,7 +18,7 @@ func (r *GormRepository) Create(ctx context.Context, tx txmanager.Tx, mapset *mo
 	return nil
 }
 
-func (r *GormRepository) Get(ctx context.Context, tx txmanager.Tx, id string) (*model.Mapset, error) {
+func (r *GormRepository) Get(ctx context.Context, tx txmanager.Tx, id int) (*model.Mapset, error) {
 	var mapset *model.Mapset
 	err := tx.DB().WithContext(ctx).Table(mapsetsTableName).Where("id = ?", id).First(&mapset).Error
 	if err != nil {
@@ -37,7 +37,7 @@ func (r *GormRepository) Update(ctx context.Context, tx txmanager.Tx, mapset *mo
 	return nil
 }
 
-func (r *GormRepository) Exists(ctx context.Context, tx txmanager.Tx, id string) (bool, error) {
+func (r *GormRepository) Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error) {
 	var count int64
 	err := tx.DB().WithContext(ctx).Table(mapsetsTableName).Where("id = ?", id).Count(&count).Error
 	if err != nil {
