@@ -51,11 +51,16 @@ func mapCommandToMapsetModel(cmd *CreateMapsetCommand) (*model.Mapset, error) {
 		return nil, err
 	}
 
+	covers, err := mapCovers(&cmd.Covers)
+	if err != nil {
+		return nil, err
+	}
+
 	return &model.Mapset{
 		ID:          cmd.Id,
 		Artist:      cmd.Artist,
 		Title:       cmd.Title,
-		Covers:      mapCovers(&cmd.Covers),
+		Covers:      covers,
 		Status:      cmd.Status,
 		LastUpdated: cmd.LastUpdated,
 		UserID:      cmd.UserId,
@@ -68,8 +73,8 @@ func mapCommandToMapsetModel(cmd *CreateMapsetCommand) (*model.Mapset, error) {
 	}, nil
 }
 
-func mapCovers(covers *Covers) map[string]string {
-	return map[string]string{
+func mapCovers(covers *Covers) (repository.JSON, error) {
+	m := map[string]string{
 		"cover":        covers.Cover,
 		"cover@2x":     covers.Cover2X,
 		"card":         covers.Card,
@@ -79,6 +84,13 @@ func mapCovers(covers *Covers) map[string]string {
 		"slimcover":    covers.Slimcover,
 		"slimcover@2x": covers.Slimcover2X,
 	}
+
+	coversJson, err := json2.Marshal(m)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal mapset covers to json: %w", err)
+	}
+
+	return coversJson, nil
 }
 
 func mapMapsetStats(cmd *CreateMapsetCommand) (repository.JSON, error) {
@@ -90,7 +102,7 @@ func mapMapsetStats(cmd *CreateMapsetCommand) (repository.JSON, error) {
 
 	statsJson, err := json2.Marshal(stats)
 	if err != nil {
-		return nil, fmt.Errorf("failed to marshal mapset stats: %w", err)
+		return nil, fmt.Errorf("failed to marshal mapset stats to json: %w", err)
 	}
 
 	return statsJson, nil

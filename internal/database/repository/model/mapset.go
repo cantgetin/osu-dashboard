@@ -9,14 +9,14 @@ type Mapset struct {
 	ID          int
 	Artist      string
 	Title       string
-	Covers      map[string]string
+	Covers      repository.JSON // map[string]string probably
 	Status      string
 	LastUpdated time.Time
 	UserID      int
 	Creator     string
 	PreviewURL  string
 	Tags        string
-	MapsetStats repository.JSON //MapsetStats struct marshaled as JSON
+	MapsetStats repository.JSON // MapsetStats struct marshaled as JSON
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

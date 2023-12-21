@@ -40,7 +40,6 @@ type CreateUserCommand struct {
 	CommentsCount                    int       `json:"comments_count"`
 	FavouriteBeatmapsetCount         int       `json:"favourite_beatmapset_count"`
 	FollowerCount                    int       `json:"follower_count"`
-	GraveyardBeatmapsetCount         int       `json:"graveyard_beatmapset_count"`
 	Groups                           []any     `json:"groups"`
 	GuestBeatmapsetCount             int       `json:"guest_beatmapset_count"`
 	LovedBeatmapsetCount             int       `json:"loved_beatmapset_count"`
@@ -51,4 +50,5 @@ type CreateUserCommand struct {
 	ScoresRecentCount                int       `json:"scores_recent_count"`
 	RankedAndApprovedBeatmapsetCount int       `json:"ranked_and_approved_beatmapset_count"`
 	UnrankedBeatmapsetCount          int       `json:"unranked_beatmapset_count"`
+	GraveyardBeatmapsetCount         int       `json:"graveyard_beatmapset_count"`
 }
