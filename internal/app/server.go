@@ -3,8 +3,6 @@ package app
 import (
 	"context"
 	"fmt"
-	"github.com/ds248a/closer"
-	log "github.com/sirupsen/logrus"
 	"os"
 	"os/signal"
 	"playcount-monitor-backend/internal/app/userserviceapi"
@@ -16,6 +14,9 @@ import (
 	"playcount-monitor-backend/internal/http"
 	"playcount-monitor-backend/internal/usecase/factory"
 	"syscall"
+
+	"github.com/ds248a/closer"
+	log "github.com/sirupsen/logrus"
 )
 
 func Run(cfg *config.Config, lg *log.Logger) error {
@@ -42,11 +43,16 @@ func Run(cfg *config.Config, lg *log.Logger) error {
 		return err
 	}
 
-	userservice := userserviceapi.New()
+	userapi := userserviceapi.New(
+		lg,
+		f.MakeProvideUserUseCase(),
+		f.MakeCreateUserUseCase(),
+		f.MakeUpdateUserUseCase(),
+	)
 
-	httpServer, err := http.New(cfg, lg, user)
+	httpServer, err := http.New(cfg, lg, userapi)
 	if err != nil {
-		return
+		return err
 	}
 
 	_, cancel := context.WithCancel(context.Background())

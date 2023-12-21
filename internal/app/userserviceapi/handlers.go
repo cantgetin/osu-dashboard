@@ -1,17 +1,20 @@
 package userserviceapi
 
 import (
-	"github.com/labstack/echo/v4"
 	"playcount-monitor-backend/internal/database/repository/model"
+	usercreate "playcount-monitor-backend/internal/usecase/user/create"
+	"strconv"
+
+	"github.com/labstack/echo/v4"
 )
 
 func (s *ServiceImpl) Create(c echo.Context) error {
-	user := new(model.User)
+	user := new(usercreate.CreateUserCommand)
 	if err := c.Bind(user); err != nil {
 		return err
 	}
 
-	return s.userProvider.Create(c.Request().Context(), user)
+	return s.userCreator.Create(c.Request().Context(), user)
 }
 
 func (s *ServiceImpl) Update(c echo.Context) error {
@@ -20,12 +23,21 @@ func (s *ServiceImpl) Update(c echo.Context) error {
 		return err
 	}
 
-	return s.userProvider.Update(c.Request().Context(), user)
+	return s.userUpdater.Update(c.Request().Context(), user)
 }
 
 func (s *ServiceImpl) Get(c echo.Context) error {
 	id := c.Param("id")
-	user, err := s.userProvider.Get(c.Request().Context(), id)
+
+	if id == "" {
+		return echo.ErrBadRequest
+	}
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	user, err := s.userProvider.Get(c.Request().Context(), idInt)
 	if err != nil {
 		return err
 	}

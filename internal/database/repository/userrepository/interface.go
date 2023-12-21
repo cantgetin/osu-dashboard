@@ -9,7 +9,8 @@ import (
 type Interface interface {
 	Create(ctx context.Context, tx txmanager.Tx, user *model.User) error
 	Update(ctx context.Context, tx txmanager.Tx, user *model.User) error
-	Get(ctx context.Context, tx txmanager.Tx, id string) (*model.User, error)
+	Get(ctx context.Context, tx txmanager.Tx, id int) (*model.User, error)
 	GetByName(ctx context.Context, tx txmanager.Tx, name string) (*model.User, error)
 	List(ctx context.Context, tx txmanager.Tx) ([]*model.User, error)
+	Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error)
 }

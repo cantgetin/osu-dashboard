@@ -18,7 +18,7 @@ func (r *GormRepository) Create(ctx context.Context, tx txmanager.Tx, user *mode
 	return nil
 }
 
-func (r *GormRepository) Get(ctx context.Context, tx txmanager.Tx, id string) (*model.User, error) {
+func (r *GormRepository) Get(ctx context.Context, tx txmanager.Tx, id int) (*model.User, error) {
 	var user *model.User
 	err := tx.DB().WithContext(ctx).Table(usersTableName).Where("id = ?", id).First(&user).Error
 	if err != nil {
@@ -26,6 +26,16 @@ func (r *GormRepository) Get(ctx context.Context, tx txmanager.Tx, id string) (*
 	}
 
 	return user, nil
+}
+
+func (r *GormRepository) Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error) {
+	var count int64
+	err := tx.DB().WithContext(ctx).Table(usersTableName).Where("id = ?", id).Count(&count).Error
+	if err != nil {
+		return false, fmt.Errorf("failed to check if user with id %v exists: %w", id, err)
+	}
+
+	return count > 0, nil
 }
 
 func (r *GormRepository) GetByName(ctx context.Context, tx txmanager.Tx, name string) (*model.User, error) {

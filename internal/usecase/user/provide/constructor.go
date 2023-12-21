@@ -2,14 +2,15 @@ package userprovide
 
 import (
 	"context"
-	log "github.com/sirupsen/logrus"
 	"playcount-monitor-backend/internal/config"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type userStore interface {
-	Get(ctx context.Context, tx txmanager.Tx, id string) (*model.User, error)
+	Get(ctx context.Context, tx txmanager.Tx, id int) (*model.User, error)
 	GetByName(ctx context.Context, tx txmanager.Tx, name string) (*model.User, error)
 	List(ctx context.Context, tx txmanager.Tx) ([]*model.User, error)
 }

@@ -2,29 +2,43 @@ package userserviceapi
 
 import (
 	"context"
-	log "github.com/sirupsen/logrus"
 	"playcount-monitor-backend/internal/database/repository/model"
+	usercreate "playcount-monitor-backend/internal/usecase/user/create"
+
+	log "github.com/sirupsen/logrus"
 )
 
+type userCreator interface {
+	Create(ctx context.Context, user *usercreate.CreateUserCommand) error
+}
+
 type userProvider interface {
-	Create(ctx context.Context, user *model.User) error
-	Get(ctx context.Context, id string) (*model.User, error)
+	Get(ctx context.Context, id int) (*model.User, error)
 	GetByName(ctx context.Context, name string) (*model.User, error)
-	Update(ctx context.Context, user *model.User) error
 	List(ctx context.Context) ([]*model.User, error)
+}
+
+type userUpdater interface {
+	Update(ctx context.Context, user *model.User) error
 }
 
 type ServiceImpl struct {
 	lg           *log.Logger
 	userProvider userProvider
+	userCreator  userCreator
+	userUpdater  userUpdater
 }
 
 func New(
 	lg *log.Logger,
 	userProvider userProvider,
+	userCreator userCreator,
+	userUpdater userUpdater,
 ) *ServiceImpl {
 	return &ServiceImpl{
-		userProvider: userProvider,
 		lg:           lg,
+		userProvider: userProvider,
+		userCreator:  userCreator,
+		userUpdater:  userUpdater,
 	}
 }
