@@ -5,24 +5,26 @@ import (
 	"fmt"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
+	"playcount-monitor-backend/internal/dto"
+	"playcount-monitor-backend/internal/usecase/mappers"
 )
 
 func (uc *UseCase) Create(
 	ctx context.Context,
-	cmd *CreateMapsetCommand,
+	dto *dto.Mapset,
 ) error {
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-		mapsetExists, err := uc.mapset.Exists(ctx, tx, cmd.Id)
+		mapsetExists, err := uc.mapset.Exists(ctx, tx, dto.Id)
 		if err != nil {
 			return err
 		}
 
 		if mapsetExists {
-			return fmt.Errorf("mapset with id %s already exists", cmd.Id)
+			return fmt.Errorf("mapset with id %v already exists", dto.Id)
 		}
 
 		// create mapset
-		mapset, err := mapCommandToMapsetModel(cmd)
+		mapset, err := mappers.MapMapsetDTOToMapsetModel(dto)
 		if err != nil {
 			return err
 		}
@@ -33,9 +35,9 @@ func (uc *UseCase) Create(
 		}
 
 		// create beatmaps
-		for _, beatmap := range cmd.Beatmaps {
+		for _, beatmap := range dto.Beatmaps {
 			var beatmapModel *model.Beatmap
-			beatmapModel, err = mapBeatmapToBeatmapModel(&beatmap)
+			beatmapModel, err = mappers.MapBeatmapDTOToBeatmapModel(&beatmap)
 			if err != nil {
 				return err
 			}

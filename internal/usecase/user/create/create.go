@@ -5,25 +5,26 @@ import (
 	"fmt"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
+	"playcount-monitor-backend/internal/dto"
 	"time"
 )
 
 func (uc *UseCase) Create(
 	ctx context.Context,
-	cmd *CreateUserCommand,
+	dto *dto.User,
 ) error {
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-		userExists, err := uc.user.Exists(ctx, tx, cmd.ID)
+		userExists, err := uc.user.Exists(ctx, tx, dto.ID)
 		if err != nil {
 			return err
 		}
 
 		if userExists {
-			return fmt.Errorf("user with id %v already exists", cmd.ID)
+			return fmt.Errorf("user with id %v already exists", dto.ID)
 		}
 
 		// create user
-		user, err := mapCommandToUserModel(cmd)
+		user, err := mapUserDTOToUserModel(dto)
 		if err != nil {
 			return err
 		}
@@ -42,13 +43,13 @@ func (uc *UseCase) Create(
 	return nil
 }
 
-func mapCommandToUserModel(cmd *CreateUserCommand) (*model.User, error) {
+func mapUserDTOToUserModel(dto *dto.User) (*model.User, error) {
 	return &model.User{
-		ID:                       cmd.ID,
-		Username:                 cmd.Username,
-		AvatarURL:                cmd.AvatarURL,
-		GraveyardBeatmapsetCount: cmd.GraveyardBeatmapsetCount,
-		UnrankedBeatmapsetCount:  cmd.UnrankedBeatmapsetCount,
+		ID:                       dto.ID,
+		Username:                 dto.Username,
+		AvatarURL:                dto.AvatarURL,
+		GraveyardBeatmapsetCount: dto.GraveyardBeatmapsetCount,
+		UnrankedBeatmapsetCount:  dto.UnrankedBeatmapsetCount,
 		CreatedAt:                time.Now().UTC(),
 		UpdatedAt:                time.Now().UTC(),
 	}, nil
