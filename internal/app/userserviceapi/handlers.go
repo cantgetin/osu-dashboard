@@ -2,14 +2,14 @@ package userserviceapi
 
 import (
 	"playcount-monitor-backend/internal/database/repository/model"
-	usercreate "playcount-monitor-backend/internal/usecase/user/create"
+	"playcount-monitor-backend/internal/dto"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
 
 func (s *ServiceImpl) Create(c echo.Context) error {
-	user := new(usercreate.CreateUserCommand)
+	user := new(dto.User)
 	if err := c.Bind(user); err != nil {
 		return err
 	}

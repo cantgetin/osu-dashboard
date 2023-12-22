@@ -2,14 +2,13 @@ package userserviceapi
 
 import (
 	"context"
-	"playcount-monitor-backend/internal/database/repository/model"
-	usercreate "playcount-monitor-backend/internal/usecase/user/create"
-
 	log "github.com/sirupsen/logrus"
+	"playcount-monitor-backend/internal/database/repository/model"
+	"playcount-monitor-backend/internal/dto"
 )
 
 type userCreator interface {
-	Create(ctx context.Context, user *usercreate.CreateUserCommand) error
+	Create(ctx context.Context, user *dto.User) error
 }
 
 type userProvider interface {

@@ -1,7 +1,7 @@
 package mappers
 
 import (
-	json2 "encoding/json"
+	"encoding/json"
 	"fmt"
 	"playcount-monitor-backend/internal/database/repository"
 	"playcount-monitor-backend/internal/database/repository/model"
@@ -78,7 +78,7 @@ func MapBeatmapStats(beatmap *dto.Beatmap) (repository.JSON, error) {
 		Passcount: beatmap.Passcount,
 	}
 
-	statsJson, err := json2.Marshal(stats)
+	statsJson, err := json.Marshal(stats)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal beatmap stats: %w", err)
 	}
@@ -87,7 +87,7 @@ func MapBeatmapStats(beatmap *dto.Beatmap) (repository.JSON, error) {
 }
 
 func mapCovers(m map[string]string) (repository.JSON, error) {
-	coversJson, err := json2.Marshal(m)
+	coversJson, err := json.Marshal(m)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal mapset covers to json: %w", err)
 	}
@@ -102,10 +102,60 @@ func MapMapsetStats(mapset *dto.Mapset) (repository.JSON, error) {
 		Favorites: mapset.FavouriteCount,
 	}
 
-	statsJson, err := json2.Marshal(stats)
+	statsJson, err := json.Marshal(stats)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal mapset stats to json: %w", err)
 	}
 
 	return statsJson, nil
+}
+
+func AppendNewMapsetStats(json1, json2 repository.JSON) (repository.JSON, error) {
+	// merge two JSONs that are map[time.Time]model.MapsetStatsModel
+	map1 := make(model.MapsetStats)
+	map2 := make(model.MapsetStats)
+
+	if err := json.Unmarshal(json1, &map1); err != nil {
+		return repository.JSON{}, err
+	}
+
+	if err := json.Unmarshal(json2, &map2); err != nil {
+		return repository.JSON{}, err
+	}
+
+	for key, value := range map2 {
+		map1[key] = value
+	}
+
+	mergedJSON, err := json.Marshal(map1)
+	if err != nil {
+		return repository.JSON{}, err
+	}
+
+	return mergedJSON, nil
+}
+
+func AppendNewBeatmapStats(json1, json2 repository.JSON) (repository.JSON, error) {
+	// merge two JSONs that are map[time.Time]model.BeatmapStatsModel
+	map1 := make(model.BeatmapStats)
+	map2 := make(model.BeatmapStats)
+
+	if err := json.Unmarshal(json1, &map1); err != nil {
+		return repository.JSON{}, err
+	}
+
+	if err := json.Unmarshal(json2, &map2); err != nil {
+		return repository.JSON{}, err
+	}
+
+	for key, value := range map2 {
+		map1[key] = value
+	}
+
+	mergedJSON, err := json.Marshal(map1)
+	if err != nil {
+		return repository.JSON{}, err
+	}
+
+	return mergedJSON, nil
 }

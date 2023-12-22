@@ -7,3 +7,6 @@ run:
 run-migrate-local:
 	sql-migrate up -env="local"
 
+build:
+	go build -o bin/main cmd/main.go
+
