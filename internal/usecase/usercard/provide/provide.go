@@ -1,4 +1,4 @@
-package usercardcreate
+package usercardprovide
 
 import (
 	"context"
@@ -7,11 +7,28 @@ import (
 	"playcount-monitor-backend/internal/usecase/mappers"
 )
 
-func (uc *UseCase) Create(
+func (uc *UseCase) GetUserCard(
 	ctx context.Context,
-	cmd *CreateUserCardCommand,
-) error {
-	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
+	userID int,
+) (*UserCard, error) {
+	var userCard *UserCard
+	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
+		// get user
+		user, err := uc.user.Get(ctx, tx, userID)
+		if err != nil {
+			return err
+		}
+
+		userCard.User = mappers.MapUserModelToUserDTO(user)
+
+		// get user mapsets
+		mapsets, err := uc.mapset.ListForUser(ctx, tx, userID)
+		if err != nil {
+			return err
+		}
+
+		userCard.Mapsets = mappers.MapMapsetModelsToMapsetDTOs(mapsets)
+
 		// create user
 		user, err := mappers.MapUserDTOToUserModel(cmd.User)
 		if err != nil {

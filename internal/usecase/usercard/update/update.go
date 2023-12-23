@@ -33,7 +33,7 @@ func (uc *UseCase) Update(
 			}
 
 			var newMapset *model.Mapset
-			newMapset, err = mappers.MapMapsetDTOToMapsetModel(ms)
+			newMapset, err = mappers.MapCreateMapsetCommandToMapsetModel(ms)
 			if err != nil {
 				return err
 			}

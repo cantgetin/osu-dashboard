@@ -17,7 +17,11 @@ type Beatmap struct {
 	Status           string
 	URL              string
 	TotalLength      int
+	UserID           int
+	LastUpdated      time.Time       // last map update
 	BeatmapStats     repository.JSON //BeatmapStats struct marshaled as JSON
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
 }
 
 type BeatmapStats map[time.Time]*BeatmapStatsModel

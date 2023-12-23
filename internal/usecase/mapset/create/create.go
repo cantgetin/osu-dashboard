@@ -24,7 +24,7 @@ func (uc *UseCase) Create(
 		}
 
 		// create mapset
-		mapset, err := mappers.MapMapsetDTOToMapsetModel(dto)
+		mapset, err := mappers.MapCreateMapsetCommandToMapsetModel(dto)
 		if err != nil {
 			return err
 		}
