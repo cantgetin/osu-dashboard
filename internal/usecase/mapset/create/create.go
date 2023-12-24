@@ -11,20 +11,20 @@ import (
 
 func (uc *UseCase) Create(
 	ctx context.Context,
-	dto *dto.Mapset,
+	cmd *dto.CreateMapsetCommand,
 ) error {
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-		mapsetExists, err := uc.mapset.Exists(ctx, tx, dto.Id)
+		mapsetExists, err := uc.mapset.Exists(ctx, tx, cmd.Id)
 		if err != nil {
 			return err
 		}
 
 		if mapsetExists {
-			return fmt.Errorf("mapset with id %v already exists", dto.Id)
+			return fmt.Errorf("mapset with id %v already exists", cmd.Id)
 		}
 
 		// create mapset
-		mapset, err := mappers.MapCreateMapsetCommandToMapsetModel(dto)
+		mapset, err := mappers.MapCreateMapsetCommandToMapsetModel(cmd)
 		if err != nil {
 			return err
 		}
@@ -35,9 +35,9 @@ func (uc *UseCase) Create(
 		}
 
 		// create beatmaps
-		for _, beatmap := range dto.Beatmaps {
+		for _, beatmap := range cmd.Beatmaps {
 			var beatmapModel *model.Beatmap
-			beatmapModel, err = mappers.MapBeatmapDTOToBeatmapModel(&beatmap)
+			beatmapModel, err = mappers.MapCreateBeatmapCommandToBeatmapModel(beatmap)
 			if err != nil {
 				return err
 			}

@@ -11,6 +11,47 @@ import (
 
 // command -> model
 
+func MapCreateUserCommandToUserModel(user *dto.CreateUserCommand) *model.User {
+	return &model.User{
+		ID:                       user.ID,
+		Username:                 user.Username,
+		AvatarURL:                user.AvatarURL,
+		GraveyardBeatmapsetCount: user.GraveyardBeatmapsetCount,
+		UnrankedBeatmapsetCount:  user.UnrankedBeatmapsetCount,
+		CreatedAt:                time.Now().UTC(),
+		UpdatedAt:                time.Now().UTC(),
+	}
+}
+
+func MapCreateMapsetCommandToMapsetModel(mapset *dto.CreateMapsetCommand) (*model.Mapset, error) {
+	mapsetStats, err := MapCreateMapsetCommandToStatsJSON(mapset)
+	if err != nil {
+		return nil, err
+	}
+
+	covers, err := MapMapsetCoversToCoversJSON(mapset.Covers)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Mapset{
+		ID:          mapset.Id,
+		Artist:      mapset.Artist,
+		Title:       mapset.Title,
+		Covers:      covers,
+		Status:      mapset.Status,
+		LastUpdated: mapset.LastUpdated,
+		UserID:      mapset.UserId,
+		Creator:     mapset.Creator,
+		PreviewURL:  mapset.PreviewUrl,
+		Tags:        mapset.Tags,
+		MapsetStats: mapsetStats,
+		BPM:         mapset.Bpm,
+		CreatedAt:   time.Now().UTC(),
+		UpdatedAt:   time.Now().UTC(),
+	}, nil
+}
+
 func MapCreateBeatmapCommandToBeatmapModel(beatmap *dto.CreateBeatmapCommand) (*model.Beatmap, error) {
 	stats, err := MapCreateBeatmapCommandToStatsJSON(beatmap)
 	if err != nil {
@@ -37,46 +78,6 @@ func MapCreateBeatmapCommandToBeatmapModel(beatmap *dto.CreateBeatmapCommand) (*
 	}, nil
 }
 
-func MapCreateUserCommandToUserModel(user *dto.CreateUserCommand) (*model.User, error) {
-	return &model.User{
-		ID:                       user.ID,
-		Username:                 user.Username,
-		AvatarURL:                user.AvatarURL,
-		GraveyardBeatmapsetCount: user.GraveyardBeatmapsetCount,
-		UnrankedBeatmapsetCount:  user.UnrankedBeatmapsetCount,
-		CreatedAt:                time.Now().UTC(),
-		UpdatedAt:                time.Now().UTC(),
-	}, nil
-}
-
-func MapCreateMapsetCommandToMapsetModel(mapset *dto.CreateMapsetCommand) (*model.Mapset, error) {
-	mapsetStats, err := MapCreateMapsetCommandToStatsJSON(mapset)
-	if err != nil {
-		return nil, err
-	}
-
-	covers, err := mapCovers(mapset.Covers)
-	if err != nil {
-		return nil, err
-	}
-
-	return &model.Mapset{
-		ID:          mapset.Id,
-		Artist:      mapset.Artist,
-		Title:       mapset.Title,
-		Covers:      covers,
-		Status:      mapset.Status,
-		LastUpdated: mapset.LastUpdated,
-		UserID:      mapset.UserId,
-		Creator:     mapset.Creator,
-		PreviewURL:  mapset.PreviewUrl,
-		Tags:        mapset.Tags,
-		MapsetStats: mapsetStats,
-		CreatedAt:   time.Now().UTC(),
-		UpdatedAt:   time.Now().UTC(),
-	}, nil
-}
-
 // model -> dto
 
 func MapUserModelToUserDTO(user *model.User) *dto.User {
@@ -87,6 +88,44 @@ func MapUserModelToUserDTO(user *model.User) *dto.User {
 		GraveyardBeatmapsetCount: user.GraveyardBeatmapsetCount,
 		UnrankedBeatmapsetCount:  user.UnrankedBeatmapsetCount,
 	}
+}
+
+func MapMapsetModelToMapsetDTO(mapset *model.Mapset, beatmaps []*model.Beatmap) (*dto.Mapset, error) {
+	beatmapsDTOs, err := MapBeatmapModelsToBeatmapDTOs(beatmaps)
+
+	covers, err := MapCoversJSONToMapsetCovers(mapset.Covers)
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.Mapset{
+		Id:          mapset.ID,
+		Artist:      mapset.Artist,
+		Title:       mapset.Title,
+		Covers:      covers,
+		Status:      mapset.Status,
+		LastUpdated: mapset.LastUpdated,
+		UserId:      mapset.UserID,
+		PreviewUrl:  mapset.PreviewURL,
+		Tags:        mapset.Tags,
+		Creator:     mapset.Creator,
+		Bpm:         mapset.BPM,
+		MapsetStats: nil,
+		Beatmaps:    beatmapsDTOs,
+	}, nil
+}
+
+func MapBeatmapModelsToBeatmapDTOs(beatmaps []*model.Beatmap) ([]*dto.Beatmap, error) {
+	res := make([]*dto.Beatmap, len(beatmaps))
+	for i, beatmap := range beatmaps {
+		var err error
+		res[i], err = MapBeatmapModelToBeatmapDTO(beatmap)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return res, nil
 }
 
 func MapBeatmapModelToBeatmapDTO(beatmap *model.Beatmap) (*dto.Beatmap, error) {
@@ -113,28 +152,27 @@ func MapBeatmapModelToBeatmapDTO(beatmap *model.Beatmap) (*dto.Beatmap, error) {
 	}, nil
 }
 
-func MapMapsetModelToMapsetDTO(mapset *model.Mapset, beaatmaps []*model.Beatmap) *dto.Mapset {
+// covers
 
-	for _, beatmap := range beaatmaps {
-		bm := MapBeatmapModelToBeatmapDTO(beatmap)
+func MapMapsetCoversToCoversJSON(m map[string]string) (repository.JSON, error) {
+	coversJson, err := json.Marshal(m)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal mapset covers to json: %w", err)
 	}
-	return &dto.Mapset{
-		Id:             mapset.ID,
-		Artist:         mapset.Artist,
-		Title:          mapset.Title,
-		Covers:         mapset.Covers,
-		Status:         mapset.Status,
-		LastUpdated:    mapset.LastUpdated,
-		UserId:         mapset.UserID,
-		PreviewUrl:     mapset.PreviewURL,
-		Tags:           mapset.Tags,
-		PlayCount:      0,
-		FavouriteCount: 0,
-		Bpm:            0,
-		Creator:        mapset.Creator,
-		Beatmaps:       nil,
-	}
+
+	return coversJson, nil
 }
+
+func MapCoversJSONToMapsetCovers(covers repository.JSON) (map[string]string, error) {
+	mapsetCovers := make(map[string]string)
+	if err := json.Unmarshal(covers, &mapsetCovers); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal mapset covers: %w", err)
+	}
+
+	return mapsetCovers, nil
+}
+
+// stats
 
 func MapCreateBeatmapCommandToStatsJSON(beatmap *dto.CreateBeatmapCommand) (repository.JSON, error) {
 	var stats = make(model.BeatmapStats)
@@ -166,34 +204,13 @@ func MapCreateMapsetCommandToStatsJSON(mapset *dto.CreateMapsetCommand) (reposit
 	return statsJson, nil
 }
 
-func MapStatsJSONToMapsetStats(json repository.JSON) (*dto.Mapset, error) {
-	var mapset *dto.Mapset
-
-	var mapsetStats model.MapsetStats
-
-	if err := json.Unmarshal(json, &mapsetStats); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal mapset stats: %w", err)
-	}
-
-	return &dto.Mapset{}
-}
-
-func MapStatsJSONToBeatmapStats(json repository.JSON) (model.BeatmapStats, error) {
+func MapStatsJSONToBeatmapStats(j repository.JSON) (model.BeatmapStats, error) {
 	beatmapStats := make(model.BeatmapStats)
-	if err := json.Unmarshal(json, &beatmapStats); err != nil {
+	if err := json.Unmarshal(j, &beatmapStats); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal beatmap stats: %w", err)
 	}
 
 	return beatmapStats, nil
-}
-
-func mapCovers(m map[string]string) (repository.JSON, error) {
-	coversJson, err := json.Marshal(m)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal mapset covers to json: %w", err)
-	}
-
-	return coversJson, nil
 }
 
 func AppendNewMapsetStats(json1, json2 repository.JSON) (repository.JSON, error) {

@@ -19,6 +19,7 @@ type mapsetStore interface {
 
 type beatmapStore interface {
 	Get(ctx context.Context, tx txmanager.Tx, id int) (*model.Beatmap, error)
+	ListForMapset(ctx context.Context, tx txmanager.Tx, mapsetID int) ([]*model.Beatmap, error)
 }
 
 type UseCase struct {

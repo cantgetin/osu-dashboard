@@ -13,7 +13,7 @@ func (uc *UseCase) Update(
 ) error {
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		// update user
-		user, err := mappers.MapUserDTOToUserModel(cmd.User)
+		user, err := mappers.MapCreateUserCommandToUserModel(cmd.User)
 		if err != nil {
 			return err
 		}
@@ -60,7 +60,7 @@ func (uc *UseCase) Update(
 				}
 
 				var newBeatmap *model.Beatmap
-				newBeatmap, err = mappers.MapBeatmapDTOToBeatmapModel(&bm)
+				newBeatmap, err = mappers.MapCreateBeatmapCommandToBeatmapModel(&bm)
 				if err != nil {
 					return err
 				}

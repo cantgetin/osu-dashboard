@@ -2,7 +2,6 @@ package usercardprovide
 
 import (
 	"context"
-	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
 	"playcount-monitor-backend/internal/usecase/mappers"
 )
@@ -27,50 +26,25 @@ func (uc *UseCase) GetUserCard(
 			return err
 		}
 
-		userCard.Mapsets = mappers.MapMapsetModelsToMapsetDTOs(mapsets)
-
-		// create user
-		user, err := mappers.MapUserDTOToUserModel(cmd.User)
-		if err != nil {
-			return err
-		}
-
-		err = uc.user.Create(ctx, tx, user)
-		if err != nil {
-			return err
-		}
-
-		// create user mapsets
-		for _, ms := range cmd.Mapsets {
-			// create mapset
-			var mapset *model.Mapset
-			mapset, err = mappers.MapCreateMapsetCommandToMapsetModel(ms)
+		// for each mapset get its maps and map to DTO
+		for _, mapset := range mapsets {
+			beatmaps, err := uc.beatmap.ListForMapset(ctx, tx, mapset.ID)
 			if err != nil {
 				return err
 			}
 
-			err = uc.mapset.Create(ctx, tx, mapset)
+			mapsetWithMaps, err := mappers.MapMapsetModelToMapsetDTO(mapset, beatmaps)
 			if err != nil {
 				return err
 			}
-
-			// create mapset beatmaps
-			for _, bm := range ms.Beatmaps {
-				var beatmap *model.Beatmap
-				beatmap, err = mappers.MapBeatmapDTOToBeatmapModel(&bm)
-				if err != nil {
-					return err
-				}
-
-				err = uc.beatmap.Create(ctx, tx, beatmap)
-			}
+			userCard.Mapsets = append(userCard.Mapsets, mapsetWithMaps)
 		}
 
 		return nil
 	})
 	if txErr != nil {
-		return txErr
+		return nil, txErr
 	}
 
-	return nil
+	return userCard, nil
 }

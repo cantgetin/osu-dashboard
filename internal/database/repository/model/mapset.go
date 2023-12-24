@@ -16,6 +16,7 @@ type Mapset struct {
 	Creator     string
 	PreviewURL  string
 	Tags        string
+	BPM         float64
 	MapsetStats repository.JSON // MapsetStats struct marshaled as JSON
 	CreatedAt   time.Time
 	UpdatedAt   time.Time

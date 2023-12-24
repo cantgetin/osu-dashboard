@@ -13,12 +13,9 @@ func (uc *UseCase) Create(
 ) error {
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		// create user
-		user, err := mappers.MapUserDTOToUserModel(cmd.User)
-		if err != nil {
-			return err
-		}
+		user := mappers.MapCreateUserCommandToUserModel(cmd.User)
 
-		err = uc.user.Create(ctx, tx, user)
+		err := uc.user.Create(ctx, tx, user)
 		if err != nil {
 			return err
 		}
@@ -40,7 +37,7 @@ func (uc *UseCase) Create(
 			// create mapset beatmaps
 			for _, bm := range ms.Beatmaps {
 				var beatmap *model.Beatmap
-				beatmap, err = mappers.MapBeatmapDTOToBeatmapModel(&bm)
+				beatmap, err = mappers.MapCreateBeatmapCommandToBeatmapModel(bm)
 				if err != nil {
 					return err
 				}
