@@ -7,7 +7,7 @@ func (s *Server) setupRoutes() {
 	s.server.GET("/users/:name", s.user.GetByName)
 	s.server.GET("/users", s.user.List)
 
-	s.server.POST("/user_card", s.userCard.Create)
-	s.server.PUT("/user_card", s.userCard.Update)
+	s.server.POST("/user_card/create", s.userCard.Create)
+	s.server.POST("/user_card/update", s.userCard.Update)
 	s.server.GET("/user_card/:id", s.userCard.Get)
 }

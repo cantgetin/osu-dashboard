@@ -5,6 +5,7 @@ import (
 	"github.com/caarlos0/env"
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/suite"
+	"gorm.io/gorm"
 	"playcount-monitor-backend/internal/app"
 	"playcount-monitor-backend/internal/config"
 	"playcount-monitor-backend/tests/integration"
@@ -22,6 +23,7 @@ type IntegrationSuite struct {
 	ctx       context.Context
 	cancelCtx func()
 	closers   []func() error
+	db        gorm.DB
 }
 
 func (s *IntegrationSuite) SetupSuite() {
@@ -30,7 +32,9 @@ func (s *IntegrationSuite) SetupSuite() {
 		s.T().Fatalf("failed to parse cfg, %v", err)
 	}
 
-	s.ctx, s.cancelCtx = context.WithCancel(context.Background())
+	s.ctx, s.cancelCtx = context.WithCancel(
+		context.WithValue(context.Background(), "environment", "integration-test"),
+	)
 
 	s.T().Log("Starting Docker containers...")
 	pool, dockerClose := integration.Start(s.T(), s.cfg)

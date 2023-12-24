@@ -27,6 +27,6 @@ type Beatmap struct {
 type BeatmapStats map[time.Time]*BeatmapStatsModel
 
 type BeatmapStatsModel struct {
-	Playcount int `json:"plays"`
-	Passcount int `json:"passes"`
+	Playcount int `json:"play_count"`
+	Passcount int `json:"pass_count"`
 }
