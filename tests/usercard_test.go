@@ -109,7 +109,7 @@ func (s *IntegrationSuite) Test_CreateUseCard() {
 			})
 		}
 
-		err := integration.ClearTables(s.ctx, s.DB)
+		err := integration.ClearTables(s.ctx, s.db)
 		s.Require().NoError(err)
 	})
 }
@@ -119,11 +119,11 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 	s.Run("valid requests", func() {
 		type models struct {
 			User     *model.User
-			Mapset   *model.Mapset
+			Mapset   []*model.Mapset
 			Beatmaps []*model.Beatmap
 		}
 
-		tt := []struct {
+		var tt = []struct {
 			name    string
 			create  *models
 			in      *usercardupdate.UpdateUserCardCommand
@@ -142,21 +142,23 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 						CreatedAt:                time.Now().UTC(),
 						UpdatedAt:                time.Now().UTC(),
 					},
-					Mapset: &model.Mapset{
-						ID:          123,
-						Artist:      "artist",
-						Title:       "title",
-						Covers:      repository.JSON(`{"cover1": "cover1", "cover2": "cover2"}`),
-						Status:      "graveyard",
-						LastUpdated: time.Now().UTC(),
-						UserID:      123,
-						Creator:     "username1",
-						PreviewURL:  "avararurl.com",
-						Tags:        "tags tags",
-						BPM:         150,
-						MapsetStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":52,"favourite_count":2}}`),
-						CreatedAt:   time.Now().UTC(),
-						UpdatedAt:   time.Now().UTC(),
+					Mapset: []*model.Mapset{
+						{
+							ID:          123,
+							Artist:      "artist",
+							Title:       "title",
+							Covers:      repository.JSON(`{"cover1": "cover1", "cover2": "cover2"}`),
+							Status:      "graveyard",
+							LastUpdated: time.Now().UTC(),
+							UserID:      123,
+							Creator:     "username1",
+							PreviewURL:  "avararurl.com",
+							Tags:        "tags tags",
+							BPM:         150,
+							MapsetStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":52,"favourite_count":2}}`),
+							CreatedAt:   time.Now().UTC(),
+							UpdatedAt:   time.Now().UTC(),
+						},
 					},
 					Beatmaps: []*model.Beatmap{
 						{
@@ -207,54 +209,158 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 					},
 					Mapsets: []*dto.CreateMapsetCommand{
 						{
-							Id:             0,
-							Artist:         "",
-							Title:          "",
-							Covers:         nil,
-							Status:         "",
-							LastUpdated:    time.Time{},
-							UserId:         0,
-							PreviewUrl:     "",
-							Tags:           "",
-							PlayCount:      0,
-							FavouriteCount: 0,
-							Bpm:            0,
-							Creator:        "",
+							Id:     123,
+							Artist: "artistchanged",
+							Title:  "titlechanged",
+							Covers: map[string]string{
+								"cover1changed": "cover1changed",
+								"cover2changed": "cover2changed",
+							},
+							Status:         "statuschanged",
+							LastUpdated:    time.Now().UTC(),
+							UserId:         123,
+							PreviewUrl:     "previewurlchanged.com",
+							Tags:           "tagschanged tagschanged",
+							PlayCount:      200,
+							FavouriteCount: 200,
+							Bpm:            200,
+							Creator:        "username1changed",
 							Beatmaps: []*dto.CreateBeatmapCommand{
-								{},
-								{},
+								{
+									Id:               3,
+									BeatmapsetId:     123,
+									DifficultyRating: 7.6,
+									Version:          "version1changed",
+									Accuracy:         1,
+									Ar:               1,
+									Bpm:              1,
+									Cs:               1,
+									Status:           "graveyard",
+									Url:              "urlchanged.com",
+									TotalLength:      1,
+									UserId:           123,
+									Passcount:        100,
+									Playcount:        100,
+									LastUpdated:      time.Now().UTC(),
+								},
+								{
+									Id:               4,
+									BeatmapsetId:     123,
+									DifficultyRating: 1.2,
+									Version:          "version2changed",
+									Accuracy:         2,
+									Ar:               2,
+									Bpm:              2,
+									Cs:               2,
+									Status:           "graveyard",
+									Url:              "urlchanged.com",
+									TotalLength:      1,
+									UserId:           123,
+									Passcount:        100,
+									Playcount:        100,
+									LastUpdated:      time.Now().UTC(),
+								},
 							},
 						},
 						{
-							Id:             0,
-							Artist:         "",
-							Title:          "",
-							Covers:         nil,
-							Status:         "",
-							LastUpdated:    time.Time{},
-							UserId:         0,
-							PreviewUrl:     "",
-							Tags:           "",
-							PlayCount:      0,
-							FavouriteCount: 0,
-							Bpm:            0,
-							Creator:        "",
+							Id:     345,
+							Artist: "artist",
+							Title:  "title",
+							Covers: map[string]string{
+								"cover1": "cover1",
+								"cover2": "cover2",
+							},
+							Status:         "graveyard",
+							LastUpdated:    time.Now().UTC(),
+							UserId:         123,
+							PreviewUrl:     "previewurlnewmap.com",
+							Tags:           "tags tags",
+							PlayCount:      345,
+							FavouriteCount: 456,
+							Bpm:            120,
+							Creator:        "username1changed",
 							Beatmaps: []*dto.CreateBeatmapCommand{
-								{},
-								{},
+								{
+									Id:               1488,
+									BeatmapsetId:     345,
+									DifficultyRating: 1,
+									Version:          "version1",
+									Accuracy:         2,
+									Ar:               3,
+									Bpm:              4,
+									Cs:               5,
+									Status:           "graveyard",
+									Url:              "url.com",
+									TotalLength:      1,
+									UserId:           2,
+									Passcount:        3,
+									Playcount:        4,
+									LastUpdated:      time.Now().UTC(),
+								},
+								{
+									Id:               1337,
+									BeatmapsetId:     345,
+									DifficultyRating: 1,
+									Version:          "version2",
+									Accuracy:         3,
+									Ar:               4,
+									Bpm:              5,
+									Cs:               6,
+									Status:           "graveyard",
+									Url:              "url.com",
+									TotalLength:      1,
+									UserId:           2,
+									Passcount:        3,
+									Playcount:        4,
+									LastUpdated:      time.Now().UTC(),
+								},
 							},
 						},
 					},
 				},
 				outCode: 0,
 				result: &models{
-					User:     nil,
-					Mapset:   nil,
+					User: &model.User{
+						ID:                       123,
+						Username:                 "username1changed",
+						AvatarURL:                "avatarurlchanged.com",
+						GraveyardBeatmapsetCount: 2,
+						UnrankedBeatmapsetCount:  2,
+					},
+					Mapset: []*model.Mapset{
+						{
+							ID:          123,
+							Artist:      "artistchanged",
+							Title:       "titlechanged",
+							Covers:      repository.JSON(``), // todo
+							Status:      "statuschanged",
+							LastUpdated: time.Now().UTC(),
+							UserID:      123,
+							Creator:     "username1changed",
+							PreviewURL:  "previewurlchanged.com",
+							Tags:        "tagschanged tagschanged",
+							BPM:         200,
+							MapsetStats: nil, // todo
+						},
+						{
+							ID:          345,
+							Artist:      "artist",
+							Title:       "title",
+							Covers:      repository.JSON(``), // todo
+							Status:      "graveyard",
+							LastUpdated: time.Now().UTC(),
+							UserID:      123,
+							Creator:     "username1changed",
+							PreviewURL:  "previewurlnewmap.com",
+							Tags:        "tags tags",
+							BPM:         120,
+							MapsetStats: nil, // todo
+						},
+					},
 					Beatmaps: nil,
 				},
 			},
 		}
-
 		for _, tc := range tt {
 			s.Run(tc.name, func() {
 				inJSON, err := json.Marshal(tc.in)
@@ -271,7 +377,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 			})
 		}
 
-		err := integration.ClearTables(s.ctx, s.DB)
+		err := integration.ClearTables(s.ctx, s.db)
 		s.Require().NoError(err)
 	})
 }

@@ -1,32 +1,42 @@
 package integration
 
 import (
-	"database/sql"
 	_ "github.com/lib/pq"
 	"github.com/ory/dockertest/v3"
 	migrate "github.com/rubenv/sql-migrate"
 	log "github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 	"os"
 	"path/filepath"
+	"playcount-monitor-backend/internal/bootstrap"
 	"playcount-monitor-backend/internal/config"
 	"testing"
 )
 
 type CloseFn func() error
 
-func InitDB(t *testing.T, pool *dockertest.Pool, cfg *config.Config) CloseFn {
-	var db *sql.DB
-
+func InitDB(t *testing.T, pool *dockertest.Pool, cfg *config.Config) (*gorm.DB, CloseFn) {
+	var gdb *gorm.DB
 	cfg.PgDSN = "postgresql://localhost:5432/db?user=db&password=db&sslmode=disable"
+
 	if retryErr := pool.Retry(func() error {
 		var err error
-		db, err = sql.Open("postgres", cfg.PgDSN)
+		gdb, err = bootstrap.InitDB(cfg)
 		if err != nil {
 			return err
 		}
-		return db.Ping()
+		if db, err := gdb.DB(); err != nil {
+			return err
+		} else {
+			return db.Ping()
+		}
 	}); retryErr != nil {
 		log.Fatalf("Could not connect to database: %s", retryErr)
+	}
+
+	db, err := gdb.DB()
+	if err != nil {
+		t.Fatal(err)
 	}
 
 	dir, err := os.Getwd()
@@ -38,13 +48,18 @@ func InitDB(t *testing.T, pool *dockertest.Pool, cfg *config.Config) CloseFn {
 		Dir: filepath.Join(dir, "..", "migrations"),
 	}
 
+	migrationsCount, err := countMigrations("./migrations")
+	if err != nil {
+		t.Fatalf("Error counting migrations: %v", err)
+	}
+
 	n, err := migrate.Exec(db, "postgres", migrations, migrate.Up)
 	if err != nil {
 		t.Logf("executed %d migrations", n)
 		t.Fatalf("Could not run the 'UP' migrations: %v", err)
 	} else {
-		if n < 1 {
-			t.Fatal("should be at least 1 migration")
+		if n < migrationsCount {
+			t.Fatalf("should be at least %v migrations", migrationsCount)
 		}
 		t.Logf("executed %d migrations", n)
 	}
@@ -56,5 +71,13 @@ func InitDB(t *testing.T, pool *dockertest.Pool, cfg *config.Config) CloseFn {
 		return nil
 	}
 
-	return closer
+	return gdb, closer
+}
+
+func countMigrations(folderPath string) (int, error) {
+	files, err := filepath.Glob(filepath.Join(folderPath, "*"))
+	if err != nil {
+		return 0, err
+	}
+	return len(files), nil
 }

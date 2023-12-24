@@ -23,7 +23,7 @@ type IntegrationSuite struct {
 	ctx       context.Context
 	cancelCtx func()
 	closers   []func() error
-	db        gorm.DB
+	db        *gorm.DB
 }
 
 func (s *IntegrationSuite) SetupSuite() {
@@ -41,8 +41,9 @@ func (s *IntegrationSuite) SetupSuite() {
 	s.closers = append(s.closers, dockerClose)
 
 	s.T().Log("Initializing DB with migrations...")
-	closeDB := integration.InitDB(s.T(), pool, s.cfg)
+	gdb, closeDB := integration.InitDB(s.T(), pool, s.cfg)
 	s.closers = append(s.closers, closeDB)
+	s.db = gdb
 
 	s.T().Log("Setup completed")
 
