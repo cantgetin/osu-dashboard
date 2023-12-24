@@ -2,11 +2,10 @@ package usercardcreate
 
 import (
 	"context"
+	log "github.com/sirupsen/logrus"
 	"playcount-monitor-backend/internal/config"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
-
-	log "github.com/sirupsen/logrus"
 )
 
 type userStore interface {

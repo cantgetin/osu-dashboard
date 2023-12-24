@@ -6,7 +6,7 @@ import (
 	"playcount-monitor-backend/internal/usecase/mappers"
 )
 
-func (uc *UseCase) GetUserCard(
+func (uc *UseCase) Get(
 	ctx context.Context,
 	userID int,
 ) (*UserCard, error) {

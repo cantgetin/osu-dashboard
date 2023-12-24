@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"playcount-monitor-backend/internal/app"
 	"playcount-monitor-backend/internal/config"
 
@@ -17,7 +18,9 @@ func main() {
 
 	lg := log.New()
 
-	if err := app.Run(cfg, lg); err != nil {
+	ctx, _ := context.WithCancel(context.Background())
+
+	if err := app.Run(ctx, cfg, lg); err != nil {
 		log.Fatalf("failed to start app, %v", err)
 	}
 }

@@ -17,7 +17,7 @@ type CreateMapsetCommand struct {
 	Tags           string                  `json:"tags"`
 	PlayCount      int                     `json:"play_count"`
 	FavouriteCount int                     `json:"favourite_count"`
-	Bpm            int                     `json:"bpm"`
+	Bpm            float64                 `json:"bpm"`
 	Creator        string                  `json:"creator"`
 	Beatmaps       []*CreateBeatmapCommand `json:"beatmaps"`
 }
@@ -33,7 +33,7 @@ type Mapset struct {
 	PreviewUrl  string            `json:"preview_url"`
 	Tags        string            `json:"tags"`
 	MapsetStats model.MapsetStats `json:"mapset_stats"`
-	Bpm         int               `json:"bpm"`
+	Bpm         float64           `json:"bpm"`
 	Creator     string            `json:"creator"`
 	Beatmaps    []*Beatmap        `json:"beatmaps"`
 }

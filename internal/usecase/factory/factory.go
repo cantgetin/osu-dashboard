@@ -11,6 +11,9 @@ import (
 	usercreate "playcount-monitor-backend/internal/usecase/user/create"
 	userprovide "playcount-monitor-backend/internal/usecase/user/provide"
 	userupdate "playcount-monitor-backend/internal/usecase/user/update"
+	usercardcreate "playcount-monitor-backend/internal/usecase/usercard/create"
+	usercardprovide "playcount-monitor-backend/internal/usecase/usercard/provide"
+	usercardupdate "playcount-monitor-backend/internal/usecase/usercard/update"
 )
 
 type UseCaseFactory struct {
@@ -74,5 +77,38 @@ func (f *UseCaseFactory) MakeUpdateUserUseCase() *userupdate.UseCase {
 		f.lg,
 		f.txManager,
 		f.repos.UserRepo,
+	)
+}
+
+func (f *UseCaseFactory) MakeCreateUserCardUseCase() *usercardcreate.UseCase {
+	return usercardcreate.New(
+		f.cfg,
+		f.lg,
+		f.txManager,
+		f.repos.UserRepo,
+		f.repos.MapsetRepo,
+		f.repos.BeatmapRepo,
+	)
+}
+
+func (f *UseCaseFactory) MakeProvideUserCardUseCase() *usercardprovide.UseCase {
+	return usercardprovide.New(
+		f.cfg,
+		f.lg,
+		f.txManager,
+		f.repos.UserRepo,
+		f.repos.MapsetRepo,
+		f.repos.BeatmapRepo,
+	)
+}
+
+func (f *UseCaseFactory) MakeUpdateUserCardUseCase() *usercardupdate.UseCase {
+	return usercardupdate.New(
+		f.cfg,
+		f.lg,
+		f.txManager,
+		f.repos.UserRepo,
+		f.repos.MapsetRepo,
+		f.repos.BeatmapRepo,
 	)
 }

@@ -2,10 +2,8 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"os/signal"
-	"playcount-monitor-backend/internal/app/userserviceapi"
 	"playcount-monitor-backend/internal/bootstrap"
 	"playcount-monitor-backend/internal/config"
 	"playcount-monitor-backend/internal/database/repository/beatmaprepository"
@@ -14,12 +12,13 @@ import (
 	"playcount-monitor-backend/internal/http"
 	"playcount-monitor-backend/internal/usecase/factory"
 	"syscall"
+	"time"
 
 	"github.com/ds248a/closer"
 	log "github.com/sirupsen/logrus"
 )
 
-func Run(cfg *config.Config, lg *log.Logger) error {
+func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 
 	db, err := bootstrap.InitDB(cfg)
 	if err != nil {
@@ -43,40 +42,35 @@ func Run(cfg *config.Config, lg *log.Logger) error {
 		return err
 	}
 
-	userapi := userserviceapi.New(
-		lg,
-		f.MakeProvideUserUseCase(),
-		f.MakeCreateUserUseCase(),
-		f.MakeUpdateUserUseCase(),
-	)
-
-	httpServer, err := http.New(cfg, lg, userapi)
+	httpServer, err := http.New(cfg, lg, f)
 	if err != nil {
 		return err
 	}
 
-	_, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(baseCtx)
 
 	httpServer.Start()
 
-	gracefulShutDown(cancel, lg)
+	gracefulShutDown(ctx, cancel)
 
 	return nil
 }
 
-func gracefulShutDown(cancel context.CancelFunc, lg *log.Logger) {
+func gracefulShutDown(ctx context.Context, cancel context.CancelFunc) {
+	const waitTime = 5 * time.Second
+
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
 	defer signal.Stop(ch)
 
-	sig := <-ch
-	errorMessage := fmt.Sprintf(
-		"%s %v - %s",
-		"Received shutdown signal:",
-		sig,
-		"Graceful shutdown done",
-	)
-	lg.Printf(errorMessage)
+	select {
+	case sig := <-ch:
+		log.Printf("os signal received %s", sig.String())
+	case <-ctx.Done():
+		log.Printf("ctx done %s", ctx.Err().Error())
+	}
+
 	cancel()
 	closer.Reset()
+	time.Sleep(waitTime)
 }

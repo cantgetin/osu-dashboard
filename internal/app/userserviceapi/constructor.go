@@ -23,21 +23,21 @@ type userUpdater interface {
 
 type ServiceImpl struct {
 	lg           *log.Logger
-	userProvider userProvider
 	userCreator  userCreator
+	userProvider userProvider
 	userUpdater  userUpdater
 }
 
 func New(
 	lg *log.Logger,
-	userProvider userProvider,
 	userCreator userCreator,
+	userProvider userProvider,
 	userUpdater userUpdater,
 ) *ServiceImpl {
 	return &ServiceImpl{
 		lg:           lg,
-		userProvider: userProvider,
 		userCreator:  userCreator,
+		userProvider: userProvider,
 		userUpdater:  userUpdater,
 	}
 }

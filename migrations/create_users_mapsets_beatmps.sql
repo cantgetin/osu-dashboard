@@ -23,7 +23,7 @@ CREATE TABLE mapsets
     creator      text    not null,
     preview_url  text    not null,
     tags         text    not null,
-    bpm double not null,
+    bpm          real    not null,
     mapset_stats jsonb,
     created_at   timestamp default NOW(),
     updated_at   timestamp default NOW()
