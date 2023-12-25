@@ -10,7 +10,7 @@ func (uc *UseCase) Get(
 	ctx context.Context,
 	userID int,
 ) (*UserCard, error) {
-	var userCard *UserCard
+	var userCard = new(UserCard)
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		// get user
 		user, err := uc.user.Get(ctx, tx, userID)
