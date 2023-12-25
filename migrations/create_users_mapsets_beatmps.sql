@@ -15,7 +15,7 @@ CREATE TABLE mapsets
     id           integer not null primary key,
     artist       text    not null,
     title        text    not null,
-    covers       text    not null,
+    covers       jsonb    not null,
     status       text    not null,
     last_updated timestamp,
     user_id      integer not null,

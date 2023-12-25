@@ -9,7 +9,7 @@ type Mapset struct {
 	ID          int
 	Artist      string
 	Title       string
-	Covers      repository.JSON // map[string]string probably
+	Covers      repository.JSON `gorm:"type:jsonb"` // map[string]string probably
 	Status      string
 	LastUpdated time.Time
 	UserID      int
@@ -17,7 +17,7 @@ type Mapset struct {
 	PreviewURL  string
 	Tags        string
 	BPM         float64
-	MapsetStats repository.JSON // MapsetStats struct marshaled as JSON
+	MapsetStats repository.JSON `gorm:"type:jsonb"` // MapsetStats struct marshaled as JSON
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

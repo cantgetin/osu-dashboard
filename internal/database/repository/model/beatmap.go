@@ -19,7 +19,7 @@ type Beatmap struct {
 	TotalLength      int
 	UserID           int
 	LastUpdated      time.Time       // last map update
-	BeatmapStats     repository.JSON //BeatmapStats struct marshaled as JSON
+	BeatmapStats     repository.JSON `gorm:"type:jsonb"` //BeatmapStats struct marshaled as JSON
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
 }

@@ -17,9 +17,9 @@ func ClearTables(ctx context.Context, db *gorm.DB) error {
 	}
 
 	if err := db.Exec(`
-	TRUNCATE TABLE users;
-	TRUNCATE TABLE beatmaps;
-	TRUNCATE TABLE mapsets;
+	DELETE FROM beatmaps;
+	DELETE FROM mapsets;
+	DELETE FROM users;
 `).Error; err != nil {
 		return err
 	}

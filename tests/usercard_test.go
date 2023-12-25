@@ -3,6 +3,7 @@ package tests
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"playcount-monitor-backend/internal/database/repository"
 	"playcount-monitor-backend/internal/database/repository/model"
@@ -114,12 +115,11 @@ func (s *IntegrationSuite) Test_CreateUseCard() {
 	})
 }
 
-// what if user got new mapset which is not created, handle this case
 func (s *IntegrationSuite) Test_UpdateUserCard() {
 	s.Run("valid requests", func() {
 		type models struct {
 			User     *model.User
-			Mapset   []*model.Mapset
+			Mapsets  []*model.Mapset
 			Beatmaps []*model.Beatmap
 		}
 
@@ -142,12 +142,12 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 						CreatedAt:                time.Now().UTC(),
 						UpdatedAt:                time.Now().UTC(),
 					},
-					Mapset: []*model.Mapset{
+					Mapsets: []*model.Mapset{
 						{
 							ID:          123,
 							Artist:      "artist",
 							Title:       "title",
-							Covers:      repository.JSON(`{"cover1": "cover1", "cover2": "cover2"}`),
+							Covers:      repository.JSON(`{"cover1":"cover1","cover2":"cover2"}`),
 							Status:      "graveyard",
 							LastUpdated: time.Now().UTC(),
 							UserID:      123,
@@ -202,7 +202,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 				in: &usercardupdate.UpdateUserCardCommand{
 					User: &dto.CreateUserCommand{
 						ID:                       123,
-						AvatarURL:                "avararurlchanged.com",
+						AvatarURL:                "avatarurlchanged.com",
 						Username:                 "username1changed",
 						UnrankedBeatmapsetCount:  2, // assume user now have 2 mapsets
 						GraveyardBeatmapsetCount: 2,
@@ -292,7 +292,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 									Status:           "graveyard",
 									Url:              "url.com",
 									TotalLength:      1,
-									UserId:           2,
+									UserId:           123,
 									Passcount:        3,
 									Playcount:        4,
 									LastUpdated:      time.Now().UTC(),
@@ -309,7 +309,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 									Status:           "graveyard",
 									Url:              "url.com",
 									TotalLength:      1,
-									UserId:           2,
+									UserId:           123,
 									Passcount:        3,
 									Playcount:        4,
 									LastUpdated:      time.Now().UTC(),
@@ -318,7 +318,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 						},
 					},
 				},
-				outCode: 0,
+				outCode: 200,
 				result: &models{
 					User: &model.User{
 						ID:                       123,
@@ -327,12 +327,12 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 						GraveyardBeatmapsetCount: 2,
 						UnrankedBeatmapsetCount:  2,
 					},
-					Mapset: []*model.Mapset{
+					Mapsets: []*model.Mapset{
 						{
 							ID:          123,
 							Artist:      "artistchanged",
 							Title:       "titlechanged",
-							Covers:      repository.JSON(``), // todo
+							Covers:      repository.JSON(`{"cover1changed":"cover1changed","cover2changed":"cover2changed"}`),
 							Status:      "statuschanged",
 							LastUpdated: time.Now().UTC(),
 							UserID:      123,
@@ -340,13 +340,12 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 							PreviewURL:  "previewurlchanged.com",
 							Tags:        "tagschanged tagschanged",
 							BPM:         200,
-							MapsetStats: nil, // todo
 						},
 						{
 							ID:          345,
 							Artist:      "artist",
 							Title:       "title",
-							Covers:      repository.JSON(``), // todo
+							Covers:      repository.JSON(`{"cover1changed":"cover1changed","cover2changed":"cover2changed"}`),
 							Status:      "graveyard",
 							LastUpdated: time.Now().UTC(),
 							UserID:      123,
@@ -354,26 +353,191 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 							PreviewURL:  "previewurlnewmap.com",
 							Tags:        "tags tags",
 							BPM:         120,
-							MapsetStats: nil, // todo
 						},
 					},
-					Beatmaps: nil,
+					Beatmaps: []*model.Beatmap{
+						{
+							ID:               3,
+							MapsetID:         123,
+							DifficultyRating: 7.6,
+							Version:          "version1changed",
+							Accuracy:         1,
+							AR:               1,
+							BPM:              1,
+							CS:               1,
+							Status:           "graveyard",
+							URL:              "urlchanged.com",
+							TotalLength:      1,
+							UserID:           123,
+						},
+						{
+							ID:               4,
+							MapsetID:         123,
+							DifficultyRating: 1.2,
+							Version:          "version2changed",
+							Accuracy:         2,
+							AR:               2,
+							BPM:              2,
+							CS:               2,
+							Status:           "graveyard",
+							URL:              "urlchanged.com",
+							TotalLength:      1,
+							UserID:           123,
+						},
+						{
+							ID:               1488,
+							MapsetID:         345,
+							DifficultyRating: 1,
+							Version:          "version1",
+							Accuracy:         2,
+							AR:               3,
+							BPM:              4,
+							CS:               5,
+							Status:           "graveyard",
+							URL:              "url.com",
+							TotalLength:      1,
+							UserID:           123,
+						},
+						{
+							ID:               1337,
+							MapsetID:         345,
+							DifficultyRating: 1,
+							Version:          "version2",
+							Accuracy:         3,
+							AR:               4,
+							BPM:              5,
+							CS:               6,
+							Status:           "graveyard",
+							URL:              "url.com",
+							TotalLength:      1,
+							UserID:           123,
+						},
+					},
 				},
 			},
 		}
 		for _, tc := range tt {
 			s.Run(tc.name, func() {
+
+				// create models for update
+				err := s.db.Create(&tc.create.User).Error
+				s.Require().NoError(err)
+
+				for _, ms := range tc.create.Mapsets {
+					err := s.db.Create(&ms).Error
+					s.Require().NoError(err)
+				}
+
+				for _, bm := range tc.create.Beatmaps {
+					err := s.db.Create(&bm).Error
+					s.Require().NoError(err)
+				}
+
 				inJSON, err := json.Marshal(tc.in)
 				s.Require().NoError(err)
 
 				out, err := http.Post(
-					"http://localhost:8080/user_card/Update",
+					"http://localhost:8080/user_card/update",
 					"application/json",
 					bytes.NewBuffer(inJSON),
 				)
 
 				s.Require().NoError(err)
-				s.Assert().Equal(out.StatusCode, tc.outCode)
+				equal := s.Assert().Equal(tc.outCode, out.StatusCode)
+				if !equal {
+					s.Failf("unexpected response code", "expected %d, got %d", tc.outCode, out.StatusCode)
+				}
+
+				// assert result with acual stuff in db
+				// user
+				expectedUser := tc.result.User
+
+				var actualUser model.User
+				err = s.db.Table("users").Where("id = ?", expectedUser.ID).First(&actualUser).Error
+				s.Require().NoError(err)
+
+				s.Assert().Equal(expectedUser.ID, actualUser.ID)
+				s.Assert().Equal(expectedUser.AvatarURL, actualUser.AvatarURL)
+				s.Assert().Equal(expectedUser.Username, actualUser.Username)
+				s.Assert().Equal(expectedUser.UnrankedBeatmapsetCount, actualUser.UnrankedBeatmapsetCount)
+				s.Assert().Equal(expectedUser.GraveyardBeatmapsetCount, actualUser.GraveyardBeatmapsetCount)
+				s.Assert().Positive(actualUser.CreatedAt.Unix()) // todo
+				s.Assert().Positive(actualUser.UpdatedAt.Unix()) // todo
+
+				// mapsets
+				expectedMapsets := tc.result.Mapsets
+
+				for _, expectedMapset := range expectedMapsets {
+					var actualMapset model.Mapset
+					err = s.db.Table("mapsets").Where("id = ?", expectedMapset.ID).First(&actualMapset).Error
+					s.Require().NoError(err)
+
+					s.Assert().Equal(expectedMapset.ID, actualMapset.ID)
+					s.Assert().Equal(expectedMapset.Artist, actualMapset.Artist)
+					s.Assert().Equal(expectedMapset.Title, actualMapset.Title)
+					s.Assert().Equal(expectedMapset.Status, actualMapset.Status)
+					s.Assert().Equal(expectedMapset.UserID, actualMapset.UserID)
+					s.Assert().Equal(expectedMapset.PreviewURL, actualMapset.PreviewURL)
+					s.Assert().Equal(expectedMapset.Tags, actualMapset.Tags)
+					s.Assert().Equal(expectedMapset.BPM, actualMapset.BPM)
+
+					s.Assert().Positive(actualMapset.CreatedAt.Unix()) // todo
+					s.Assert().Positive(actualMapset.UpdatedAt.Unix()) // todo
+
+					var data map[string]interface{}
+
+					err := json.Unmarshal(expectedMapset.MapsetStats, &data)
+					if err != nil {
+						fmt.Println("Error:", err)
+						return
+					}
+
+					if actualMapset.ID == 123 {
+						s.Assert().Equal(len(data), 2)
+					} else {
+						s.Assert().Equal(len(data), 1)
+					}
+				}
+
+				// beatmaps
+				expectedBeatmaps := tc.result.Beatmaps
+
+				for _, expectedBeatmap := range expectedBeatmaps {
+					var actualBeatmap model.Beatmap
+					err = s.db.Table("beatmaps").Where("id = ?", expectedBeatmap.ID).First(&actualBeatmap).Error
+					s.Require().NoError(err)
+
+					s.Assert().Equal(expectedBeatmap.ID, actualBeatmap.ID)
+					s.Assert().Equal(expectedBeatmap.MapsetID, actualBeatmap.MapsetID)
+					s.Assert().Equal(expectedBeatmap.DifficultyRating, actualBeatmap.DifficultyRating)
+					s.Assert().Equal(expectedBeatmap.Version, actualBeatmap.Version)
+					s.Assert().Equal(expectedBeatmap.Accuracy, actualBeatmap.Accuracy)
+					s.Assert().Equal(expectedBeatmap.AR, actualBeatmap.AR)
+					s.Assert().Equal(expectedBeatmap.BPM, actualBeatmap.BPM)
+					s.Assert().Equal(expectedBeatmap.CS, actualBeatmap.CS)
+					s.Assert().Equal(expectedBeatmap.Status, actualBeatmap.Status)
+					s.Assert().Equal(expectedBeatmap.URL, actualBeatmap.URL)
+					s.Assert().Equal(expectedBeatmap.TotalLength, actualBeatmap.TotalLength)
+					s.Assert().Equal(expectedBeatmap.UserID, actualBeatmap.UserID)
+					s.Assert().Equal(expectedBeatmap.LastUpdated, actualBeatmap.LastUpdated)
+
+					s.Assert().Positive(actualBeatmap.CreatedAt.Unix()) // todo
+					s.Assert().Positive(actualBeatmap.UpdatedAt.Unix()) // todo
+
+					var data map[string]interface{}
+
+					err := json.Unmarshal(expectedBeatmap.BeatmapStats, &data)
+					if err != nil {
+						fmt.Println("Error:", err)
+						return
+					}
+
+					if actualBeatmap.ID == 3 || actualBeatmap.ID == 4 {
+						s.Assert().Equal(len(data), 2)
+					} else {
+						s.Assert().Equal(len(data), 1)
+					}
+				}
 			})
 		}
 
