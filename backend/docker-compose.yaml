@@ -7,7 +7,7 @@ networks:
 services:
   pmb-service:
     build:
-      context: "."
+      context: ".."
     networks:
       - "pmb-network"
     ports:
