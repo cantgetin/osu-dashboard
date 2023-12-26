@@ -669,7 +669,7 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 									Bpm:              210,
 									Cs:               3.3,
 									Status:           "graveyard",
-									Url:              "url.com",
+									Url:              "url2.com",
 									TotalLength:      102,
 									UserId:           1,
 								},
@@ -728,8 +728,26 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 					s.Assert().Equal(expectedMapset.Bpm, actualMapset.Bpm)
 					s.Assert().Equal(expectedMapset.Creator, actualMapset.Creator)
 
-					// todo: fix usecase
 					s.Assert().Equal(1, len(actualMapset.MapsetStats))
+
+					for i, actualBeatmap := range actualMapset.Beatmaps {
+						expectedBeatmap := tc.out.Mapsets[0].Beatmaps[i]
+
+						s.Assert().Equal(expectedBeatmap.Id, actualBeatmap.Id)
+						s.Assert().Equal(expectedBeatmap.BeatmapsetId, actualBeatmap.BeatmapsetId)
+						s.Assert().Equal(expectedBeatmap.DifficultyRating, actualBeatmap.DifficultyRating)
+						s.Assert().Equal(expectedBeatmap.Version, actualBeatmap.Version)
+						s.Assert().Equal(expectedBeatmap.Accuracy, actualBeatmap.Accuracy)
+						s.Assert().Equal(expectedBeatmap.Ar, actualBeatmap.Ar)
+						s.Assert().Equal(expectedBeatmap.Bpm, actualBeatmap.Bpm)
+						s.Assert().Equal(expectedBeatmap.Cs, actualBeatmap.Cs)
+						s.Assert().Equal(expectedBeatmap.Status, actualBeatmap.Status)
+						s.Assert().Equal(expectedBeatmap.Url, actualBeatmap.Url)
+						s.Assert().Equal(expectedBeatmap.TotalLength, actualBeatmap.TotalLength)
+						s.Assert().Equal(expectedBeatmap.UserId, actualBeatmap.UserId)
+
+						s.Assert().Equal(1, len(actualBeatmap.BeatmapStats))
+					}
 				}
 			})
 		}

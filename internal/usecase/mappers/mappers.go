@@ -98,6 +98,11 @@ func MapMapsetModelToMapsetDTO(mapset *model.Mapset, beatmaps []*model.Beatmap) 
 		return nil, err
 	}
 
+	stats, err := MapStatsJSONToMapsetStats(mapset.MapsetStats)
+	if err != nil {
+		return nil, err
+	}
+
 	return &dto.Mapset{
 		Id:          mapset.ID,
 		Artist:      mapset.Artist,
@@ -110,7 +115,7 @@ func MapMapsetModelToMapsetDTO(mapset *model.Mapset, beatmaps []*model.Beatmap) 
 		Tags:        mapset.Tags,
 		Creator:     mapset.Creator,
 		Bpm:         mapset.BPM,
-		MapsetStats: nil,
+		MapsetStats: stats,
 		Beatmaps:    beatmapsDTOs,
 	}, nil
 }
@@ -211,6 +216,15 @@ func MapStatsJSONToBeatmapStats(j repository.JSON) (model.BeatmapStats, error) {
 	}
 
 	return beatmapStats, nil
+}
+
+func MapStatsJSONToMapsetStats(j repository.JSON) (model.MapsetStats, error) {
+	mapsetStats := make(model.MapsetStats)
+	if err := json.Unmarshal(j, &mapsetStats); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal mapset stats: %w", err)
+	}
+
+	return mapsetStats, nil
 }
 
 func AppendNewMapsetStats(json1, json2 repository.JSON) (repository.JSON, error) {
