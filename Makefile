@@ -4,7 +4,7 @@ up:
 run:
 	go run cmd/main.go || exit 1
 
-run-migrate-local:
+migrate:
 	sql-migrate up -env="local"
 
 build:
