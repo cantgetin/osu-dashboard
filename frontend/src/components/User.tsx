@@ -18,7 +18,7 @@ const User = (props: UserProps) => {
                     {props.children[0]}
                 </div>
             </div>
-            <div className="p-2 flex flex-col bg-zinc-900 gap-2 w-mi text-right">
+            <div className="p-2 flex flex-col bg-zinc-900 gap-2 text-right">
                 {props.children[1]}
             </div>
         </div>

@@ -46,13 +46,6 @@ const UserPage = () => {
                 pointStyle: 'circle',
                 pointRadius: 6,
                 pointHoverRadius: 10,
-                options: {
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
             },
         ],
     });
