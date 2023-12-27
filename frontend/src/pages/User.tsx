@@ -1,9 +1,11 @@
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
+import User from "../components/User.tsx";
 
-const User = () => {
-    const { userId } = useParams();
-    const [user, setUser] = useState(null);
+const UserPage = () => {
+    const {userId} = useParams();
+
+    const [user, setUser] = useState<UserCard>();
 
 
     useEffect(() => {
@@ -12,25 +14,25 @@ const User = () => {
                 const response = await fetch(`http://localhost:8080/user_card/${userId}`);
                 const userData = await response.json();
 
-                setUser(userData);
+                setUser(JSON.parse(JSON.stringify(userData)) as UserCard)
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
         };
 
-        fetchUserData();
+        fetchUserData()
     }, [userId]);
 
     return (
         <div>
-            <p>User ID: {userId}</p>
             {user && (
-                <div>
-                    <p>JSON Data: {JSON.stringify(user, null, 2)}</p>
-                </div>
+                <User user={user.User}>
+                    <div></div>
+                    <div></div>
+                </User>
             )}
         </div>
     );
 };
 
-export default User;
+export default UserPage;
