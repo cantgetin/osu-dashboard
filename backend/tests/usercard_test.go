@@ -9,7 +9,7 @@ import (
 	"playcount-monitor-backend/internal/database/repository"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/dto"
-	usercardcreate "playcount-monitor-backend/internal/usecase/models"
+	"playcount-monitor-backend/internal/usecase/command"
 	"playcount-monitor-backend/tests/integration"
 	"time"
 )
@@ -18,20 +18,20 @@ func (s *IntegrationSuite) Test_CreateUseCard() {
 	s.Run("valid requests", func() {
 		tt := []struct {
 			name    string
-			in      *usercardcreate.CreateUserCardCommand
+			in      *command.CreateUserCardCommand
 			outCode int
 		}{
 			{
 				name: "valid request, should properly create",
-				in: &usercardcreate.CreateUserCardCommand{
-					User: &usercardcreate.CreateUserCommand{
+				in: &command.CreateUserCardCommand{
+					User: &command.CreateUserCommand{
 						ID:                       1,
 						AvatarURL:                "avatarurl.com",
 						Username:                 "username",
 						UnrankedBeatmapsetCount:  1,
 						GraveyardBeatmapsetCount: 1,
 					},
-					Mapsets: []*usercardcreate.CreateMapsetCommand{
+					Mapsets: []*command.CreateMapsetCommand{
 						{
 							Id:     1,
 							Artist: "artist",
@@ -49,7 +49,7 @@ func (s *IntegrationSuite) Test_CreateUseCard() {
 							FavouriteCount: 25,
 							Bpm:            150,
 							Creator:        "username",
-							Beatmaps: []*usercardcreate.CreateBeatmapCommand{
+							Beatmaps: []*command.CreateBeatmapCommand{
 								{
 									Id:               1,
 									BeatmapsetId:     1,
@@ -126,7 +126,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 		var tt = []struct {
 			name    string
 			create  *models
-			in      *models.UpdateUserCardCommand
+			in      *command.UpdateUserCardCommand
 			result  *models // assert db models after calling update method
 			outCode int
 		}{
@@ -199,15 +199,15 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 						},
 					},
 				},
-				in: &models.UpdateUserCardCommand{
-					User: &models.CreateUserCommand{
+				in: &command.UpdateUserCardCommand{
+					User: &command.UpdateUserCommand{
 						ID:                       123,
 						AvatarURL:                "avatarurlchanged.com",
 						Username:                 "username1changed",
 						UnrankedBeatmapsetCount:  2, // assume user now have 2 mapsets
 						GraveyardBeatmapsetCount: 2,
 					},
-					Mapsets: []*models.CreateMapsetCommand{
+					Mapsets: []*command.UpdateMapsetCommand{
 						{
 							Id:     123,
 							Artist: "artistchanged",
@@ -225,7 +225,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 							FavouriteCount: 200,
 							Bpm:            200,
 							Creator:        "username1changed",
-							Beatmaps: []*models.CreateBeatmapCommand{
+							Beatmaps: []*command.UpdateBeatmapCommand{
 								{
 									Id:               3,
 									BeatmapsetId:     123,
@@ -279,7 +279,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 							FavouriteCount: 456,
 							Bpm:            120,
 							Creator:        "username1changed",
-							Beatmaps: []*models.CreateBeatmapCommand{
+							Beatmaps: []*command.UpdateBeatmapCommand{
 								{
 									Id:               1488,
 									BeatmapsetId:     345,
@@ -710,7 +710,11 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 
 				expectedUser := tc.out.User
 
-				s.Assert().Equal(expectedUser, actual.User)
+				s.Assert().Equal(expectedUser.ID, actual.User.ID)
+				s.Assert().Equal(expectedUser.AvatarURL, actual.User.AvatarURL)
+				s.Assert().Equal(expectedUser.Username, actual.User.Username)
+				s.Assert().Equal(expectedUser.UnrankedBeatmapsetCount, actual.User.UnrankedBeatmapsetCount)
+				s.Assert().Equal(expectedUser.GraveyardBeatmapsetCount, actual.User.GraveyardBeatmapsetCount)
 
 				for _, actualMapset := range actual.Mapsets {
 					expectedMapset := tc.out.Mapsets[0]

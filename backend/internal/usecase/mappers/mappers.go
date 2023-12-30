@@ -6,13 +6,25 @@ import (
 	"playcount-monitor-backend/internal/database/repository"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/dto"
-	usercardcreate "playcount-monitor-backend/internal/usecase/models"
+	"playcount-monitor-backend/internal/usecase/command"
 	"time"
 )
 
 // command -> model
 
-func MapCreateUserCommandToUserModel(user *usercardcreate.CreateUserCommand) *model.User {
+func MapCreateUserCommandToUserModel(user *command.CreateUserCommand) *model.User {
+	return &model.User{
+		ID:                       user.ID,
+		Username:                 user.Username,
+		AvatarURL:                user.AvatarURL,
+		GraveyardBeatmapsetCount: user.GraveyardBeatmapsetCount,
+		UnrankedBeatmapsetCount:  user.UnrankedBeatmapsetCount,
+		UpdatedAt:                time.Now().UTC(),
+		CreatedAt:                time.Now().UTC(),
+	}
+}
+
+func MapUpdateUserCommandToUserModel(user *command.UpdateUserCommand) *model.User {
 	return &model.User{
 		ID:                       user.ID,
 		Username:                 user.Username,
@@ -23,8 +35,37 @@ func MapCreateUserCommandToUserModel(user *usercardcreate.CreateUserCommand) *mo
 	}
 }
 
-func MapCreateMapsetCommandToMapsetModel(mapset *usercardcreate.CreateMapsetCommand) (*model.Mapset, error) {
-	mapsetStats, err := MapCreateMapsetCommandToStatsJSON(mapset)
+func MapCreateMapsetCommandToMapsetModel(mapset *command.CreateMapsetCommand) (*model.Mapset, error) {
+	mapsetStats, err := MapMapsetPlaycountFavouritesToStatsJSON(mapset.PlayCount, mapset.FavouriteCount)
+	if err != nil {
+		return nil, err
+	}
+
+	covers, err := MapMapsetCoversToCoversJSON(mapset.Covers)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Mapset{
+		ID:          mapset.Id,
+		Artist:      mapset.Artist,
+		Title:       mapset.Title,
+		Covers:      covers,
+		Status:      mapset.Status,
+		LastUpdated: mapset.LastUpdated,
+		UserID:      mapset.UserId,
+		Creator:     mapset.Creator,
+		PreviewURL:  mapset.PreviewUrl,
+		Tags:        mapset.Tags,
+		MapsetStats: mapsetStats,
+		BPM:         mapset.Bpm,
+		UpdatedAt:   time.Now().UTC(),
+		CreatedAt:   time.Now().UTC(),
+	}, nil
+}
+
+func MapUpdateMapsetCommandToMapsetModel(mapset *command.UpdateMapsetCommand) (*model.Mapset, error) {
+	mapsetStats, err := MapMapsetPlaycountFavouritesToStatsJSON(mapset.PlayCount, mapset.FavouriteCount)
 	if err != nil {
 		return nil, err
 	}
@@ -51,8 +92,34 @@ func MapCreateMapsetCommandToMapsetModel(mapset *usercardcreate.CreateMapsetComm
 	}, nil
 }
 
-func MapCreateBeatmapCommandToBeatmapModel(beatmap *usercardcreate.CreateBeatmapCommand) (*model.Beatmap, error) {
-	stats, err := MapCreateBeatmapCommandToStatsJSON(beatmap)
+func MapCreateBeatmapCommandToBeatmapModel(beatmap *command.CreateBeatmapCommand) (*model.Beatmap, error) {
+	stats, err := MapBeatmapPlayPassCountToStatsJSON(beatmap.Playcount, beatmap.Passcount)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Beatmap{
+		ID:               beatmap.Id,
+		MapsetID:         beatmap.BeatmapsetId,
+		DifficultyRating: beatmap.DifficultyRating,
+		Version:          beatmap.Version,
+		Accuracy:         beatmap.Accuracy,
+		AR:               beatmap.Ar,
+		BPM:              beatmap.Bpm,
+		CS:               beatmap.Cs,
+		Status:           beatmap.Status,
+		URL:              beatmap.Url,
+		TotalLength:      beatmap.TotalLength,
+		UserID:           beatmap.UserId,
+		LastUpdated:      beatmap.LastUpdated,
+		BeatmapStats:     stats,
+		UpdatedAt:        time.Now().UTC(),
+		CreatedAt:        time.Now().UTC(),
+	}, nil
+}
+
+func MapUpdateBeatmapCommandToBeatmapModel(beatmap *command.UpdateBeatmapCommand) (*model.Beatmap, error) {
+	stats, err := MapBeatmapPlayPassCountToStatsJSON(beatmap.Playcount, beatmap.Passcount)
 	if err != nil {
 		return nil, err
 	}
@@ -178,11 +245,11 @@ func MapCoversJSONToMapsetCovers(covers repository.JSON) (map[string]string, err
 
 // stats
 
-func MapCreateBeatmapCommandToStatsJSON(beatmap *usercardcreate.CreateBeatmapCommand) (repository.JSON, error) {
+func MapBeatmapPlayPassCountToStatsJSON(playcount, passcount int) (repository.JSON, error) {
 	var stats = make(model.BeatmapStats)
 	stats[time.Now().UTC()] = &model.BeatmapStatsModel{
-		Playcount: beatmap.Playcount,
-		Passcount: beatmap.Passcount,
+		Playcount: playcount,
+		Passcount: passcount,
 	}
 
 	statsJson, err := json.Marshal(stats)
@@ -193,11 +260,11 @@ func MapCreateBeatmapCommandToStatsJSON(beatmap *usercardcreate.CreateBeatmapCom
 	return statsJson, nil
 }
 
-func MapCreateMapsetCommandToStatsJSON(mapset *usercardcreate.CreateMapsetCommand) (repository.JSON, error) {
+func MapMapsetPlaycountFavouritesToStatsJSON(playcount, favourites int) (repository.JSON, error) {
 	var stats = make(model.MapsetStats)
 	stats[time.Now().UTC()] = &model.MapsetStatsModel{
-		Playcount: mapset.PlayCount,
-		Favorites: mapset.FavouriteCount,
+		Playcount: playcount,
+		Favorites: favourites,
 	}
 
 	statsJson, err := json.Marshal(stats)

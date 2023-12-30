@@ -4,19 +4,25 @@ import (
 	"context"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
+	"playcount-monitor-backend/internal/usecase/command"
 	"playcount-monitor-backend/internal/usecase/mappers"
-	usercardcreate "playcount-monitor-backend/internal/usecase/models"
 )
 
 func (uc *UseCase) Update(
 	ctx context.Context,
-	cmd *usercardcreate.UpdateUserCardCommand,
+	cmd *command.UpdateUserCardCommand,
 ) error {
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		// update user
-		user := mappers.MapCreateUserCommandToUserModel(cmd.User)
+		existingUser, err := uc.user.Get(ctx, tx, cmd.User.ID)
+		if err != nil {
+			return err
+		}
 
-		err := uc.user.Update(ctx, tx, user)
+		newUser := mappers.MapUpdateUserCommandToUserModel(cmd.User)
+		newUser.CreatedAt = existingUser.CreatedAt
+
+		err = uc.user.Update(ctx, tx, newUser)
 		if err != nil {
 			return err
 		}
@@ -52,7 +58,11 @@ func (uc *UseCase) Update(
 	return nil
 }
 
-func (uc *UseCase) updateExistingMapsetAndItsBeatmaps(ctx context.Context, tx txmanager.Tx, ms *usercardcreate.CreateMapsetCommand) error {
+func (uc *UseCase) updateExistingMapsetAndItsBeatmaps(
+	ctx context.Context,
+	tx txmanager.Tx,
+	ms *command.UpdateMapsetCommand,
+) error {
 	// update mapset
 	existingMapset, err := uc.mapset.Get(ctx, tx, ms.Id)
 	if err != nil {
@@ -60,18 +70,16 @@ func (uc *UseCase) updateExistingMapsetAndItsBeatmaps(ctx context.Context, tx tx
 	}
 
 	var newMapset *model.Mapset
-	newMapset, err = mappers.MapCreateMapsetCommandToMapsetModel(ms)
+	newMapset, err = mappers.MapUpdateMapsetCommandToMapsetModel(ms)
 	if err != nil {
 		return err
 	}
 
-	newMapset.MapsetStats, err = mappers.AppendNewMapsetStats(
-		existingMapset.MapsetStats,
-		newMapset.MapsetStats,
-	)
+	newMapset.MapsetStats, err = mappers.AppendNewMapsetStats(existingMapset.MapsetStats, newMapset.MapsetStats)
 	if err != nil {
 		return err
 	}
+	newMapset.CreatedAt = existingMapset.CreatedAt
 
 	err = uc.mapset.Update(ctx, tx, newMapset)
 	if err != nil {
@@ -87,7 +95,7 @@ func (uc *UseCase) updateExistingMapsetAndItsBeatmaps(ctx context.Context, tx tx
 		}
 
 		var newBeatmap *model.Beatmap
-		newBeatmap, err = mappers.MapCreateBeatmapCommandToBeatmapModel(bm)
+		newBeatmap, err = mappers.MapUpdateBeatmapCommandToBeatmapModel(bm)
 		if err != nil {
 			return err
 		}
@@ -96,6 +104,10 @@ func (uc *UseCase) updateExistingMapsetAndItsBeatmaps(ctx context.Context, tx tx
 			existingBeatmap.BeatmapStats,
 			newBeatmap.BeatmapStats,
 		)
+		if err != nil {
+			return err
+		}
+		newBeatmap.CreatedAt = existingBeatmap.CreatedAt
 
 		err = uc.beatmap.Update(ctx, tx, newBeatmap)
 		if err != nil {
@@ -106,9 +118,13 @@ func (uc *UseCase) updateExistingMapsetAndItsBeatmaps(ctx context.Context, tx tx
 	return nil
 }
 
-func (uc *UseCase) createNewMapsetWithItsBeatmaps(ctx context.Context, tx txmanager.Tx, ms *usercardcreate.CreateMapsetCommand) error {
+func (uc *UseCase) createNewMapsetWithItsBeatmaps(
+	ctx context.Context,
+	tx txmanager.Tx,
+	ms *command.UpdateMapsetCommand,
+) error {
 	var newMapset *model.Mapset
-	newMapset, err := mappers.MapCreateMapsetCommandToMapsetModel(ms)
+	newMapset, err := mappers.MapUpdateMapsetCommandToMapsetModel(ms)
 	if err != nil {
 		return err
 	}
@@ -120,7 +136,7 @@ func (uc *UseCase) createNewMapsetWithItsBeatmaps(ctx context.Context, tx txmana
 
 	for _, bm := range ms.Beatmaps {
 		var newBeatmap *model.Beatmap
-		newBeatmap, err = mappers.MapCreateBeatmapCommandToBeatmapModel(bm)
+		newBeatmap, err = mappers.MapUpdateBeatmapCommandToBeatmapModel(bm)
 		if err != nil {
 			return err
 		}
