@@ -4,6 +4,7 @@ import User from "../components/User.tsx";
 import LineChart from "../components/LineChart.tsx";
 import PlaysSummary from "../components/PlaysSummary.tsx";
 import MapsetSummary from "../components/MapsetSummary.tsx";
+import Header from "../components/Header.tsx";
 
 const UserPage = () => {
     const {userId} = useParams();
@@ -67,19 +68,22 @@ const UserPage = () => {
     }, [userId]);
 
     return (
-        <div className="flex justify-center items-center">
-            <div className="p-10 flex flex-col gap-2">
-                {userCard && (
-                    <>
-                        <User user={userCard.User}>
-                            <LineChart chartData={chartData}/>
-                            <PlaysSummary/>
-                        </User>
-                        <MapsetSummary map={userCard.Mapsets[0]}/>
-                    </>
-                )}
+        <>
+            <Header/>
+            <div className="flex justify-center items-center">
+                <div className="p-10 flex flex-col gap-2">
+                    {userCard && (
+                        <>
+                            <User user={userCard.User}>
+                                <LineChart chartData={chartData}/>
+                                <PlaysSummary/>
+                            </User>
+                            <MapsetSummary map={userCard.Mapsets[0]}/>
+                        </>
+                    )}
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

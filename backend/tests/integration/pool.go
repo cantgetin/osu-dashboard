@@ -26,7 +26,7 @@ func Start(t *testing.T, cfg *config.Config) (*dockertest.Pool, CloseFn) {
 		},
 		ExposedPorts: []string{"5432/tcp"}, // Specify the container's exposed port
 		PortBindings: map[dc.Port][]dc.PortBinding{
-			"5432/tcp": {{HostIP: "", HostPort: "5432"}}, // Map the exposed port to the desired host port
+			"5432/tcp": {{HostIP: "", HostPort: "5432"}}, // Beatmapset the exposed port to the desired host port
 		},
 	})
 	if err != nil {

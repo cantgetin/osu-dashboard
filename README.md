@@ -18,3 +18,6 @@ TODO backend
 
 * handle env client id and client secret
 * add worker that would fetch all users from tracking table very 24 hours
+
+* tracking since - created_at отдавать в dto user
+* add tracking list handler and table for tracked users 

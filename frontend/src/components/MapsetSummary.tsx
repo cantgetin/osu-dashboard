@@ -11,7 +11,8 @@ const MapsetSummary = (props: MapCardProps) => {
                      style={{objectFit: 'cover'}}/>
             </div>
             <div className="px-2 py-1 mr-auto">
-                <div className="text-xl">{props.map.artist} - {props.map.title}</div>
+                <a className="text-xl underline" href={`/beatmapset/${props.map.id}`}>{props.map.artist} - {props.map.title}</a>
+                {/*<div className="text-xl">{props.map.artist} - {props.map.title}</div>*/}
                 <div className="flex gap-2 justify-left items-baseline">
                     <h1 className="text-xl text-yellow-200">{Object.values(props.map.mapset_stats)[1].play_count} plays</h1>
                     <h1 className="text-sm h-full text-orange-200">were {Object.values(props.map.mapset_stats)[0].play_count} plays</h1>
