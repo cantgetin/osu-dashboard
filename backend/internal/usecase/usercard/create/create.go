@@ -5,15 +5,18 @@ import (
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
 	"playcount-monitor-backend/internal/usecase/mappers"
+	"playcount-monitor-backend/internal/usecase/models"
+	"time"
 )
 
 func (uc *UseCase) Create(
 	ctx context.Context,
-	cmd *CreateUserCardCommand,
+	cmd *models.CreateUserCardCommand,
 ) error {
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		// create user
 		user := mappers.MapCreateUserCommandToUserModel(cmd.User)
+		user.CreatedAt = time.Now().UTC()
 
 		err := uc.user.Create(ctx, tx, user)
 		if err != nil {
@@ -28,6 +31,7 @@ func (uc *UseCase) Create(
 			if err != nil {
 				return err
 			}
+			mapset.CreatedAt = time.Now().UTC()
 
 			err = uc.mapset.Create(ctx, tx, mapset)
 			if err != nil {
@@ -41,6 +45,7 @@ func (uc *UseCase) Create(
 				if err != nil {
 					return err
 				}
+				beatmap.CreatedAt = time.Now().UTC()
 
 				err = uc.beatmap.Create(ctx, tx, beatmap)
 			}

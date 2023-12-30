@@ -3,14 +3,15 @@ package usercardprovide
 import (
 	"context"
 	"playcount-monitor-backend/internal/database/txmanager"
+	"playcount-monitor-backend/internal/dto"
 	"playcount-monitor-backend/internal/usecase/mappers"
 )
 
 func (uc *UseCase) Get(
 	ctx context.Context,
 	userID int,
-) (*UserCard, error) {
-	var userCard = new(UserCard)
+) (*dto.UserCard, error) {
+	var userCard = new(dto.UserCard)
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		// get user
 		user, err := uc.user.Get(ctx, tx, userID)

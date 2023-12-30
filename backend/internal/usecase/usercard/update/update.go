@@ -4,13 +4,13 @@ import (
 	"context"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
-	"playcount-monitor-backend/internal/dto"
 	"playcount-monitor-backend/internal/usecase/mappers"
+	usercardcreate "playcount-monitor-backend/internal/usecase/models"
 )
 
 func (uc *UseCase) Update(
 	ctx context.Context,
-	cmd *UpdateUserCardCommand,
+	cmd *usercardcreate.UpdateUserCardCommand,
 ) error {
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		// update user
@@ -52,7 +52,7 @@ func (uc *UseCase) Update(
 	return nil
 }
 
-func (uc *UseCase) updateExistingMapsetAndItsBeatmaps(ctx context.Context, tx txmanager.Tx, ms *dto.CreateMapsetCommand) error {
+func (uc *UseCase) updateExistingMapsetAndItsBeatmaps(ctx context.Context, tx txmanager.Tx, ms *usercardcreate.CreateMapsetCommand) error {
 	// update mapset
 	existingMapset, err := uc.mapset.Get(ctx, tx, ms.Id)
 	if err != nil {
@@ -106,7 +106,7 @@ func (uc *UseCase) updateExistingMapsetAndItsBeatmaps(ctx context.Context, tx tx
 	return nil
 }
 
-func (uc *UseCase) createNewMapsetWithItsBeatmaps(ctx context.Context, tx txmanager.Tx, ms *dto.CreateMapsetCommand) error {
+func (uc *UseCase) createNewMapsetWithItsBeatmaps(ctx context.Context, tx txmanager.Tx, ms *usercardcreate.CreateMapsetCommand) error {
 	var newMapset *model.Mapset
 	newMapset, err := mappers.MapCreateMapsetCommandToMapsetModel(ms)
 	if err != nil {

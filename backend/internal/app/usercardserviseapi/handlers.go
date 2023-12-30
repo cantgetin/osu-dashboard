@@ -2,8 +2,7 @@ package usercardserviseapi
 
 import (
 	"github.com/labstack/echo/v4"
-	usercardcreate "playcount-monitor-backend/internal/usecase/usercard/create"
-	usercardupdate "playcount-monitor-backend/internal/usecase/usercard/update"
+	usercardcreate "playcount-monitor-backend/internal/usecase/models"
 	"strconv"
 )
 
@@ -32,7 +31,7 @@ func (s *ServiceImpl) Get(c echo.Context) error {
 }
 
 func (s *ServiceImpl) Update(c echo.Context) error {
-	userCard := new(usercardupdate.UpdateUserCardCommand)
+	userCard := new(models.UpdateUserCardCommand)
 	if err := c.Bind(userCard); err != nil {
 		return err
 	}

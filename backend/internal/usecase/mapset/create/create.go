@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
-	"playcount-monitor-backend/internal/dto"
 	"playcount-monitor-backend/internal/usecase/mappers"
+	usercardcreate "playcount-monitor-backend/internal/usecase/models"
 )
 
 func (uc *UseCase) Create(
 	ctx context.Context,
-	cmd *dto.CreateMapsetCommand,
+	cmd *usercardcreate.CreateMapsetCommand,
 ) error {
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		mapsetExists, err := uc.mapset.Exists(ctx, tx, cmd.Id)

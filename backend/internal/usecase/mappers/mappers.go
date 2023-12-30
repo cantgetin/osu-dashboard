@@ -6,24 +6,24 @@ import (
 	"playcount-monitor-backend/internal/database/repository"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/dto"
+	usercardcreate "playcount-monitor-backend/internal/usecase/models"
 	"time"
 )
 
 // command -> model
 
-func MapCreateUserCommandToUserModel(user *dto.CreateUserCommand) *model.User {
+func MapCreateUserCommandToUserModel(user *usercardcreate.CreateUserCommand) *model.User {
 	return &model.User{
 		ID:                       user.ID,
 		Username:                 user.Username,
 		AvatarURL:                user.AvatarURL,
 		GraveyardBeatmapsetCount: user.GraveyardBeatmapsetCount,
 		UnrankedBeatmapsetCount:  user.UnrankedBeatmapsetCount,
-		CreatedAt:                time.Now().UTC(),
 		UpdatedAt:                time.Now().UTC(),
 	}
 }
 
-func MapCreateMapsetCommandToMapsetModel(mapset *dto.CreateMapsetCommand) (*model.Mapset, error) {
+func MapCreateMapsetCommandToMapsetModel(mapset *usercardcreate.CreateMapsetCommand) (*model.Mapset, error) {
 	mapsetStats, err := MapCreateMapsetCommandToStatsJSON(mapset)
 	if err != nil {
 		return nil, err
@@ -47,12 +47,11 @@ func MapCreateMapsetCommandToMapsetModel(mapset *dto.CreateMapsetCommand) (*mode
 		Tags:        mapset.Tags,
 		MapsetStats: mapsetStats,
 		BPM:         mapset.Bpm,
-		CreatedAt:   time.Now().UTC(),
 		UpdatedAt:   time.Now().UTC(),
 	}, nil
 }
 
-func MapCreateBeatmapCommandToBeatmapModel(beatmap *dto.CreateBeatmapCommand) (*model.Beatmap, error) {
+func MapCreateBeatmapCommandToBeatmapModel(beatmap *usercardcreate.CreateBeatmapCommand) (*model.Beatmap, error) {
 	stats, err := MapCreateBeatmapCommandToStatsJSON(beatmap)
 	if err != nil {
 		return nil, err
@@ -73,7 +72,6 @@ func MapCreateBeatmapCommandToBeatmapModel(beatmap *dto.CreateBeatmapCommand) (*
 		UserID:           beatmap.UserId,
 		LastUpdated:      beatmap.LastUpdated,
 		BeatmapStats:     stats,
-		CreatedAt:        time.Now().UTC(),
 		UpdatedAt:        time.Now().UTC(),
 	}, nil
 }
@@ -87,6 +85,7 @@ func MapUserModelToUserDTO(user *model.User) *dto.User {
 		AvatarURL:                user.AvatarURL,
 		GraveyardBeatmapsetCount: user.GraveyardBeatmapsetCount,
 		UnrankedBeatmapsetCount:  user.UnrankedBeatmapsetCount,
+		TrackingSince:            user.CreatedAt,
 	}
 }
 
@@ -179,7 +178,7 @@ func MapCoversJSONToMapsetCovers(covers repository.JSON) (map[string]string, err
 
 // stats
 
-func MapCreateBeatmapCommandToStatsJSON(beatmap *dto.CreateBeatmapCommand) (repository.JSON, error) {
+func MapCreateBeatmapCommandToStatsJSON(beatmap *usercardcreate.CreateBeatmapCommand) (repository.JSON, error) {
 	var stats = make(model.BeatmapStats)
 	stats[time.Now().UTC()] = &model.BeatmapStatsModel{
 		Playcount: beatmap.Playcount,
@@ -194,7 +193,7 @@ func MapCreateBeatmapCommandToStatsJSON(beatmap *dto.CreateBeatmapCommand) (repo
 	return statsJson, nil
 }
 
-func MapCreateMapsetCommandToStatsJSON(mapset *dto.CreateMapsetCommand) (repository.JSON, error) {
+func MapCreateMapsetCommandToStatsJSON(mapset *usercardcreate.CreateMapsetCommand) (repository.JSON, error) {
 	var stats = make(model.MapsetStats)
 	stats[time.Now().UTC()] = &model.MapsetStatsModel{
 		Playcount: mapset.PlayCount,

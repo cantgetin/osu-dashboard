@@ -3,9 +3,8 @@ package usercardserviseapi
 import (
 	"context"
 	log "github.com/sirupsen/logrus"
-	usercardcreate "playcount-monitor-backend/internal/usecase/usercard/create"
+	usercardcreate "playcount-monitor-backend/internal/usecase/models"
 	usercardprovide "playcount-monitor-backend/internal/usecase/usercard/provide"
-	usercardupdate "playcount-monitor-backend/internal/usecase/usercard/update"
 )
 
 type userCardCreator interface {
@@ -17,7 +16,7 @@ type userCardProvider interface {
 }
 
 type userCardUpdater interface {
-	Update(ctx context.Context, cmd *usercardupdate.UpdateUserCardCommand) error
+	Update(ctx context.Context, cmd *models.UpdateUserCardCommand) error
 }
 
 type ServiceImpl struct {

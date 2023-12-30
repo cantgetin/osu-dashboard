@@ -9,9 +9,7 @@ import (
 	"playcount-monitor-backend/internal/database/repository"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/dto"
-	usercardcreate "playcount-monitor-backend/internal/usecase/usercard/create"
-	usercardprovide "playcount-monitor-backend/internal/usecase/usercard/provide"
-	usercardupdate "playcount-monitor-backend/internal/usecase/usercard/update"
+	usercardcreate "playcount-monitor-backend/internal/usecase/models"
 	"playcount-monitor-backend/tests/integration"
 	"time"
 )
@@ -26,14 +24,14 @@ func (s *IntegrationSuite) Test_CreateUseCard() {
 			{
 				name: "valid request, should properly create",
 				in: &usercardcreate.CreateUserCardCommand{
-					User: &dto.CreateUserCommand{
+					User: &usercardcreate.CreateUserCommand{
 						ID:                       1,
 						AvatarURL:                "avatarurl.com",
 						Username:                 "username",
 						UnrankedBeatmapsetCount:  1,
 						GraveyardBeatmapsetCount: 1,
 					},
-					Mapsets: []*dto.CreateMapsetCommand{
+					Mapsets: []*usercardcreate.CreateMapsetCommand{
 						{
 							Id:     1,
 							Artist: "artist",
@@ -51,7 +49,7 @@ func (s *IntegrationSuite) Test_CreateUseCard() {
 							FavouriteCount: 25,
 							Bpm:            150,
 							Creator:        "username",
-							Beatmaps: []*dto.CreateBeatmapCommand{
+							Beatmaps: []*usercardcreate.CreateBeatmapCommand{
 								{
 									Id:               1,
 									BeatmapsetId:     1,
@@ -128,7 +126,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 		var tt = []struct {
 			name    string
 			create  *models
-			in      *usercardupdate.UpdateUserCardCommand
+			in      *models.UpdateUserCardCommand
 			result  *models // assert db models after calling update method
 			outCode int
 		}{
@@ -201,15 +199,15 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 						},
 					},
 				},
-				in: &usercardupdate.UpdateUserCardCommand{
-					User: &dto.CreateUserCommand{
+				in: &models.UpdateUserCardCommand{
+					User: &models.CreateUserCommand{
 						ID:                       123,
 						AvatarURL:                "avatarurlchanged.com",
 						Username:                 "username1changed",
 						UnrankedBeatmapsetCount:  2, // assume user now have 2 mapsets
 						GraveyardBeatmapsetCount: 2,
 					},
-					Mapsets: []*dto.CreateMapsetCommand{
+					Mapsets: []*models.CreateMapsetCommand{
 						{
 							Id:     123,
 							Artist: "artistchanged",
@@ -227,7 +225,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 							FavouriteCount: 200,
 							Bpm:            200,
 							Creator:        "username1changed",
-							Beatmaps: []*dto.CreateBeatmapCommand{
+							Beatmaps: []*models.CreateBeatmapCommand{
 								{
 									Id:               3,
 									BeatmapsetId:     123,
@@ -281,7 +279,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 							FavouriteCount: 456,
 							Bpm:            120,
 							Creator:        "username1changed",
-							Beatmaps: []*dto.CreateBeatmapCommand{
+							Beatmaps: []*models.CreateBeatmapCommand{
 								{
 									Id:               1488,
 									BeatmapsetId:     345,
@@ -560,7 +558,7 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 			name    string
 			create  *models
 			in      string
-			out     *usercardprovide.UserCard
+			out     *dto.UserCard
 			outCode int
 		}{
 			{
@@ -623,7 +621,7 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 					},
 				},
 				in: "1",
-				out: &usercardprovide.UserCard{
+				out: &dto.UserCard{
 					User: &dto.User{
 						ID:                       1,
 						AvatarURL:                "avatarurl.com",
@@ -706,7 +704,7 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 				body, err := ioutil.ReadAll(out.Body)
 				s.Require().NoError(err)
 
-				var actual usercardprovide.UserCard
+				var actual dto.UserCard
 				err = json.Unmarshal(body, &actual)
 				s.Require().NoError(err)
 
