@@ -5,9 +5,12 @@ import (
 	"playcount-monitor-backend/internal/config"
 	"playcount-monitor-backend/internal/database/repository/beatmaprepository"
 	"playcount-monitor-backend/internal/database/repository/mapsetrepository"
+	"playcount-monitor-backend/internal/database/repository/trackingrepository"
 	"playcount-monitor-backend/internal/database/repository/userrepository"
 	"playcount-monitor-backend/internal/database/txmanager"
 	mapsetcreate "playcount-monitor-backend/internal/usecase/mapset/create"
+	trackingcreate "playcount-monitor-backend/internal/usecase/tracking/create"
+	trackingprovide "playcount-monitor-backend/internal/usecase/tracking/provide"
 	usercreate "playcount-monitor-backend/internal/usecase/user/create"
 	userprovide "playcount-monitor-backend/internal/usecase/user/provide"
 	userupdate "playcount-monitor-backend/internal/usecase/user/update"
@@ -24,9 +27,10 @@ type UseCaseFactory struct {
 }
 
 type Repositories struct {
-	UserRepo    userrepository.Interface
-	BeatmapRepo beatmaprepository.Interface
-	MapsetRepo  mapsetrepository.Interface
+	UserRepo     userrepository.Interface
+	BeatmapRepo  beatmaprepository.Interface
+	MapsetRepo   mapsetrepository.Interface
+	TrackingRepo trackingrepository.Interface
 }
 
 func New(
@@ -110,5 +114,23 @@ func (f *UseCaseFactory) MakeUpdateUserCardUseCase() *usercardupdate.UseCase {
 		f.repos.UserRepo,
 		f.repos.MapsetRepo,
 		f.repos.BeatmapRepo,
+	)
+}
+
+func (f *UseCaseFactory) MakeCreateTrackingUseCase() *trackingcreate.UseCase {
+	return trackingcreate.New(
+		f.cfg,
+		f.lg,
+		f.txManager,
+		f.repos.TrackingRepo,
+	)
+}
+
+func (f *UseCaseFactory) MakeProvideTrackingUseCase() *trackingprovide.UseCase {
+	return trackingprovide.New(
+		f.cfg,
+		f.lg,
+		f.txManager,
+		f.repos.TrackingRepo,
 	)
 }
