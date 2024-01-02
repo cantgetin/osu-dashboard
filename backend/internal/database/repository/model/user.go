@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"playcount-monitor-backend/internal/database/repository"
+	"time"
+)
 
 type User struct {
 	ID                       int
@@ -8,6 +11,15 @@ type User struct {
 	AvatarURL                string
 	GraveyardBeatmapsetCount int
 	UnrankedBeatmapsetCount  int
+	UserStats                repository.JSON
 	CreatedAt                time.Time
 	UpdatedAt                time.Time
+}
+
+type UserStats map[time.Time]*UserStatsModel
+
+type UserStatsModel struct {
+	PlayCount int `json:"play_count"`
+	Favorites int `json:"favourite_count"`
+	MapCount  int `json:"map_count"`
 }

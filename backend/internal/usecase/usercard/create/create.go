@@ -14,9 +14,12 @@ func (uc *UseCase) Create(
 ) error {
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		// create user
-		user := mappers.MapCreateUserCommandToUserModel(cmd.User)
+		user, err := mappers.MapCreateUserCardCommandToUserModel(cmd)
+		if err != nil {
+			return err
+		}
 
-		err := uc.user.Create(ctx, tx, user)
+		err = uc.user.Create(ctx, tx, user)
 		if err != nil {
 			return err
 		}

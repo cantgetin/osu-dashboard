@@ -12,31 +12,65 @@ import (
 
 // command -> model
 
-func MapCreateUserCommandToUserModel(user *command.CreateUserCommand) *model.User {
+func MapCreateUserCardCommandToUserModel(cmd *command.CreateUserCardCommand) (*model.User, error) {
+	// get total playcount, favorites, map count
+	var totalUserPlaycount int
+	var favorites int
+	var mapCount int
+
+	for _, ms := range cmd.Mapsets {
+		totalUserPlaycount += ms.PlayCount
+		favorites += ms.FavouriteCount
+		mapCount++
+	}
+
+	stats, err := mapUserInfoToStatsJSON(totalUserPlaycount, favorites, mapCount)
+	if err != nil {
+		return nil, err
+	}
+
 	return &model.User{
-		ID:                       user.ID,
-		Username:                 user.Username,
-		AvatarURL:                user.AvatarURL,
-		GraveyardBeatmapsetCount: user.GraveyardBeatmapsetCount,
-		UnrankedBeatmapsetCount:  user.UnrankedBeatmapsetCount,
+		ID:                       cmd.User.ID,
+		Username:                 cmd.User.Username,
+		AvatarURL:                cmd.User.AvatarURL,
+		GraveyardBeatmapsetCount: cmd.User.GraveyardBeatmapsetCount,
+		UnrankedBeatmapsetCount:  cmd.User.UnrankedBeatmapsetCount,
+		UserStats:                stats,
 		UpdatedAt:                time.Now().UTC(),
 		CreatedAt:                time.Now().UTC(),
-	}
+	}, nil
 }
 
-func MapUpdateUserCommandToUserModel(user *command.UpdateUserCommand) *model.User {
+func MapUpdateUserCardCommandToUserModel(cmd *command.UpdateUserCardCommand) *model.User {
+	// get total playcount, favorites, map count
+	var totalUserPlaycount int
+	var favorites int
+	var mapCount int
+
+	for _, ms := range cmd.Mapsets {
+		totalUserPlaycount += ms.PlayCount
+		favorites += ms.FavouriteCount
+		mapCount++
+	}
+
+	stats, err := mapUserInfoToStatsJSON(totalUserPlaycount, favorites, mapCount)
+	if err != nil {
+		return nil
+	}
+
 	return &model.User{
-		ID:                       user.ID,
-		Username:                 user.Username,
-		AvatarURL:                user.AvatarURL,
-		GraveyardBeatmapsetCount: user.GraveyardBeatmapsetCount,
-		UnrankedBeatmapsetCount:  user.UnrankedBeatmapsetCount,
+		ID:                       cmd.User.ID,
+		Username:                 cmd.User.Username,
+		AvatarURL:                cmd.User.AvatarURL,
+		GraveyardBeatmapsetCount: cmd.User.GraveyardBeatmapsetCount,
+		UnrankedBeatmapsetCount:  cmd.User.UnrankedBeatmapsetCount,
 		UpdatedAt:                time.Now().UTC(),
+		UserStats:                stats,
 	}
 }
 
 func MapCreateMapsetCommandToMapsetModel(mapset *command.CreateMapsetCommand) (*model.Mapset, error) {
-	mapsetStats, err := MapMapsetPlaycountFavouritesToStatsJSON(mapset.PlayCount, mapset.FavouriteCount)
+	mapsetStats, err := MapMapsetInfoToStatsJSON(mapset.PlayCount, mapset.FavouriteCount)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +99,7 @@ func MapCreateMapsetCommandToMapsetModel(mapset *command.CreateMapsetCommand) (*
 }
 
 func MapUpdateMapsetCommandToMapsetModel(mapset *command.UpdateMapsetCommand) (*model.Mapset, error) {
-	mapsetStats, err := MapMapsetPlaycountFavouritesToStatsJSON(mapset.PlayCount, mapset.FavouriteCount)
+	mapsetStats, err := MapMapsetInfoToStatsJSON(mapset.PlayCount, mapset.FavouriteCount)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +127,7 @@ func MapUpdateMapsetCommandToMapsetModel(mapset *command.UpdateMapsetCommand) (*
 }
 
 func MapCreateBeatmapCommandToBeatmapModel(beatmap *command.CreateBeatmapCommand) (*model.Beatmap, error) {
-	stats, err := MapBeatmapPlayPassCountToStatsJSON(beatmap.Playcount, beatmap.Passcount)
+	stats, err := MapBeatmapInfoToStatsJSON(beatmap.Playcount, beatmap.Passcount)
 	if err != nil {
 		return nil, err
 	}
@@ -119,7 +153,7 @@ func MapCreateBeatmapCommandToBeatmapModel(beatmap *command.CreateBeatmapCommand
 }
 
 func MapUpdateBeatmapCommandToBeatmapModel(beatmap *command.UpdateBeatmapCommand) (*model.Beatmap, error) {
-	stats, err := MapBeatmapPlayPassCountToStatsJSON(beatmap.Playcount, beatmap.Passcount)
+	stats, err := MapBeatmapInfoToStatsJSON(beatmap.Playcount, beatmap.Passcount)
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +179,12 @@ func MapUpdateBeatmapCommandToBeatmapModel(beatmap *command.UpdateBeatmapCommand
 
 // model -> dto
 
-func MapUserModelToUserDTO(user *model.User) *dto.User {
+func MapUserModelToUserDTO(user *model.User) (*dto.User, error) {
+	stats, err := MapStatsJSONToUserStats(user.UserStats)
+	if err != nil {
+		return nil, err
+	}
+
 	return &dto.User{
 		ID:                       user.ID,
 		Username:                 user.Username,
@@ -153,7 +192,8 @@ func MapUserModelToUserDTO(user *model.User) *dto.User {
 		GraveyardBeatmapsetCount: user.GraveyardBeatmapsetCount,
 		UnrankedBeatmapsetCount:  user.UnrankedBeatmapsetCount,
 		TrackingSince:            user.CreatedAt,
-	}
+		UserStats:                stats,
+	}, nil
 }
 
 func MapMapsetModelToMapsetDTO(mapset *model.Mapset, beatmaps []*model.Beatmap) (*dto.Mapset, error) {
@@ -243,9 +283,25 @@ func MapCoversJSONToMapsetCovers(covers repository.JSON) (map[string]string, err
 	return mapsetCovers, nil
 }
 
-// stats
+// stats -> JSON
 
-func MapBeatmapPlayPassCountToStatsJSON(playcount, passcount int) (repository.JSON, error) {
+func mapUserInfoToStatsJSON(playcount, favorites, mapcount int) (repository.JSON, error) {
+	var stats = make(model.UserStats)
+	stats[time.Now().UTC()] = &model.UserStatsModel{
+		PlayCount: playcount,
+		Favorites: favorites,
+		MapCount:  mapcount,
+	}
+
+	statsJson, err := json.Marshal(stats)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal user stats: %w", err)
+	}
+
+	return statsJson, nil
+}
+
+func MapBeatmapInfoToStatsJSON(playcount, passcount int) (repository.JSON, error) {
 	var stats = make(model.BeatmapStats)
 	stats[time.Now().UTC()] = &model.BeatmapStatsModel{
 		Playcount: playcount,
@@ -260,7 +316,7 @@ func MapBeatmapPlayPassCountToStatsJSON(playcount, passcount int) (repository.JS
 	return statsJson, nil
 }
 
-func MapMapsetPlaycountFavouritesToStatsJSON(playcount, favourites int) (repository.JSON, error) {
+func MapMapsetInfoToStatsJSON(playcount, favourites int) (repository.JSON, error) {
 	var stats = make(model.MapsetStats)
 	stats[time.Now().UTC()] = &model.MapsetStatsModel{
 		Playcount: playcount,
@@ -273,6 +329,18 @@ func MapMapsetPlaycountFavouritesToStatsJSON(playcount, favourites int) (reposit
 	}
 
 	return statsJson, nil
+}
+
+// JSON -> stats
+// todo: generic
+
+func MapStatsJSONToUserStats(j repository.JSON) (model.UserStats, error) {
+	userStats := make(model.UserStats)
+	if err := json.Unmarshal(j, &userStats); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal user stats: %w", err)
+	}
+
+	return userStats, nil
 }
 
 func MapStatsJSONToBeatmapStats(j repository.JSON) (model.BeatmapStats, error) {
@@ -291,6 +359,34 @@ func MapStatsJSONToMapsetStats(j repository.JSON) (model.MapsetStats, error) {
 	}
 
 	return mapsetStats, nil
+}
+
+// JSON -> JSON append
+// todo: generic
+
+func AppendNewUserStats(json1, json2 repository.JSON) (repository.JSON, error) {
+	// merge two JSONs that are map[time.Time]model.UserStatsModel
+	map1 := make(model.UserStats)
+	map2 := make(model.UserStats)
+
+	if err := json.Unmarshal(json1, &map1); err != nil {
+		return repository.JSON{}, err
+	}
+
+	if err := json.Unmarshal(json2, &map2); err != nil {
+		return repository.JSON{}, err
+	}
+
+	for key, value := range map2 {
+		map1[key] = value
+	}
+
+	mergedJSON, err := json.Marshal(map1)
+	if err != nil {
+		return repository.JSON{}, err
+	}
+
+	return mergedJSON, nil
 }
 
 func AppendNewMapsetStats(json1, json2 repository.JSON) (repository.JSON, error) {

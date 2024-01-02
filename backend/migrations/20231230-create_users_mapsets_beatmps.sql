@@ -6,6 +6,7 @@ CREATE TABLE users
     avatar_url                 text    not null,
     graveyard_beatmapset_count integer not null,
     unranked_beatmapset_count  integer not null,
+    user_stats                 jsonb,
     created_at                 timestamp default NOW(),
     updated_at                 timestamp default NOW()
 );

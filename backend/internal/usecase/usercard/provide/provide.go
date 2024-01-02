@@ -19,7 +19,10 @@ func (uc *UseCase) Get(
 			return err
 		}
 
-		userCard.User = mappers.MapUserModelToUserDTO(user)
+		userCard.User, err = mappers.MapUserModelToUserDTO(user)
+		if err != nil {
+			return err
+		}
 
 		// get user mapsets
 		mapsets, err := uc.mapset.ListForUser(ctx, tx, userID)

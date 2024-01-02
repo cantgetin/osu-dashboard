@@ -19,8 +19,14 @@ func (uc *UseCase) Update(
 			return err
 		}
 
-		newUser := mappers.MapUpdateUserCommandToUserModel(cmd.User)
+		newUser := mappers.MapUpdateUserCardCommandToUserModel(cmd)
 		newUser.CreatedAt = existingUser.CreatedAt
+
+		// add new map entry to stats json
+		newUser.UserStats, err = mappers.AppendNewUserStats(existingUser.UserStats, newUser.UserStats)
+		if err != nil {
+			return err
+		}
 
 		err = uc.user.Update(ctx, tx, newUser)
 		if err != nil {

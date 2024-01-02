@@ -139,6 +139,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 						AvatarURL:                "avararurl.com",
 						GraveyardBeatmapsetCount: 1,
 						UnrankedBeatmapsetCount:  1,
+						UserStats:                repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":52,"favourite_count":2, "map_count":3}}`),
 						CreatedAt:                time.Now().UTC(),
 						UpdatedAt:                time.Now().UTC(),
 					},
@@ -464,6 +465,16 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 				s.Assert().Positive(actualUser.CreatedAt.Unix()) // todo
 				s.Assert().Positive(actualUser.UpdatedAt.Unix()) // todo
 
+				var data map[string]interface{}
+
+				err = json.Unmarshal(actualUser.UserStats, &data)
+				if err != nil {
+					fmt.Println("Error:", err)
+					return
+				}
+
+				s.Assert().Equal(len(data), 2)
+
 				// mapsets
 				expectedMapsets := tc.result.Mapsets
 
@@ -570,6 +581,7 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 						Username:                 "username",
 						UnrankedBeatmapsetCount:  1,
 						GraveyardBeatmapsetCount: 1,
+						UserStats:                repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favourite_count":2, "map_count":1}}`),
 					},
 					Mapsets: []*model.Mapset{
 						{
@@ -715,6 +727,10 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 				s.Assert().Equal(expectedUser.Username, actual.User.Username)
 				s.Assert().Equal(expectedUser.UnrankedBeatmapsetCount, actual.User.UnrankedBeatmapsetCount)
 				s.Assert().Equal(expectedUser.GraveyardBeatmapsetCount, actual.User.GraveyardBeatmapsetCount)
+				
+				s.Assert().Equal(len(actual.User.UserStats), 1)
+
+				s.Assert().Equal(1, len(actual.Mapsets))
 
 				for _, actualMapset := range actual.Mapsets {
 					expectedMapset := tc.out.Mapsets[0]
