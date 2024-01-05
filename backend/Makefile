@@ -13,3 +13,6 @@ build:
 test:
 	go test ./tests/... -v -cover
 
+add-sample-data:
+	go run tests/data/add_sample_data.go
+
