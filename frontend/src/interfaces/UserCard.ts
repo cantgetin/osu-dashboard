@@ -9,6 +9,25 @@ interface User {
     username: string;
     unranked_beatmapset_count: number;
     graveyard_beatmapset_count: number;
+    tracking_since: string;
+    user_stats: UserStats;
+}
+
+interface UserStats {
+    [key: string]: UserStatsModel;
+}
+
+interface UserStatsModel {
+    play_count: number;
+    favourite_count: number;
+    map_count: number;
+}
+
+interface UserStatsDataset {
+    timestamp: string;
+    play_count: number;
+    favourite_count: number;
+    map_count: number;
 }
 
 interface Mapset {

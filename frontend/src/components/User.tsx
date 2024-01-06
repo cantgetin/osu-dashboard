@@ -1,4 +1,5 @@
 import React from 'react';
+import {convertDateFormat} from "../utils/utils.ts";
 
 interface UserProps {
     user: User
@@ -12,13 +13,13 @@ const User = (props: UserProps) => {
             <div className="p-2 flex flex-col w-96 gap-2 h-64">
                 <div>
                     <h1 className="text-3xl">{props.user.username}</h1>
-                    <span className="text-sm text-zinc-400 px-1">tracking since 21.11.2023</span>
+                    <span className="text-sm text-zinc-400 px-1">tracking since {convertDateFormat(props.user.tracking_since)}</span>
                 </div>
                 <div>
                     {props.children[0]}
                 </div>
             </div>
-            <div className="p-2 flex flex-col bg-zinc-900 gap-2 text-right">
+            <div className="p-2 flex flex-col bg-zinc-900 gap-2 text-right w-full">
                 {props.children[1]}
             </div>
         </div>

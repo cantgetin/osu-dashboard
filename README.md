@@ -6,7 +6,8 @@ TODO frontend
 * getMapsetRemainingPendingTime shit
 * redux store
 * about page
-* header with search, navigation
+* header navigation
+* ✅ header with search
 
 
 TODO backend

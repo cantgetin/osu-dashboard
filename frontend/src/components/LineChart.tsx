@@ -10,13 +10,34 @@ interface LineChartProps {
 const options: ChartOptions<'line'> = {
     plugins:{
         legend: {
-            display: false
+            position: 'top',
         }
     },
     interaction: {
         intersect: false,
         mode: 'index',
     },
+    scales: {
+        x: {
+            border: {
+                display: true
+            },
+            grid: {
+                display: true,
+                drawOnChartArea: true,
+                drawTicks: true,
+                color: 'rgba(93,93,93,0.2)',
+            }
+        },
+        y: {
+            grid: {
+                display: true,
+                drawOnChartArea: true,
+                drawTicks: true,
+                color: 'rgba(93,93,93,0.2)',
+            }
+        }
+    }
 }
 
 const LineChart: React.FC<LineChartProps> = ({ chartData }) => {

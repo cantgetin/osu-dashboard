@@ -1,56 +1,17 @@
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import User from "../components/User.tsx";
-import LineChart from "../components/LineChart.tsx";
 import PlaysSummary from "../components/PlaysSummary.tsx";
 import MapsetSummary from "../components/MapsetSummary.tsx";
 import Header from "../components/Header.tsx";
+import {mapUserStatsToArray} from "../utils/utils.ts";
+import ChartsSummary from "../components/ChartsSummary.tsx";
 
 const UserPage = () => {
     const {userId} = useParams();
 
     const [userCard, setUser] = useState<UserCard>();
-
-    const UserData = [
-        {
-            year: "2023-12-25",
-            plays: 1000,
-        },
-        {
-            year: "2023-12-26",
-            plays: 1100,
-        },
-        {
-            year: "2023-12-27",
-            plays: 1250,
-        },
-        {
-            year: "2023-12-28",
-            plays: 1350,
-        },
-        {
-            year: "2023-12-29",
-            plays: 2100,
-        },
-    ];
-
-    const [chartData] = useState({
-        labels: UserData.map((data) => data.year),
-        datasets: [
-            {
-                data: UserData.map((data) => data.plays),
-                backgroundColor: [
-                    "#FEF07B",
-                ],
-                borderColor: "#101010",
-                borderWidth: 2,
-                pointStyle: 'circle',
-                pointRadius: 6,
-                pointHoverRadius: 10,
-            },
-        ],
-    });
-
+    const [userData, setUserData] = useState<UserStatsDataset[]>([]);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -67,17 +28,24 @@ const UserPage = () => {
         fetchUserData()
     }, [userId]);
 
+    useEffect(() => {
+        if (userCard) {
+            setUserData(mapUserStatsToArray(userCard!.User.user_stats))
+        }
+    }, [userCard]);
+
     return (
         <>
             <Header/>
             <div className="flex justify-center items-center">
                 <div className="p-10 flex flex-col gap-2">
-                    {userCard && (
+                    {userCard && userData.length > 0 && (
                         <>
                             <User user={userCard.User}>
-                                <LineChart chartData={chartData}/>
-                                <PlaysSummary/>
+                                <div></div>
+                                <PlaysSummary data={userData}/>
                             </User>
+                            <ChartsSummary data={userData}/>
                             <MapsetSummary map={userCard.Mapsets[0]}/>
                         </>
                     )}
