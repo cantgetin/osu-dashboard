@@ -7,6 +7,6 @@ func (s *Server) setupRoutes() {
 	s.server.POST("/user_card/update", s.userCard.Update)
 	s.server.GET("/user_card/:id", s.userCard.Get)
 
-	s.server.GET("/tracking/list", s.tracking.List)
-	s.server.POST("/tracking/create", s.tracking.Create)
+	s.server.GET("/following/list", s.tracking.List)
+	s.server.POST("/following/create", s.tracking.Create)
 }

@@ -1,4 +1,4 @@
-package trackingprovide
+package followingprovide
 
 import (
 	"context"
@@ -10,10 +10,10 @@ import (
 func (uc *UseCase) List(
 	ctx context.Context,
 ) ([]*dto.Tracking, error) {
-	var trackList []*model.Tracking
+	var trackList []*model.Following
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		var err error
-		trackList, err = uc.tracking.List(ctx, tx)
+		trackList, err = uc.following.List(ctx, tx)
 		if err != nil {
 			return err
 		}
@@ -27,7 +27,7 @@ func (uc *UseCase) List(
 	return mapTrackingModelToTrackingDTO(trackList), nil
 }
 
-func mapTrackingModelToTrackingDTO(trackList []*model.Tracking) []*dto.Tracking {
+func mapTrackingModelToTrackingDTO(trackList []*model.Following) []*dto.Tracking {
 	var trackDTOList []*dto.Tracking
 	for _, track := range trackList {
 		trackDTOList = append(trackDTOList, &dto.Tracking{

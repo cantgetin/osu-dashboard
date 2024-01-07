@@ -1,4 +1,4 @@
-package trackingprovide
+package followingcreate
 
 import (
 	"context"
@@ -9,27 +9,27 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type trackingStore interface {
-	List(ctx context.Context, tx txmanager.Tx) ([]*model.Tracking, error)
+type followingStore interface {
+	Create(ctx context.Context, tx txmanager.Tx, user *model.Following) error
 }
 
 type UseCase struct {
-	cfg      *config.Config
-	lg       *log.Logger
-	txm      txmanager.TxManager
-	tracking trackingStore
+	cfg       *config.Config
+	lg        *log.Logger
+	txm       txmanager.TxManager
+	following followingStore
 }
 
 func New(
 	cfg *config.Config,
 	lg *log.Logger,
 	txm txmanager.TxManager,
-	tracking trackingStore,
+	following followingStore,
 ) *UseCase {
 	return &UseCase{
-		cfg:      cfg,
-		lg:       lg,
-		txm:      txm,
-		tracking: tracking,
+		cfg:       cfg,
+		lg:        lg,
+		txm:       txm,
+		following: following,
 	}
 }

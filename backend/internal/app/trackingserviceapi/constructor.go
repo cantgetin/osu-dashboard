@@ -8,7 +8,7 @@ import (
 )
 
 type trackingCreator interface {
-	Create(ctx context.Context, cmd *model.Tracking) error
+	Create(ctx context.Context, cmd *model.Following) error
 }
 
 type trackingProvider interface {

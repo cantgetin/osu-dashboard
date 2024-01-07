@@ -1,4 +1,4 @@
-package trackingcreate
+package followingcreate
 
 import (
 	"context"
@@ -8,10 +8,10 @@ import (
 
 func (uc *UseCase) Create(
 	ctx context.Context,
-	tracking *model.Tracking,
+	tracking *model.Following,
 ) error {
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-		err := uc.tracking.Create(ctx, tx, tracking)
+		err := uc.following.Create(ctx, tx, tracking)
 		if err != nil {
 			return err
 		}

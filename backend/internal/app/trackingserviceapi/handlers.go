@@ -6,7 +6,7 @@ import (
 )
 
 func (s *ServiceImpl) Create(c echo.Context) error {
-	tracking := new(model.Tracking)
+	tracking := new(model.Following)
 	if err := c.Bind(tracking); err != nil {
 		return err
 	}

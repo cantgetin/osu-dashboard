@@ -7,7 +7,7 @@ import (
 )
 
 type Interface interface {
-	Create(ctx context.Context, tx txmanager.Tx, user *model.Tracking) error
-	List(ctx context.Context, tx txmanager.Tx) ([]*model.Tracking, error)
+	Create(ctx context.Context, tx txmanager.Tx, user *model.Following) error
+	List(ctx context.Context, tx txmanager.Tx) ([]*model.Following, error)
 	Delete(ctx context.Context, tx txmanager.Tx, id int) error
 }

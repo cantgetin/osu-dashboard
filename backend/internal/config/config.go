@@ -9,4 +9,12 @@ type Config struct {
 	PgMaxOpenConn  int           `env:"PG_MAX_OPEN_CONN" envDefault:"5"`
 	PgIdleConn     int           `env:"PG_MAX_IDLE_CONN" envDefault:"5"`
 	PgPingInterval time.Duration `env:"PG_PING_INTERVAL" envDefault:"5s"`
+
+	TrackingTimeout  time.Duration `env:"TRACKING_TIMEOUT" envDefault:"1m"`
+	TrackingInterval time.Duration `env:"TRACKING_INTERVAL" envDefault:"12h"`
+
+	OsuAPIClientID     string `env:"OSU_API_CLIENT_ID" envDefault:""`
+	OsuAPIClientSecret string `env:"OSU_API_CLIENT_SECRET" envDefault:""`
+	OsuAPIHost         string `env:"OSU_API_HOST" envDefault:"https://osu.ppy.sh/api/v2/"`
+	OsuOAuthHost       string `env:"OSU_OAUTH_HOST" envDefault:"https://osu.ppy.sh/oauth/token"`
 }
