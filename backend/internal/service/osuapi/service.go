@@ -55,7 +55,7 @@ func (s *Service) GetUser(ctx context.Context, userID string) (*User, error) {
 	return user, nil
 }
 
-func (s *Service) GetUserBeatmaps(ctx context.Context, userID string) ([]*Beatmap, error) {
+func (s *Service) GetUserMapsets(ctx context.Context, userID string) ([]*Mapset, error) {
 
 	var BeatmapTypes = []BeatmapType{Graveyard, Loved, Nominated, Pending, Ranked}
 
@@ -70,7 +70,7 @@ func (s *Service) GetUserBeatmaps(ctx context.Context, userID string) ([]*Beatma
 		"Authorization": "Bearer " + token,
 	}
 
-	beatmaps := []*Beatmap{}
+	beatmapsets := []*Mapset{}
 	for _, beatmapType := range BeatmapTypes {
 		req, err := http.NewRequest("GET", s.cfg.OsuAPIHost+"/users/"+userID+"beatmapsets/"+string(beatmapType), nil)
 		if err != nil {
@@ -86,15 +86,15 @@ func (s *Service) GetUserBeatmaps(ctx context.Context, userID string) ([]*Beatma
 			return nil, fmt.Errorf("failed to invoke request to %s: %w", req.URL.String(), err)
 		}
 
-		var maps []*Beatmap
+		var maps []*Mapset
 		err = json.NewDecoder(res.Body).Decode(&maps)
 		if err != nil {
 			return nil, fmt.Errorf("failed to decode response body: %w", err)
 		}
 
-		beatmaps = append(beatmaps, maps...)
+		beatmapsets = append(beatmapsets, maps...)
 		res.Body.Close()
 	}
 
-	return beatmaps, nil
+	return beatmapsets, nil
 }

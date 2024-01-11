@@ -16,7 +16,7 @@ type (
 
 	Interface interface {
 		GetUser(ctx context.Context, userID string) (*User, error)
-		GetUserBeatmaps(ctx context.Context, userID string) ([]*Beatmap, error)
+		GetUserMapsets(ctx context.Context, userID string) ([]*Mapset, error)
 	}
 
 	HTTPClientInterface interface {

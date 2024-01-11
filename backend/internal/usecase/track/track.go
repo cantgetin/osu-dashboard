@@ -7,6 +7,7 @@ import (
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
 	"playcount-monitor-backend/internal/usecase/command"
+	"playcount-monitor-backend/internal/usecase/mappers"
 	"strconv"
 )
 
@@ -31,33 +32,79 @@ func (uc *UseCase) Track(
 			return fmt.Errorf("no following users present in db")
 		}
 
-		for _, f := range follows {
+		for _, following := range follows {
 			// get data from api
-			_, err := uc.getCurrentUserCardFromAPI(ctx, f.ID)
+			user, err := uc.osuApiService.GetUser(ctx, strconv.Itoa(following.ID))
+			if err != nil {
+				return err
+			}
+			userMapsets, err := uc.osuApiService.GetUserMapsets(ctx, strconv.Itoa(following.ID))
 			if err != nil {
 				return err
 			}
 
-			// update userCardInfo
-			// TODO
+			// create/update data in db
+			txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
+				userExists, err := uc.user.Exists(ctx, tx, user.ID)
+				if err != nil {
+					return err
+				}
+
+				if userExists {
+					// update user
+
+				} else {
+					// create usercard
+					cmd := &command.CreateUserCardCommand{
+						User:    mapOsuAPiUserToCreateUserCommand(user),
+						Mapsets: mapOsuApiMapsetsToCreateMapsetCommands(userMapsets),
+					}
+
+					// create user
+					userModel, err := mappers.MapCreateUserCardCommandToUserModel(cmd)
+					if err != nil {
+						return err
+					}
+
+					err = uc.user.Create(ctx, tx, userModel)
+					if err != nil {
+						return err
+					}
+
+					// create user mapsets
+					for _, ms := range cmd.Mapsets {
+						// create mapset
+						var mapset *model.Mapset
+						mapset, err = mappers.MapCreateMapsetCommandToMapsetModel(ms)
+						if err != nil {
+							return err
+						}
+
+						err = uc.mapset.Create(ctx, tx, mapset)
+						if err != nil {
+							return err
+						}
+
+						// create mapset beatmaps
+						for _, bm := range ms.Beatmaps {
+							var beatmap *model.Beatmap
+							beatmap, err = mappers.MapCreateBeatmapCommandToBeatmapModel(bm)
+							if err != nil {
+								return err
+							}
+
+							err = uc.beatmap.Create(ctx, tx, beatmap)
+						}
+					}
+				}
+
+				return nil
+			})
+			if txErr != nil {
+				return txErr
+			}
+
 		}
 
 	}
-}
-
-func (uc *UseCase) getCurrentUserCardFromAPI(ctx context.Context, userID int) (*command.CreateUserCardCommand, error) {
-	user, err := uc.osuApiService.GetUser(ctx, strconv.Itoa(userID))
-	if err != nil {
-		return nil, err
-	}
-
-	mapsets, err := uc.osuApiService.GetUserBeatmaps(ctx, strconv.Itoa(userID))
-	if err != nil {
-		return nil, err
-	}
-
-	return &command.CreateUserCardCommand{
-		User:    mapOsuAPiUserToCreateUserCommand(user),
-		Mapsets: mapOsuApiMapsetsToCreateMapsetCommands(mapsets),
-	}, nil
 }

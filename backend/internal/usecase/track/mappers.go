@@ -3,37 +3,60 @@ package track
 import (
 	"playcount-monitor-backend/internal/service/osuapi"
 	"playcount-monitor-backend/internal/usecase/command"
-	"time"
 )
 
 func mapOsuAPiUserToCreateUserCommand(user *osuapi.User) *command.CreateUserCommand {
 	return &command.CreateUserCommand{
-		ID:                       0,
-		AvatarURL:                "",
-		Username:                 "",
-		UnrankedBeatmapsetCount:  0,
-		GraveyardBeatmapsetCount: 0,
+		ID:                       user.ID,
+		Username:                 user.Username,
+		AvatarURL:                user.AvatarURL,
+		UnrankedBeatmapsetCount:  user.UnrankedBeatmapsetCount,
+		GraveyardBeatmapsetCount: user.GraveyardBeatmapsetCount,
 	}
 }
 
-func mapOsuApiMapsetsToCreateMapsetCommands(mapsets []*osuapi.Beatmap) []*command.CreateMapsetCommand {
+func mapOsuApiMapsetsToCreateMapsetCommands(mapsets []*osuapi.Mapset) []*command.CreateMapsetCommand {
 	cmds := []*command.CreateMapsetCommand{}
-	for _, _ = range mapsets {
+	for _, m := range mapsets {
 		cmds = append(cmds, &command.CreateMapsetCommand{
-			Id:             0,
-			Artist:         "",
-			Title:          "",
-			Covers:         nil,
-			Status:         "",
-			LastUpdated:    time.Time{},
-			UserId:         0,
-			PreviewUrl:     "",
-			Tags:           "",
-			PlayCount:      0,
-			FavouriteCount: 0,
-			Bpm:            0,
-			Creator:        "",
-			Beatmaps:       nil,
+			Id:             m.Id,
+			Artist:         m.Artist,
+			Title:          m.Title,
+			Covers:         m.Covers,
+			Status:         m.Status,
+			LastUpdated:    m.LastUpdated,
+			UserId:         m.UserId,
+			PreviewUrl:     m.PreviewUrl,
+			Tags:           m.Tags,
+			PlayCount:      m.PlayCount,
+			FavouriteCount: m.FavouriteCount,
+			Bpm:            m.Bpm,
+			Creator:        m.Creator,
+			Beatmaps:       mapOsuApiBeatmapsToCreateBeatmapCommands(m.Beatmaps),
+		})
+	}
+	return cmds
+}
+
+func mapOsuApiBeatmapsToCreateBeatmapCommands(beatmaps []*osuapi.Beatmap) []*command.CreateBeatmapCommand {
+	cmds := []*command.CreateBeatmapCommand{}
+	for _, b := range beatmaps {
+		cmds = append(cmds, &command.CreateBeatmapCommand{
+			Id:               b.Id,
+			BeatmapsetId:     b.BeatmapsetId,
+			DifficultyRating: b.DifficultyRating,
+			Version:          b.Version,
+			Accuracy:         b.Accuracy,
+			Ar:               b.Ar,
+			Bpm:              b.Bpm,
+			Cs:               b.Cs,
+			Status:           b.Status,
+			Url:              b.Url,
+			TotalLength:      b.TotalLength,
+			UserId:           b.UserId,
+			Passcount:        b.Passcount,
+			Playcount:        b.Playcount,
+			LastUpdated:      b.LastUpdated,
 		})
 	}
 	return cmds
