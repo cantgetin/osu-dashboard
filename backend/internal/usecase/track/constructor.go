@@ -2,10 +2,10 @@ package track
 
 import (
 	"context"
-	log "github.com/sirupsen/logrus"
 	"playcount-monitor-backend/internal/config"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
+	"playcount-monitor-backend/internal/service/osuapi"
 )
 
 type userStore interface {
@@ -29,27 +29,31 @@ type followingStore interface {
 }
 
 type UseCase struct {
-	cfg       *config.Config
-	lg        *log.Logger
-	txm       txmanager.TxManager
-	user      userStore
-	mapset    mapsetStore
-	beatmap   beatmapStore
-	following followingStore
+	cfg           *config.Config
+	txm           txmanager.TxManager
+	osuApiService osuapi.Interface
+	user          userStore
+	mapset        mapsetStore
+	beatmap       beatmapStore
+	following     followingStore
 }
 
 func New(
+	cfg *config.Config,
 	txManager txmanager.TxManager,
+	osuAPI osuapi.Interface,
 	user userStore,
 	mapset mapsetStore,
 	beatmap beatmapStore,
 	following followingStore,
 ) *UseCase {
 	return &UseCase{
-		txm:       txManager,
-		user:      user,
-		mapset:    mapset,
-		beatmap:   beatmap,
-		following: following,
+		cfg:           cfg,
+		txm:           txManager,
+		osuApiService: osuAPI,
+		user:          user,
+		mapset:        mapset,
+		beatmap:       beatmap,
+		following:     following,
 	}
 }

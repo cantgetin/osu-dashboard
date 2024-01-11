@@ -20,6 +20,6 @@ func main() {
 	ctx, _ := context.WithCancel(context.Background())
 
 	if err := app.RunTrackingWorker(ctx, cfg, lg); err != nil {
-		log.Fatalf("failed to start app, %v", err)
+		log.Fatalf("failed to start tracking worker app, %v", err)
 	}
 }

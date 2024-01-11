@@ -6,12 +6,14 @@ import (
 	"fmt"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
+	"playcount-monitor-backend/internal/usecase/command"
+	"strconv"
 )
 
 func (uc *UseCase) Track(
 	ctx context.Context,
 ) error {
-	// get all following IDs and get data from api
+	// get all following IDs from db and get updated data from api, update data in db
 	for {
 		// get IDs
 		var follows []*model.Following
@@ -43,11 +45,19 @@ func (uc *UseCase) Track(
 	}
 }
 
-type WIPType struct {
-	// TODO
-}
+func (uc *UseCase) getCurrentUserCardFromAPI(ctx context.Context, userID int) (*command.CreateUserCardCommand, error) {
+	user, err := uc.osuApiService.GetUser(ctx, strconv.Itoa(userID))
+	if err != nil {
+		return nil, err
+	}
 
-func (uc *UseCase) getCurrentUserCardFromAPI(ctx context.Context, userID int) (*WIPType, error) {
-	// TODO
-	return nil, nil
+	mapsets, err := uc.osuApiService.GetUserBeatmaps(ctx, strconv.Itoa(userID))
+	if err != nil {
+		return nil, err
+	}
+
+	return &command.CreateUserCardCommand{
+		User:    mapOsuAPiUserToCreateUserCommand(user),
+		Mapsets: mapOsuApiMapsetsToCreateMapsetCommands(mapsets),
+	}, nil
 }

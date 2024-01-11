@@ -31,7 +31,7 @@ func RunTrackingWorker(
 	}
 
 	const waitForConnection = 5 * time.Second
-	txm := bootstrap.ConnectTxManager("following-worker", waitForConnection, db, lg)
+	txm := bootstrap.ConnectTxManager("tracking-worker", waitForConnection, db, lg)
 
 	// init repos
 	userRepo, err := userrepository.New(cfg, lg)

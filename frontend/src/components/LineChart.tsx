@@ -7,6 +7,8 @@ interface LineChartProps {
     chartData: any;
 }
 
+const gridColor = 'rgba(115,115,115,0.2)';
+
 const options: ChartOptions<'line'> = {
     plugins:{
         legend: {
@@ -26,7 +28,7 @@ const options: ChartOptions<'line'> = {
                 display: true,
                 drawOnChartArea: true,
                 drawTicks: true,
-                color: 'rgba(93,93,93,0.2)',
+                color: gridColor,
             }
         },
         y: {
@@ -34,7 +36,7 @@ const options: ChartOptions<'line'> = {
                 display: true,
                 drawOnChartArea: true,
                 drawTicks: true,
-                color: 'rgba(93,93,93,0.2)',
+                color: gridColor,
             }
         }
     }
