@@ -10,17 +10,21 @@ import (
 
 type userStore interface {
 	Create(ctx context.Context, tx txmanager.Tx, user *model.User) error
+	Get(ctx context.Context, tx txmanager.Tx, id int) (*model.User, error)
 	Update(ctx context.Context, tx txmanager.Tx, user *model.User) error
 	Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error)
 }
 
 type mapsetStore interface {
 	Create(ctx context.Context, tx txmanager.Tx, mapset *model.Mapset) error
+	Get(ctx context.Context, tx txmanager.Tx, id int) (*model.Mapset, error)
+	Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error)
 	Update(ctx context.Context, tx txmanager.Tx, mapset *model.Mapset) error
 }
 
 type beatmapStore interface {
 	Create(ctx context.Context, tx txmanager.Tx, beatmap *model.Beatmap) error
+	Get(ctx context.Context, tx txmanager.Tx, id int) (*model.Beatmap, error)
 	Update(ctx context.Context, tx txmanager.Tx, beatmap *model.Beatmap) error
 }
 

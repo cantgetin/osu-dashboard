@@ -1,11 +1,10 @@
 up:
 	docker-compose up -d
-
 run:
 	go run cmd/playcount-monitor/main.go || exit 1
 
 run-tracker:
-	go run cmd/tracking-worker/main.go || exit 1
+	go run cmd/playcount-tracker/main.go || exit 1
 
 migrate:
 	sql-migrate up -env="local"

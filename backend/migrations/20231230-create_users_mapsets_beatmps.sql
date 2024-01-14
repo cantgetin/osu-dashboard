@@ -44,8 +44,7 @@ CREATE TABLE beatmaps
     status            text    not null,
     url               text    not null,
     total_length      integer not null,
-    user_id           integer not null,
-    constraint user_id_fk foreign key (user_id) references users (id),
+    user_id           integer not null, -- no constraint here cause mapset's beatmap can be mapped by other user (?)
     last_updated      timestamp,
     beatmap_stats     jsonb,
     created_at        timestamp default NOW(),

@@ -7,6 +7,7 @@ import (
 	"playcount-monitor-backend/internal/bootstrap"
 	"playcount-monitor-backend/internal/config"
 	"playcount-monitor-backend/internal/database/repository/beatmaprepository"
+	"playcount-monitor-backend/internal/database/repository/followingrepository"
 	"playcount-monitor-backend/internal/database/repository/mapsetrepository"
 	"playcount-monitor-backend/internal/database/repository/userrepository"
 	"playcount-monitor-backend/internal/http"
@@ -31,12 +32,14 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 	userRepo, err := userrepository.New(cfg, lg)
 	mapsetRepo, err := mapsetrepository.New(cfg, lg)
 	beatmapRepo, err := beatmaprepository.New(cfg, lg)
+	followingRepo, err := followingrepository.New(cfg, lg)
 
 	// useCase factory
 	f, err := factory.New(cfg, lg, txm, &factory.Repositories{
-		UserRepo:    userRepo,
-		BeatmapRepo: beatmapRepo,
-		MapsetRepo:  mapsetRepo,
+		UserRepo:      userRepo,
+		BeatmapRepo:   beatmapRepo,
+		MapsetRepo:    mapsetRepo,
+		FollowingRepo: followingRepo,
 	})
 	if err != nil {
 		return err

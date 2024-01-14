@@ -2,7 +2,7 @@ FROM golang:alpine
 
 COPY .. /go/src/app
 
-WORKDIR /go/src/app/cmd
+WORKDIR /go/src/app/cmd/playcount-monitor
 
 RUN go build -o app main.go
 

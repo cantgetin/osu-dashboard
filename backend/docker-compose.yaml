@@ -8,10 +8,24 @@ services:
   pmb-service:
     build:
       context: "./"
+      dockerfile: Dockerfile.app
     networks:
       - "pmb-network"
     ports:
       - 8080:8080
+    depends_on:
+      - "db"
+    restart: "on-failure"
+
+  pmb-worker:
+    environment:
+      - OSU_API_CLIENT_ID=${OSU_API_CLIENT_ID}
+      - OSU_API_CLIENT_SECRET=${OSU_API_CLIENT_SECRET}
+    build:
+      context: "./"
+      dockerfile: Dockerfile.worker
+    networks:
+      - "pmb-network"
     depends_on:
       - "db"
     restart: "on-failure"

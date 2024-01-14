@@ -1,5 +1,5 @@
 -- +migrate Up
-CREATE TABLE tracking
+CREATE TABLE following
 (
     id                         integer not null primary key,
     username                   text    not null,
@@ -7,4 +7,4 @@ CREATE TABLE tracking
 );
 
 -- +migrate Down
-DROP TABLE tracking;
+DROP TABLE following;

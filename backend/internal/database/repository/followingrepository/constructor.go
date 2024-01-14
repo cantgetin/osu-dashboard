@@ -1,4 +1,4 @@
-package trackingrepository
+package followingrepository
 
 import (
 	log "github.com/sirupsen/logrus"

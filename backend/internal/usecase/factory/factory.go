@@ -4,8 +4,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"playcount-monitor-backend/internal/config"
 	"playcount-monitor-backend/internal/database/repository/beatmaprepository"
+	"playcount-monitor-backend/internal/database/repository/followingrepository"
 	"playcount-monitor-backend/internal/database/repository/mapsetrepository"
-	"playcount-monitor-backend/internal/database/repository/trackingrepository"
 	"playcount-monitor-backend/internal/database/repository/userrepository"
 	"playcount-monitor-backend/internal/database/txmanager"
 	trackingcreate "playcount-monitor-backend/internal/usecase/following/create"
@@ -27,10 +27,10 @@ type UseCaseFactory struct {
 }
 
 type Repositories struct {
-	UserRepo     userrepository.Interface
-	BeatmapRepo  beatmaprepository.Interface
-	MapsetRepo   mapsetrepository.Interface
-	TrackingRepo trackingrepository.Interface
+	UserRepo      userrepository.Interface
+	BeatmapRepo   beatmaprepository.Interface
+	MapsetRepo    mapsetrepository.Interface
+	FollowingRepo followingrepository.Interface
 }
 
 func New(
@@ -122,7 +122,7 @@ func (f *UseCaseFactory) MakeCreateTrackingUseCase() *trackingcreate.UseCase {
 		f.cfg,
 		f.lg,
 		f.txManager,
-		f.repos.TrackingRepo,
+		f.repos.FollowingRepo,
 	)
 }
 
@@ -131,6 +131,6 @@ func (f *UseCaseFactory) MakeProvideTrackingUseCase() *trackingprovide.UseCase {
 		f.cfg,
 		f.lg,
 		f.txManager,
-		f.repos.TrackingRepo,
+		f.repos.FollowingRepo,
 	)
 }

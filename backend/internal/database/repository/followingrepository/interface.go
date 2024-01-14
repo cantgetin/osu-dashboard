@@ -1,4 +1,4 @@
-package trackingrepository
+package followingrepository
 
 import (
 	"context"

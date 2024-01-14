@@ -47,6 +47,9 @@ func (uc *UseCase) Create(
 				}
 
 				err = uc.beatmap.Create(ctx, tx, beatmap)
+				if err != nil {
+					return err
+				}
 			}
 		}
 

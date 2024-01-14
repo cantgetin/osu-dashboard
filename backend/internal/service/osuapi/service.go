@@ -57,7 +57,7 @@ func (s *Service) GetUser(ctx context.Context, userID string) (*User, error) {
 
 func (s *Service) GetUserMapsets(ctx context.Context, userID string) ([]*Mapset, error) {
 
-	var BeatmapTypes = []BeatmapType{Graveyard, Loved, Nominated, Pending, Ranked}
+	var BeatmapTypes = []BeatmapType{Graveyard}
 
 	token, err := s.tokenProvider.GetToken(ctx)
 	if err != nil {
@@ -72,7 +72,7 @@ func (s *Service) GetUserMapsets(ctx context.Context, userID string) ([]*Mapset,
 
 	beatmapsets := []*Mapset{}
 	for _, beatmapType := range BeatmapTypes {
-		req, err := http.NewRequest("GET", s.cfg.OsuAPIHost+"/users/"+userID+"beatmapsets/"+string(beatmapType), nil)
+		req, err := http.NewRequest("GET", s.cfg.OsuAPIHost+"/users/"+userID+"/beatmapsets/"+string(beatmapType), nil)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create http request for user %s and beatmap type %s: %w", userID, beatmapType, err)
 		}
@@ -97,4 +97,18 @@ func (s *Service) GetUserMapsets(ctx context.Context, userID string) ([]*Mapset,
 	}
 
 	return beatmapsets, nil
+}
+
+func (s *Service) GetUserWithMapsets(ctx context.Context, userID string) (*User, []*Mapset, error) {
+	user, err := s.GetUser(ctx, userID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	userMapsets, err := s.GetUserMapsets(ctx, userID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return user, userMapsets, nil
 }

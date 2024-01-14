@@ -17,6 +17,7 @@ type (
 	Interface interface {
 		GetUser(ctx context.Context, userID string) (*User, error)
 		GetUserMapsets(ctx context.Context, userID string) ([]*Mapset, error)
+		GetUserWithMapsets(ctx context.Context, userID string) (*User, []*Mapset, error)
 	}
 
 	HTTPClientInterface interface {
