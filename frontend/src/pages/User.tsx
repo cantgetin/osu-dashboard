@@ -46,7 +46,7 @@ const UserPage = () => {
                                 <PlaysSummary data={userData}/>
                             </User>
                             <ChartsSummary data={userData}/>
-                            <MapsetSummary map={userCard.Mapsets[0]}/>
+                            {userCard.Mapsets.map(mapset => <MapsetSummary key={mapset.id} map={mapset}/>)}
                         </>
                     )}
                 </div>
