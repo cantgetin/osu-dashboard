@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 )
 
 type BeatmapType string
@@ -16,6 +17,20 @@ const (
 	Pending   BeatmapType = "pending"
 	Ranked    BeatmapType = "ranked"
 )
+
+func (s *Service) GetUserWithMapsets(ctx context.Context, userID string) (*User, []*Mapset, error) {
+	user, err := s.GetUser(ctx, userID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	userMapsets, err := s.GetUserMapsets(ctx, userID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return user, userMapsets, nil
+}
 
 func (s *Service) GetUser(ctx context.Context, userID string) (*User, error) {
 	token, err := s.tokenProvider.GetToken(ctx)
@@ -56,8 +71,7 @@ func (s *Service) GetUser(ctx context.Context, userID string) (*User, error) {
 }
 
 func (s *Service) GetUserMapsets(ctx context.Context, userID string) ([]*Mapset, error) {
-
-	var BeatmapTypes = []BeatmapType{Graveyard}
+	var BeatmapTypes = []BeatmapType{Graveyard, Loved, Nominated, Pending, Ranked}
 
 	token, err := s.tokenProvider.GetToken(ctx)
 	if err != nil {
@@ -72,43 +86,50 @@ func (s *Service) GetUserMapsets(ctx context.Context, userID string) ([]*Mapset,
 
 	beatmapsets := []*Mapset{}
 	for _, beatmapType := range BeatmapTypes {
-		req, err := http.NewRequest("GET", s.cfg.OsuAPIHost+"/users/"+userID+"/beatmapsets/"+string(beatmapType), nil)
+		beatmapsets, err = s.fetchBeatmapsets(userID, string(beatmapType), 0, headers, beatmapsets)
 		if err != nil {
-			return nil, fmt.Errorf("failed to create http request for user %s and beatmap type %s: %w", userID, beatmapType, err)
+			return nil, err
 		}
-		for key, value := range headers {
-			req.Header.Set(key, value)
-		}
-
-		client := &http.Client{}
-		res, err := client.Do(req)
-		if err != nil {
-			return nil, fmt.Errorf("failed to invoke request to %s: %w", req.URL.String(), err)
-		}
-
-		var maps []*Mapset
-		err = json.NewDecoder(res.Body).Decode(&maps)
-		if err != nil {
-			return nil, fmt.Errorf("failed to decode response body: %w", err)
-		}
-
-		beatmapsets = append(beatmapsets, maps...)
-		res.Body.Close()
 	}
 
 	return beatmapsets, nil
 }
 
-func (s *Service) GetUserWithMapsets(ctx context.Context, userID string) (*User, []*Mapset, error) {
-	user, err := s.GetUser(ctx, userID)
+func (s *Service) fetchBeatmapsets(
+	userID string,
+	beatmapType string,
+	offset int,
+	headers map[string]string,
+	beatmapsets []*Mapset,
+) ([]*Mapset, error) {
+	req, err := http.NewRequest("GET", s.cfg.OsuAPIHost+"/users/"+userID+"/beatmapsets/"+beatmapType+"?limit=100&offset="+strconv.Itoa(offset), nil)
 	if err != nil {
-		return nil, nil, err
+		return nil, fmt.Errorf("failed to create http request for user %s and beatmap type %s: %w", userID, beatmapType, err)
 	}
 
-	userMapsets, err := s.GetUserMapsets(ctx, userID)
-	if err != nil {
-		return nil, nil, err
+	for key, value := range headers {
+		req.Header.Set(key, value)
 	}
 
-	return user, userMapsets, nil
+	client := &http.Client{}
+	res, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to invoke request to %s: %w", req.URL.String(), err)
+	}
+
+	var maps []*Mapset
+	err = json.NewDecoder(res.Body).Decode(&maps)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode response body: %w", err)
+	}
+
+	beatmapsets = append(beatmapsets, maps...)
+	res.Body.Close()
+
+	if len(maps) >= 100 {
+		// If there are 100 or more maps, fetch the next page
+		return s.fetchBeatmapsets(userID, beatmapType, offset+100, headers, beatmapsets)
+	}
+
+	return beatmapsets, nil
 }
