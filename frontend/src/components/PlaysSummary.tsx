@@ -1,3 +1,5 @@
+import {formatDateDiff} from "../utils/utils.ts";
+
 interface PlaysSummaryProps {
     data: UserStatsDataset[];
 }
@@ -23,7 +25,9 @@ const PlaysSummary = (props: PlaysSummaryProps) => {
                                 {props.data[props.data.length - 1].play_count - props.data[props.data.length - 2].play_count}
                             </h1>
                         </div>
-                        <div className="text-xs text-zinc-400">total plays for last 24 hours</div>
+                        <div className="text-xs text-zinc-400">
+                            total plays for last {formatDateDiff(props.data[props.data.length - 1].timestamp, props.data[props.data.length - 2].timestamp)}
+                        </div>
                     </>
                     : null}
             </div>

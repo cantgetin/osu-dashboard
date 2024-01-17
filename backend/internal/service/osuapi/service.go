@@ -71,7 +71,7 @@ func (s *Service) GetUser(ctx context.Context, userID string) (*User, error) {
 }
 
 func (s *Service) GetUserMapsets(ctx context.Context, userID string) ([]*Mapset, error) {
-	var BeatmapTypes = []BeatmapType{Graveyard, Loved, Nominated, Pending, Ranked}
+	var BeatmapTypes = []BeatmapType{Graveyard, Loved, Pending, Ranked}
 
 	token, err := s.tokenProvider.GetToken(ctx)
 	if err != nil {

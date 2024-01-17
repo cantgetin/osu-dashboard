@@ -1,10 +1,17 @@
 import LineChart from "./LineChart.tsx";
+import {convertDataToDayMonth} from "../utils/utils.ts";
 
 interface LineChartProps {
     data: UserStatsDataset[];
 }
 
-const ChartsSummary = (props: LineChartProps) => {
+const UserChartsSummary = (props: LineChartProps) => {
+
+    function mapToChartData(data: UserStatsDataset[]): UserStatsDataset[] {
+        const updatedArray: UserStatsDataset[] = [];
+        data.forEach((obj) => updatedArray.push({...obj, timestamp: convertDataToDayMonth(obj.timestamp)}));
+        return updatedArray
+    }
 
     type ChartDataProperty = keyof UserStatsDataset;
 
@@ -31,17 +38,13 @@ const ChartsSummary = (props: LineChartProps) => {
     return (
         <div className="flex gap-3 bg-zinc-900 rounded-lg py-4 px-2 box-border w-full">
             <div className="w-1/2">
-                <LineChart chartData={generateSingleChartData(props.data, 'play_count', '#86EFAC')}/>
+                <LineChart chartData={generateSingleChartData(mapToChartData(props.data), 'play_count', '#86EFAC')}/>
             </div>
-            {/*<div className="w-1/3">*/}
-            {/*    <LineChart chartData={generateSingleChartData(props.data, 'map_count', '#64bbff')}/>*/}
-            {/*</div>*/}
             <div className="w-1/2">
-                <LineChart
-                    chartData={generateSingleChartData(props.data, 'favourite_count', '#ff5dbd')}/>
+                <LineChart chartData={generateSingleChartData(mapToChartData(props.data), 'favourite_count', '#ff5dbd')}/>
             </div>
         </div>
     );
 };
 
-export default ChartsSummary;
+export default UserChartsSummary;
