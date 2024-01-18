@@ -1,5 +1,9 @@
 up:
 	docker-compose up -d
+
+up-no-worker:
+	docker-compose up --scale pmb-worker=0
+
 run:
 	go run cmd/playcount-monitor/main.go || exit 1
 

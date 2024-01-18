@@ -14,7 +14,7 @@ const Users = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/following/list`);
+                const response = await fetch(`/api/following/list`);
                 const userData = await response.json();
 
                 setFollows(JSON.parse(JSON.stringify(userData)  ) as Following[])
@@ -24,7 +24,7 @@ const Users = () => {
         };
 
         fetchUserData()
-    })
+    }, [])
 
     return (
         <>

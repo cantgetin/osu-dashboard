@@ -16,7 +16,7 @@ const UserPage = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/user_card/${userId}`);
+                const response = await fetch(`/api/user_card/${userId}`);
                 const userData = await response.json();
 
                 setUserCard(JSON.parse(JSON.stringify(userData)) as UserCard)
