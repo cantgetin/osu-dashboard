@@ -26,6 +26,11 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 		return err
 	}
 
+	err = bootstrap.ApplyMigrations(db)
+	if err != nil {
+		return err
+	}
+
 	txm := bootstrap.ConnectTxManager("playcount-monitor-backend", 5, db, lg)
 
 	// init repos

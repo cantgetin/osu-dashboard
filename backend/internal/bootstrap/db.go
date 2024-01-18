@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"fmt"
 	"github.com/ds248a/closer"
+	migrate "github.com/rubenv/sql-migrate"
 	log "github.com/sirupsen/logrus"
 	"playcount-monitor-backend/internal/config"
 	"playcount-monitor-backend/internal/database/txmanager"
@@ -56,6 +57,25 @@ func InitDB(cfg *config.Config) (*gorm.DB, error) {
 	})
 
 	return db, nil
+}
+
+func ApplyMigrations(gdb *gorm.DB) error {
+	migrations := migrate.FileMigrationSource{
+		Dir: "../../migrations",
+	}
+
+	db, err := gdb.DB()
+	if err != nil {
+		return err
+	}
+
+	n, err := migrate.Exec(db, "postgres", migrations, migrate.Up)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Applied %d migrations!\n", n)
+
+	return nil
 }
 
 func ConnectTxManager(ns string, wait time.Duration, db *gorm.DB, lg *log.Logger) txmanager.TxManager {
