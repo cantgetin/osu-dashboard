@@ -1,7 +1,12 @@
+import Header from "./components/Header.tsx";
+
 function App() {
 
     return (
-        <h1>App</h1>
+        <>
+            <Header/>
+            <h1>App</h1>
+        </>
     )
 }
 

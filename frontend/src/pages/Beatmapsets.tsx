@@ -1,8 +1,13 @@
+import Header from "../components/Header.tsx";
+
 const Beatmapsets = () => {
     return (
-        <div>
-            Beatmapsets
-        </div>
+        <>
+            <Header/>
+            <div>
+                Beatmapsets
+            </div>
+        </>
     );
 };
 
