@@ -3,6 +3,7 @@ import {router} from "./router.tsx";
 import {RouterProvider} from "react-router-dom";
 import "./index.css";
 import React from "react";
+import '@fontsource/roboto';
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
