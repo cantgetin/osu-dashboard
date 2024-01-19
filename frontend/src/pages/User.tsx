@@ -38,7 +38,7 @@ const UserPage = () => {
         <>
             <Header/>
             <div className="flex justify-center items-center">
-                <div className="p-10 flex flex-col gap-2">
+                <div className="p-10 flex flex-col gap-2 w-1/2">
                     {userCard && userData.length > 0 && (
                         <>
                             <User user={userCard.User}>

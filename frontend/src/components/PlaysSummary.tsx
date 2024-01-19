@@ -20,13 +20,20 @@ const PlaysSummary = (props: PlaysSummaryProps) => {
                 {props.data.length > 1 ?
                     <>
                         <div className="flex gap-2 justify-center items-center ml-auto px-2">
+                            <h1 className="text-xs text-pink-400">▲</h1>
+                            <h1 className="text-2xl text-pink-400">
+                                {props.data[props.data.length - 1].favourite_count - props.data[props.data.length - 2].favourite_count}
+                            </h1>
+                        </div>
+                        <div className="flex gap-2 justify-center items-center ml-auto px-2">
                             <h1 className="text-xs text-green-300">▲</h1>
                             <h1 className="text-2xl text-green-300">
                                 {props.data[props.data.length - 1].play_count - props.data[props.data.length - 2].play_count}
                             </h1>
                         </div>
                         <div className="text-xs text-zinc-400">
-                            total plays for last {formatDateDiff(props.data[props.data.length - 1].timestamp, props.data[props.data.length - 2].timestamp)}
+                            stats for
+                            last {formatDateDiff(props.data[props.data.length - 1].timestamp, props.data[props.data.length - 2].timestamp)}
                         </div>
                     </>
                     : null}
