@@ -13,7 +13,8 @@ const MapsetSummaryList = (props: MapsetSummaryProps) => {
         if (props.Mapsets.length === 0) return;
         props.Mapsets.sort((a, b) => {
             const getKey = (mapset: Mapset) : string => Object.keys(mapset.mapset_stats).pop()!;
-            return (getKey(b) ? b.mapset_stats[getKey(b)].play_count : 0) - (getKey(a) ? a.mapset_stats[getKey(a)].play_count : 0);
+            return (getKey(b) ? b.mapset_stats[getKey(b)].play_count : 0) -
+                (getKey(a) ? a.mapset_stats[getKey(a)].play_count : 0);
         });
         setSorted(true)
     }, [props]);

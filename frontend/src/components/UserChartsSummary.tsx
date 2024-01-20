@@ -36,7 +36,7 @@ const UserChartsSummary = (props: LineChartProps) => {
     };
 
     return (
-        <div className="flex gap-3 bg-zinc-900 rounded-lg py-4 px-2 box-border w-full">
+        <div className="flex gap-3 bg-zinc-900 rounded-lg p-2 box-border w-full">
             <div className="w-1/2">
                 <LineChart chartData={generateSingleChartData(mapToChartData(props.data), 'play_count', '#86EFAC')}/>
             </div>

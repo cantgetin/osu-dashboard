@@ -38,7 +38,7 @@ const MapsetSummary = (props: MapCardProps) => {
                         <img src={props.map.covers.card} className='h-full w-64 min-w-64' alt="map bg"
                              style={{objectFit: 'cover'}}/>
                     </div>
-                    <div className="px-2 py-1 mr-auto">
+                    <div className="flex flex-col p-2 w-full">
                         <a className="text-xl"
                            href={`/beatmapset/${props.map.id}`}>{props.map.artist} - {props.map.title}</a>
                         <div className="flex gap-2 justify-left items-baseline">
@@ -52,17 +52,17 @@ const MapsetSummary = (props: MapCardProps) => {
                             {props.map.status}
                         </div>
                     </div>
-                    <div className="p-4 flex flex-col gap-2 justify-center items-center">
+                    <div className="px-4 flex flex-col gap-1 justify-center items-center">
                         {penultimateStats ?
                             <>
-                                {favouriteCountDifference > 0 ?
+                                {favouriteCountDifference != 0 ?
                                     <div className="flex gap-2 items-center w-full justify-end">
                                         <h1 className="text-xs text-pink-400">▲</h1>
                                         <h1 className="text-2xl text-pink-400">{favouriteCountDifference}</h1>
                                     </div>
                                     : null
                                 }
-                                {playCountDifference > 0 ?
+                                {playCountDifference != 0 ?
                                     <div className="flex gap-2 items-center w-full justify-end">
                                         <h1 className="text-xs text-green-300">▲</h1>
                                         <h1 className="text-2xl text-green-300">{playCountDifference}</h1>

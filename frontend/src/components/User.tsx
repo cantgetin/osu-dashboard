@@ -13,7 +13,9 @@ const User = (props: UserProps) => {
             <div className="p-2 flex flex-col w-96 gap-2 h-64">
                 <div>
                     <h1 className="text-3xl">{props.user.username}</h1>
-                    <span className="text-sm text-zinc-400 px-1">tracking since {convertDateFormat(props.user.tracking_since)}</span>
+                    <span className="text-xs text-zinc-400 px-1">
+                        tracking since {convertDateFormat(props.user.tracking_since)}
+                    </span>
                 </div>
                 <div>
                     {props.children[0]}

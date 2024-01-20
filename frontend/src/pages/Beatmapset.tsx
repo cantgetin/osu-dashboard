@@ -9,7 +9,6 @@ const Beatmapset = () => {
             <Header/>
             <div>
                 {mapId}
-
             </div>
         </>
     );
