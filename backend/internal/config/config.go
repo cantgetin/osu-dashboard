@@ -11,7 +11,7 @@ type Config struct {
 	PgPingInterval time.Duration `env:"PG_PING_INTERVAL" envDefault:"5s"`
 
 	TrackingTimeout  time.Duration `env:"TRACKING_TIMEOUT" envDefault:"1m"`
-	TrackingInterval time.Duration `env:"TRACKING_INTERVAL" envDefault:"12h"`
+	TrackingInterval time.Duration `env:"TRACKING_INTERVAL" envDefault:"24h"`
 
 	OsuAPIClientID     string `env:"OSU_API_CLIENT_ID" envDefault:""`
 	OsuAPIClientSecret string `env:"OSU_API_CLIENT_SECRET" envDefault:""`

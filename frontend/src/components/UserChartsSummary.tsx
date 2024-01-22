@@ -20,6 +20,10 @@ const UserChartsSummary = (props: LineChartProps) => {
         property: ChartDataProperty,
         color: string
     ) => {
+        if (userData.length >= 7) {
+            userData = userData.slice(-7)
+        }
+
         return {
             labels: userData.map((data) => data.timestamp),
             datasets: [{
