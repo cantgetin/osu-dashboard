@@ -42,7 +42,6 @@ func RunTrackingWorker(
 	followingRepo, err := followingrepository.New(cfg, lg)
 
 	// init api
-
 	httpClient := http.Client{}
 	osuTokenProvider := osuapitokenprovider.New(cfg, &httpClient)
 	osuAPI := osuapi.New(cfg, osuTokenProvider, &httpClient)
@@ -58,9 +57,6 @@ func RunTrackingWorker(
 	))
 
 	worker.Start(ctx)
-	//closer.Add(func() {
-	//	worker.Start(ctx)
-	//})
 
 	gracefulShutDown(ctx, cancel)
 

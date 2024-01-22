@@ -2,19 +2,24 @@
 
 TODO frontend
 
-* userpage max width 
-* userpage mapset sort
+* map types in user page
+* map types filtering in user page
+* userpage max width
 * mobile compitability
 * mapset page
 * getMapsetRemainingPendingTime shit
 * redux store
 * about page
 * header search
+* ✅ userpage mapset sort
 * ✅ header navigation
 
 
 TODO backend
 
+* tracker getLastTimeTracked on restart
+* usercard nginx gzip 
+* possible usercard map pagination, separate handler for maps with pagination (page, per_page)
 * list most played mapsets for all users with limit offset endpoint
 * list users endpoint
 * ✅ handle env client id and client secret

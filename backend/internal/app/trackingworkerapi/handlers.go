@@ -11,6 +11,8 @@ func (w *Worker) Start(ctx context.Context) func() error {
 	go func() {
 		for {
 			func() {
+				//if w.tracker.GetLastTimeTracked
+
 				w.lg.Infof("tracking worker started")
 
 				loopCtx, cancel := context.WithTimeout(ctx, w.cfg.TrackingTimeout)
