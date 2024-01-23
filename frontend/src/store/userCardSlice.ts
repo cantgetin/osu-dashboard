@@ -42,10 +42,10 @@ const userCardSlice = createSlice({
             state.userCard = action.payload.userCard
             state.loading = LoadingState.Succeeded
         })
-        builder.addCase(fetchUserCard.pending, (state, action) => {
+        builder.addCase(fetchUserCard.pending, (state) => {
             state.loading = LoadingState.Pending
         })
-        builder.addCase(fetchUserCard.rejected, (state, action) => {
+        builder.addCase(fetchUserCard.rejected, (state) => {
             state.loading = LoadingState.Failed
         })
     },
