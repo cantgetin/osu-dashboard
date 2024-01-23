@@ -1,13 +1,13 @@
-import {formatDateDiff} from "../utils/utils.ts";
+import { formatDateDiff } from "../utils/utils.ts";
 
-interface PlaysSummaryProps {
-    data: UserStatsDataset[];
+interface UserStatsSummaryProps {
+    data: UserStatsDataset[]
 }
 
-const PlaysSummary = (props: PlaysSummaryProps) => {
+const UserStatsSummary = (props: UserStatsSummaryProps) => {
     return (
         <>
-            <h1 className="text-2xl">{props.data[props.data.length - 1].map_count} maps fetched</h1>
+            <h1 className="text-2xl" > {props.data[props.data.length - 1].map_count} maps fetched</h1>
             <div>
                 <div className="text-xl text-yellow-200">{props.data[props.data.length - 1].play_count} Plays now</div>
                 {props.data.length > 1 ?
@@ -42,4 +42,4 @@ const PlaysSummary = (props: PlaysSummaryProps) => {
     );
 };
 
-export default PlaysSummary;
+export default UserStatsSummary;

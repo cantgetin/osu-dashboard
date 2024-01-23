@@ -20,11 +20,11 @@ const MapsetSummaryList = (props: MapsetSummaryProps) => {
     }, [props]);
 
     return (
-        <>
+        <div className="flex flex-col gap-2">
             {sorted ? props.Mapsets.map(mapset =>
                 <MapsetSummary key={mapset.id} map={mapset}/>
             ) : null}
-        </>
+        </div>
     );
 };
 
