@@ -44,7 +44,7 @@ const MapsetSummary = (props: MapCardProps) => {
                         <div className="flex gap-2 justify-left items-baseline">
                             <h1 className="text-xl text-yellow-200">{lastStats?.play_count ?? 0} plays</h1>
                             {penultimateStats ?
-                                <h1 className="text-sm h-full text-orange-200">were {penultimateStats.play_count} plays</h1>
+                                <h1 className="text-sm h-full text-pink-100">{lastStats.favourite_count} favourites</h1>
                                 : null
                             }
                         </div>
