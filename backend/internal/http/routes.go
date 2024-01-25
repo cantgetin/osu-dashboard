@@ -9,4 +9,6 @@ func (s *Server) setupRoutes() {
 
 	s.server.GET("api/following/list", s.tracking.List)
 	s.server.POST("api/following/create", s.tracking.Create)
+
+	s.server.GET("api/users/list", s.user.List)
 }
