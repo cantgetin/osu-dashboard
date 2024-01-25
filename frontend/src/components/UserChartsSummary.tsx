@@ -1,5 +1,5 @@
 import LineChart from "./LineChart.tsx";
-import { convertDataToDayMonth } from "../utils/utils.ts";
+import {convertDataToDayMonth} from "../utils/utils.ts";
 
 interface LineChartProps {
     data: UserStatsDataset[]
@@ -9,7 +9,7 @@ const UserChartsSummary = (props: LineChartProps) => {
 
     function mapToChartData(data: UserStatsDataset[]): UserStatsDataset[] {
         const updatedArray: UserStatsDataset[] = [];
-        data.forEach((obj) => updatedArray.push({ ...obj, timestamp: convertDataToDayMonth(obj.timestamp) }));
+        data.forEach((obj) => updatedArray.push({...obj, timestamp: convertDataToDayMonth(obj.timestamp)}));
         return updatedArray
     }
 
@@ -18,6 +18,7 @@ const UserChartsSummary = (props: LineChartProps) => {
     const generateSingleChartData = (
         userData: UserStatsDataset[],
         property: ChartDataProperty,
+        name: string,
         color: string
     ) => {
         if (userData.length >= 7) {
@@ -29,7 +30,7 @@ const UserChartsSummary = (props: LineChartProps) => {
             datasets: [{
                 data: userData.map((data) => data[property]),
                 backgroundColor: [color],
-                label: property, // Add the label for the legend
+                label: name,
                 borderColor: [color],
                 borderWidth: 2,
                 pointStyle: 'circle',
@@ -45,12 +46,30 @@ const UserChartsSummary = (props: LineChartProps) => {
                 props.data.length > 0 ?
                     <div className="flex gap-3 bg-zinc-900 rounded-lg p-2 box-border w-full">
                         <div className="w-1/2">
-                            <LineChart chartData={generateSingleChartData(mapToChartData(props.data), 'play_count', '#86EFAC')} />
+                            <LineChart
+                                chartData={
+                                    generateSingleChartData(
+                                        mapToChartData(props.data),
+                                        'play_count',
+                                        'Play count',
+                                        '#86EFAC'
+                                    )
+                                }
+                            />
                         </div>
                         <div className="w-1/2">
-                            <LineChart chartData={generateSingleChartData(mapToChartData(props.data), 'favourite_count', '#ff5dbd')} />
+                            <LineChart
+                                chartData={
+                                    generateSingleChartData(
+                                        mapToChartData(props.data),
+                                        'favourite_count',
+                                        'Favorite count',
+                                        '#ff5dbd'
+                                    )
+                                }
+                            />
                         </div>
-                    </div> 
+                    </div>
                     : null}
         </>
     );
