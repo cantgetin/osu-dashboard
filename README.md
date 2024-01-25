@@ -7,12 +7,12 @@ TODO frontend
 * userpage max width
 * mobile compitability
 * mapset page
-* getMapsetRemainingPendingTime shit
 * redux store
 * about page
 * header search
 * ✅ userpage mapset sort
 * ✅ header navigation
+* ✅ getMapsetRemainingPendingTime shit
 
 
 TODO backend

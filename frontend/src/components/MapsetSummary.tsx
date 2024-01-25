@@ -1,4 +1,5 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
+import { getRemainingPendingTime } from "../utils/utils";
 
 interface MapCardProps {
     map: Mapset
@@ -36,11 +37,11 @@ const MapsetSummary = (props: MapCardProps) => {
                 <div className="flex bg-zinc-900 text-white w-full rounded-lg overflow-hidden">
                     <div>
                         <img src={props.map.covers.card} className='h-full w-64 min-w-64' alt="map bg"
-                             style={{objectFit: 'cover'}}/>
+                            style={{ objectFit: 'cover' }} />
                     </div>
                     <div className="flex flex-col p-2 w-full">
                         <a className="text-xl"
-                           href={`/beatmapset/${props.map.id}`}>{props.map.artist} - {props.map.title}</a>
+                            href={`/beatmapset/${props.map.id}`}>{props.map.artist} - {props.map.title}</a>
                         <div className="flex gap-2 justify-left items-baseline">
                             <h1 className="text-xl text-yellow-200">{lastStats?.play_count ?? 0} plays</h1>
                             {penultimateStats ?
@@ -49,7 +50,9 @@ const MapsetSummary = (props: MapCardProps) => {
                             }
                         </div>
                         <div className='text-xs text-zinc-400'>
-                            {props.map.status}
+                            {props.map.status == "wip" || props.map.status == "pending" ?
+                                getRemainingPendingTime(props.map.last_updated)
+                                : props.map.status}
                         </div>
                     </div>
                     <div className="px-4 flex flex-col gap-1 justify-center items-center">
