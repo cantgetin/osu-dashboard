@@ -11,6 +11,7 @@ import (
 	"playcount-monitor-backend/internal/database/repository/beatmaprepository"
 	"playcount-monitor-backend/internal/database/repository/followingrepository"
 	"playcount-monitor-backend/internal/database/repository/mapsetrepository"
+	"playcount-monitor-backend/internal/database/repository/trackrepository"
 	"playcount-monitor-backend/internal/database/repository/userrepository"
 	"playcount-monitor-backend/internal/service/osuapi"
 	"playcount-monitor-backend/internal/service/osuapitokenprovider"
@@ -40,6 +41,7 @@ func RunTrackingWorker(
 	mapsetRepo, err := mapsetrepository.New(cfg, lg)
 	beatmapRepo, err := beatmaprepository.New(cfg, lg)
 	followingRepo, err := followingrepository.New(cfg, lg)
+	trackRepo, err := trackrepository.New(cfg, lg)
 
 	// init api
 	httpClient := http.Client{}
@@ -54,6 +56,7 @@ func RunTrackingWorker(
 		mapsetRepo,
 		beatmapRepo,
 		followingRepo,
+		trackRepo,
 	))
 
 	worker.Start(ctx)

@@ -4,11 +4,14 @@ import (
 	"context"
 	log "github.com/sirupsen/logrus"
 	"playcount-monitor-backend/internal/config"
+	"time"
 )
 
 type (
 	tracker interface {
 		Track(ctx context.Context) error
+		GetLastTimeTracked(ctx context.Context) (*time.Time, error)
+		CreateTrackRecord(ctx context.Context) error
 	}
 
 	Worker struct {

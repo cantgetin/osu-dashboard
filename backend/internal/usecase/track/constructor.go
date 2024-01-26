@@ -32,6 +32,12 @@ type followingStore interface {
 	List(ctx context.Context, tx txmanager.Tx) ([]*model.Following, error)
 }
 
+type trackStore interface {
+	Create(ctx context.Context, tx txmanager.Tx, track *model.Track) error
+	GetLastTrack(ctx context.Context, tx txmanager.Tx) (*model.Track, error)
+	List(ctx context.Context, tx txmanager.Tx) ([]*model.Track, error)
+}
+
 type UseCase struct {
 	cfg           *config.Config
 	txm           txmanager.TxManager
@@ -40,6 +46,7 @@ type UseCase struct {
 	mapset        mapsetStore
 	beatmap       beatmapStore
 	following     followingStore
+	track         trackStore
 }
 
 func New(
@@ -50,6 +57,7 @@ func New(
 	mapset mapsetStore,
 	beatmap beatmapStore,
 	following followingStore,
+	track trackStore,
 ) *UseCase {
 	return &UseCase{
 		cfg:           cfg,
@@ -59,5 +67,6 @@ func New(
 		mapset:        mapset,
 		beatmap:       beatmap,
 		following:     following,
+		track:         track,
 	}
 }
