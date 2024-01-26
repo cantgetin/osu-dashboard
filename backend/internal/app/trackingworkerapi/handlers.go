@@ -20,8 +20,7 @@ func (w *Worker) Start(ctx context.Context) func() error {
 	hoursSinceLastFetch := -time.Now().Sub(*lastTimeTracked).Hours()
 	if hoursSinceLastFetch <= 24 {
 		waitDuration := time.Duration(24 - hoursSinceLastFetch)
-		w.lg.Errorf("persisted last time tracked: %v, waiting %v until next fetch",
-			*lastTimeTracked, waitDuration)
+		w.lg.Errorf("persisted last time tracked:, waiting %v until next fetch", waitDuration)
 		time.After(waitDuration)
 	} else {
 		w.lg.Infof("persisted last time tracked: %v, no need to wait until refetch", *lastTimeTracked)
@@ -46,6 +45,7 @@ func (w *Worker) Start(ctx context.Context) func() error {
 			case <-ctx.Done():
 				finished <- struct{}{}
 				w.lg.Infof("tracking finished")
+				_ = w.tracker.CreateTrackRecord(ctx)
 				return
 			case <-time.After(w.cfg.TrackingInterval):
 			}

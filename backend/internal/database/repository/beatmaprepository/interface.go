@@ -11,4 +11,5 @@ type Interface interface {
 	Update(ctx context.Context, tx txmanager.Tx, beatmap *model.Beatmap) error
 	Get(ctx context.Context, tx txmanager.Tx, id int) (*model.Beatmap, error)
 	ListForMapset(ctx context.Context, tx txmanager.Tx, mapsetID int) ([]*model.Beatmap, error)
+	Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error)
 }
