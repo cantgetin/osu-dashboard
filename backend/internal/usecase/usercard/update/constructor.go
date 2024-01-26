@@ -25,6 +25,7 @@ type beatmapStore interface {
 	Create(ctx context.Context, tx txmanager.Tx, beatmap *model.Beatmap) error
 	Get(ctx context.Context, tx txmanager.Tx, id int) (*model.Beatmap, error)
 	Update(ctx context.Context, tx txmanager.Tx, beatmap *model.Beatmap) error
+	Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error)
 }
 
 type UseCase struct {

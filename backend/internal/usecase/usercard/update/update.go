@@ -6,6 +6,7 @@ import (
 	"playcount-monitor-backend/internal/database/txmanager"
 	"playcount-monitor-backend/internal/usecase/command"
 	"playcount-monitor-backend/internal/usecase/mappers"
+	"time"
 )
 
 func (uc *UseCase) Update(
@@ -94,31 +95,54 @@ func (uc *UseCase) updateExistingMapsetAndItsBeatmaps(
 
 	// update mapset beatmaps
 	for _, bm := range ms.Beatmaps {
-		var existingBeatmap *model.Beatmap
-		existingBeatmap, err = uc.beatmap.Get(ctx, tx, bm.Id)
+		var beatmapExist bool
+		beatmapExist, err = uc.beatmap.Exists(ctx, tx, ms.Id)
 		if err != nil {
 			return err
 		}
+		if beatmapExist {
+			err = uc.updateExistingBeatmap(ctx, tx, bm)
+			if err != nil {
+				return err
+			}
+		} else {
+			err = uc.createNewBeatmap(ctx, tx, bm)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
 
-		var newBeatmap *model.Beatmap
-		newBeatmap, err = mappers.MapUpdateBeatmapCommandToBeatmapModel(bm)
-		if err != nil {
-			return err
-		}
+func (uc *UseCase) updateExistingBeatmap(
+	ctx context.Context,
+	tx txmanager.Tx,
+	bm *command.UpdateBeatmapCommand,
+) error {
+	existingBeatmap, err := uc.beatmap.Get(ctx, tx, bm.Id)
+	if err != nil {
+		return err
+	}
 
-		newBeatmap.BeatmapStats, err = mappers.AppendNewBeatmapStats(
-			existingBeatmap.BeatmapStats,
-			newBeatmap.BeatmapStats,
-		)
-		if err != nil {
-			return err
-		}
-		newBeatmap.CreatedAt = existingBeatmap.CreatedAt
+	var newBeatmap *model.Beatmap
+	newBeatmap, err = mappers.MapUpdateBeatmapCommandToBeatmapModel(bm)
+	if err != nil {
+		return err
+	}
 
-		err = uc.beatmap.Update(ctx, tx, newBeatmap)
-		if err != nil {
-			return err
-		}
+	newBeatmap.BeatmapStats, err = mappers.AppendNewBeatmapStats(
+		existingBeatmap.BeatmapStats,
+		newBeatmap.BeatmapStats,
+	)
+	if err != nil {
+		return err
+	}
+	newBeatmap.CreatedAt = existingBeatmap.CreatedAt
+
+	err = uc.beatmap.Update(ctx, tx, newBeatmap)
+	if err != nil {
+		return err
 	}
 
 	return nil
@@ -134,6 +158,7 @@ func (uc *UseCase) createNewMapsetWithItsBeatmaps(
 	if err != nil {
 		return err
 	}
+	newMapset.CreatedAt = time.Now().UTC()
 
 	err = uc.mapset.Create(ctx, tx, newMapset)
 	if err != nil {
@@ -141,16 +166,29 @@ func (uc *UseCase) createNewMapsetWithItsBeatmaps(
 	}
 
 	for _, bm := range ms.Beatmaps {
-		var newBeatmap *model.Beatmap
-		newBeatmap, err = mappers.MapUpdateBeatmapCommandToBeatmapModel(bm)
+		err = uc.createNewBeatmap(ctx, tx, bm)
 		if err != nil {
 			return err
 		}
+	}
 
-		err = uc.beatmap.Create(ctx, tx, newBeatmap)
-		if err != nil {
-			return err
-		}
+	return nil
+}
+
+func (uc *UseCase) createNewBeatmap(
+	ctx context.Context,
+	tx txmanager.Tx,
+	bm *command.UpdateBeatmapCommand,
+) error {
+	newBeatmap, err := mappers.MapUpdateBeatmapCommandToBeatmapModel(bm)
+	if err != nil {
+		return err
+	}
+	newBeatmap.CreatedAt = time.Now().UTC()
+
+	err = uc.beatmap.Create(ctx, tx, newBeatmap)
+	if err != nil {
+		return err
 	}
 
 	return nil

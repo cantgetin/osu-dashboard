@@ -46,3 +46,13 @@ func (r *GormRepository) ListForMapset(ctx context.Context, tx txmanager.Tx, map
 
 	return beatmaps, nil
 }
+
+func (r *GormRepository) Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error) {
+	var count int64
+	err := tx.DB().WithContext(ctx).Table(beatmapsTableName).Where("id = ?", id).Count(&count).Error
+	if err != nil {
+		return false, fmt.Errorf("failed to check if beatmap with id %v exists: %w", id, err)
+	}
+
+	return count > 0, nil
+}
