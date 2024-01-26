@@ -179,6 +179,19 @@ func MapUpdateBeatmapCommandToBeatmapModel(beatmap *command.UpdateBeatmapCommand
 
 // model -> dto
 
+func MapUserModelsToUserDTOs(users []*model.User) ([]*dto.User, error) {
+	res := make([]*dto.User, len(users))
+	for i, user := range users {
+		var err error
+		res[i], err = MapUserModelToUserDTO(user)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return res, nil
+}
+
 func MapUserModelToUserDTO(user *model.User) (*dto.User, error) {
 	stats, err := MapStatsJSONToUserStats(user.UserStats)
 	if err != nil {

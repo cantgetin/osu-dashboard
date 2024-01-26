@@ -12,9 +12,9 @@ type userCreator interface {
 }
 
 type userProvider interface {
-	Get(ctx context.Context, id int) (*model.User, error)
-	GetByName(ctx context.Context, name string) (*model.User, error)
-	List(ctx context.Context) ([]*model.User, error)
+	Get(ctx context.Context, id int) (*dto.User, error)
+	GetByName(ctx context.Context, name string) (*dto.User, error)
+	List(ctx context.Context) ([]*dto.User, error)
 }
 
 type userUpdater interface {

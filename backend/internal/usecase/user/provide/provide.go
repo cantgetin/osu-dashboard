@@ -4,12 +4,14 @@ import (
 	"context"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
+	"playcount-monitor-backend/internal/dto"
+	"playcount-monitor-backend/internal/usecase/mappers"
 )
 
 func (uc *UseCase) Get(
 	ctx context.Context,
 	id int,
-) (*model.User, error) {
+) (*dto.User, error) {
 	var user *model.User
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		var err error
@@ -24,13 +26,13 @@ func (uc *UseCase) Get(
 		return nil, txErr
 	}
 
-	return user, nil
+	return mappers.MapUserModelToUserDTO(user)
 }
 
 func (uc *UseCase) GetByName(
 	ctx context.Context,
 	name string,
-) (*model.User, error) {
+) (*dto.User, error) {
 	var user *model.User
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		var err error
@@ -45,12 +47,12 @@ func (uc *UseCase) GetByName(
 		return nil, txErr
 	}
 
-	return user, nil
+	return mappers.MapUserModelToUserDTO(user)
 }
 
 func (uc *UseCase) List(
 	ctx context.Context,
-) ([]*model.User, error) {
+) ([]*dto.User, error) {
 	var users []*model.User
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		var err error
@@ -65,5 +67,5 @@ func (uc *UseCase) List(
 		return nil, txErr
 	}
 
-	return users, nil
+	return mappers.MapUserModelsToUserDTOs(users)
 }
