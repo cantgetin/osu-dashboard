@@ -3,6 +3,7 @@ import {convertDataToDayMonth} from "../utils/utils.ts";
 
 interface LineChartProps {
     data: UserStatsDataset[]
+    onlyPlaycount?: boolean
 }
 
 const UserChartsSummary = (props: LineChartProps) => {
@@ -40,35 +41,54 @@ const UserChartsSummary = (props: LineChartProps) => {
         };
     };
 
+    const playCountChart = () => {
+        return (
+            <LineChart
+                chartData={
+                    generateSingleChartData(
+                        mapToChartData(props.data),
+                        'play_count',
+                        'Play count',
+                        '#86EFAC'
+                    )
+                }
+            />
+        )
+    }
+
+    const favouritesChart = () => {
+        return (
+            <LineChart
+                chartData={
+                    generateSingleChartData(
+                        mapToChartData(props.data),
+                        'favourite_count',
+                        'Favourite count',
+                        '#FF5DBD'
+                    )
+                }
+            />
+        )
+    }
+
     return (
         <>
             {
                 props.data.length > 0 ?
                     <div className="flex gap-3 bg-zinc-900 rounded-lg p-2 box-border w-full">
-                        <div className="w-1/2">
-                            <LineChart
-                                chartData={
-                                    generateSingleChartData(
-                                        mapToChartData(props.data),
-                                        'play_count',
-                                        'Play count',
-                                        '#86EFAC'
-                                    )
-                                }
-                            />
-                        </div>
-                        <div className="w-1/2">
-                            <LineChart
-                                chartData={
-                                    generateSingleChartData(
-                                        mapToChartData(props.data),
-                                        'favourite_count',
-                                        'Favorite count',
-                                        '#ff5dbd'
-                                    )
-                                }
-                            />
-                        </div>
+                        {props.onlyPlaycount ?
+                            <div className="w-full">
+                                {playCountChart()}
+                            </div> :
+                            <>
+                                <div className="w-1/2">
+                                    {playCountChart()}
+                                </div>
+                                <div className="w-1/2">
+                                    {favouritesChart()}
+                                </div>
+                            </>
+                        }
                     </div>
                     : null}
         </>
