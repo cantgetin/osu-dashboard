@@ -28,7 +28,7 @@ const UserPage = () => {
                 <div className="p-10 flex flex-col gap-2 2xl:w-1/2">
                     {userCard && (
                         <>
-                            <User user={userCard.User}>
+                            <User user={userCard.User} nameOnClick={() => window.open(`https://osu.ppy.sh/users/${userCard.User.id}`)}>
                                 <MapStatsSummary data={userCard} />
                                 <UserStatsSummary data={mapUserStatsToArray(userCard.User.user_stats)} />
                             </User>
