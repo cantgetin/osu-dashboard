@@ -1,11 +1,11 @@
-import MapsetSummary from "./MapsetSummary.tsx";
+import Mapset from "./Mapset.tsx";
 import {useEffect, useState} from "react";
 
 interface MapsetSummaryProps {
     Mapsets: Mapset[]
 }
 
-const MapsetSummaryList = (props: MapsetSummaryProps) => {
+const MapsetList = (props: MapsetSummaryProps) => {
 
     const [sorted, setSorted] = useState<boolean>(false);
 
@@ -22,10 +22,10 @@ const MapsetSummaryList = (props: MapsetSummaryProps) => {
     return (
         <div className="flex flex-col gap-2">
             {sorted ? props.Mapsets.map(mapset =>
-                <MapsetSummary key={mapset.id} map={mapset}/>
+                <Mapset key={mapset.id} map={mapset}/>
             ) : null}
         </div>
     );
 };
 
-export default MapsetSummaryList;
+export default MapsetList;

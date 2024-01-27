@@ -6,7 +6,7 @@ interface LineChartProps {
     onlyPlaycount?: boolean
 }
 
-const UserChartsSummary = (props: LineChartProps) => {
+const UserCharts = (props: LineChartProps) => {
 
     function mapToChartData(data: UserStatsDataset[]): UserStatsDataset[] {
         const updatedArray: UserStatsDataset[] = [];
@@ -95,4 +95,4 @@ const UserChartsSummary = (props: LineChartProps) => {
     );
 };
 
-export default UserChartsSummary;
+export default UserCharts;

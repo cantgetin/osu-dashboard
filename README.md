@@ -10,6 +10,7 @@ TODO frontend
 * redux store
 * about page
 * header search
+* ✅ react spinner while loading
 * ✅ userpage mapset sort
 * ✅ header navigation
 * ✅ getMapsetRemainingPendingTime shit
@@ -17,11 +18,11 @@ TODO frontend
 
 TODO backend
 
-* tracker getLastTimeTracked on restart
 * usercard nginx gzip 
 * possible usercard map pagination, separate handler for maps with pagination (page, per_page)
 * list most played mapsets for all users with limit offset endpoint
-* list users endpoint
+* ✅ list users endpoint
+* ✅ tracker getLastTimeTracked on restart
 * ✅ handle env client id and client secret
 * ✅ add worker that would fetch all users from tracking table very 24 hours
 * ✅ add total user map plays stats map[string]string to user dto

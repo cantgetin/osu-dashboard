@@ -7,7 +7,7 @@ interface MapCardProps {
 }
 
 // todo: refactor this crap
-const MapsetSummary = (props: MapCardProps) => {
+const Mapset = (props: MapCardProps) => {
 
     const [lastStats, setLastStats] = useState<MapsetStatsModel | null>(null);
     const [penultimateStats, setPenultimateStats] = useState<MapsetStatsModel | null>(null);
@@ -83,4 +83,4 @@ const MapsetSummary = (props: MapCardProps) => {
     );
 };
 
-export default MapsetSummary;
+export default Mapset;

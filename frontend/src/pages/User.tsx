@@ -1,15 +1,16 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import {useParams} from "react-router-dom";
+import React, {useEffect, useState} from "react";
 import User from "../components/User.tsx";
 import UserStatsSummary from "../components/UserStatsSummary.tsx";
 import Header from "../components/Header.tsx";
-import UserChartsSummary from "../components/UserChartsSummary.tsx";
-import MapsetSummaryList from "../components/MapsetSummaryList.tsx";
+import UserCharts from "../components/UserCharts.tsx";
+import MapsetList from "../components/MapsetList.tsx";
 import MapStatsSummary from "../components/MapStatsSummary.tsx";
-import { mapUserStatsToArray } from "../utils/utils.ts";
+import {mapUserStatsToArray} from "../utils/utils.ts";
+import LoadingSpinner from "../components/LoadingSpinner.tsx";
 
 const UserPage = () => {
-    const { userId } = useParams();
+    const {userId} = useParams();
     const [userCard, setUserCard] = useState<UserCard>();
 
     useEffect(() => {
@@ -23,20 +24,23 @@ const UserPage = () => {
 
     return (
         <>
-            <Header />
+            <Header/>
             <div className="flex justify-center items-center">
-                <div className="p-10 flex flex-col gap-2 2xl:w-1/2">
-                    {userCard && (
+                {userCard ?
+                    <div className="p-10 flex flex-col gap-2 2xl:w-1/2">
                         <>
-                            <User user={userCard.User} nameOnClick={() => window.open(`https://osu.ppy.sh/users/${userCard.User.id}`)}>
-                                <MapStatsSummary data={userCard} />
-                                <UserStatsSummary data={mapUserStatsToArray(userCard.User.user_stats)} />
+                            <User user={userCard.User}
+                                  nameOnClick={() => window.open(`https://osu.ppy.sh/users/${userCard.User.id}`)}>
+                                <MapStatsSummary data={userCard}/>
+                                <UserStatsSummary data={mapUserStatsToArray(userCard.User.user_stats)}/>
                             </User>
-                            <UserChartsSummary data={mapUserStatsToArray(userCard.User.user_stats)} />
-                            <MapsetSummaryList Mapsets={userCard.Mapsets} />
+                            <UserCharts data={mapUserStatsToArray(userCard.User.user_stats)}/>
+                            <MapsetList Mapsets={userCard.Mapsets}/>
                         </>
-                    )}
-                </div>
+
+                    </div>
+                    :
+                    <LoadingSpinner/>}
             </div>
         </>
     );
