@@ -253,7 +253,7 @@ func (uc *UseCase) updateExistingMapsetAndItsBeatmaps(
 	// update mapset beatmaps
 	for _, bm := range ms.Beatmaps {
 		var beatmapExist bool
-		beatmapExist, err = uc.beatmap.Exists(ctx, tx, ms.Id)
+		beatmapExist, err = uc.beatmap.Exists(ctx, tx, bm.Id)
 		if err != nil {
 			return err
 		}
@@ -345,7 +345,7 @@ func (uc *UseCase) createNewBeatmap(
 
 	err = uc.beatmap.Create(ctx, tx, newBeatmap)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create new beatmap with id %v, err: %w", newBeatmap.ID, err)
 	}
 
 	return nil
