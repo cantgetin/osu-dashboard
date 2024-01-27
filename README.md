@@ -18,9 +18,11 @@ TODO frontend
 
 TODO backend
 
+* search endpoint
 * usercard nginx gzip 
 * possible usercard map pagination, separate handler for maps with pagination (page, per_page)
 * list most played mapsets for all users with limit offset endpoint
+* ✅ mapset endpoint
 * ✅ list users endpoint
 * ✅ tracker getLastTimeTracked on restart
 * ✅ handle env client id and client secret
