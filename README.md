@@ -18,6 +18,8 @@ TODO frontend
 
 TODO backend
 
+* limit usercard maps to 50
+* store map comments (check if its possible)
 * search endpoint
 * usercard nginx gzip 
 * possible usercard map pagination, separate handler for maps with pagination (page, per_page)

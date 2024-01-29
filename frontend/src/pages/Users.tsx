@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import Header from "../components/Header.tsx";
 import User from "../components/User.tsx";
 import {mapUserStatsToArray} from "../utils/utils.ts";
 import UserStatsSummary from "../components/UserStatsSummary.tsx";
 import UserCharts from "../components/UserCharts.tsx";
 import LoadingSpinner from "../components/LoadingSpinner.tsx";
+import Content from "../components/Content.tsx";
 
 const Users = () => {
     const [users, setUsers] = useState<User[]>();
@@ -21,7 +22,7 @@ const Users = () => {
     return (
         <>
             <Header/>
-            <div className="p-10 grid xl:grid-cols-2 gap-4">
+            <Content className="p-10 grid 2xl:grid-cols-2 l:grid-cols-1 gap-4">
                 {users && users.length > 0 ?
                     users.map(user => (
                         <User user={user} key={user.id} nameOnClick={() => {
@@ -32,7 +33,7 @@ const Users = () => {
                         </User>))
                     :
                     <LoadingSpinner/>}
-            </div>
+            </Content>
         </>
     );
 };

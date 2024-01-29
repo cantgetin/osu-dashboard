@@ -1,5 +1,6 @@
 import {useParams} from "react-router-dom";
 import Header from "../components/Header.tsx";
+import Content from "../components/Content.tsx";
 
 const Beatmapset = () => {
     const {mapId} = useParams();
@@ -7,9 +8,9 @@ const Beatmapset = () => {
     return (
         <>
             <Header/>
-            <div>
+            <Content>
                 {mapId}
-            </div>
+            </Content>
         </>
     );
 };

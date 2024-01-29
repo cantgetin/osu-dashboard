@@ -1,12 +1,13 @@
 import Header from "../components/Header.tsx";
+import Content from "../components/Content.tsx";
 
 const Beatmapsets = () => {
     return (
         <>
             <Header/>
-            <div>
+            <Content>
                 Beatmapsets
-            </div>
+            </Content>
         </>
     );
 };
