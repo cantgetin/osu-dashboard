@@ -11,6 +11,7 @@ import (
 	trackingcreate "playcount-monitor-backend/internal/usecase/following/create"
 	trackingprovide "playcount-monitor-backend/internal/usecase/following/provide"
 	mapsetcreate "playcount-monitor-backend/internal/usecase/mapset/create"
+	mapsetprovide "playcount-monitor-backend/internal/usecase/mapset/provide"
 	usercreate "playcount-monitor-backend/internal/usecase/user/create"
 	userprovide "playcount-monitor-backend/internal/usecase/user/provide"
 	userupdate "playcount-monitor-backend/internal/usecase/user/update"
@@ -49,6 +50,16 @@ func New(
 
 func (f *UseCaseFactory) MakeCreateMapsetUseCase() *mapsetcreate.UseCase {
 	return mapsetcreate.New(
+		f.cfg,
+		f.lg,
+		f.txManager,
+		f.repos.BeatmapRepo,
+		f.repos.MapsetRepo,
+	)
+}
+
+func (f *UseCaseFactory) MakeProvideMapsetUseCase() *mapsetprovide.UseCase {
+	return mapsetprovide.New(
 		f.cfg,
 		f.lg,
 		f.txManager,

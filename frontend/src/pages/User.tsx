@@ -38,7 +38,6 @@ const UserPage = () => {
                             <UserCharts data={mapUserStatsToArray(userCard.User.user_stats)}/>
                             <MapsetList Mapsets={userCard.Mapsets}/>
                         </>
-
                     </div>
                     :
                     <LoadingSpinner/>}

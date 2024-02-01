@@ -58,6 +58,7 @@ func New(
 
 	mapset := mapsetserviceapi.New(
 		lg,
+		f.MakeProvideMapsetUseCase(),
 		f.MakeCreateMapsetUseCase(),
 	)
 
