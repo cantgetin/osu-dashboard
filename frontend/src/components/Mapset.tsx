@@ -22,13 +22,12 @@ const Mapset = (props: MapCardProps) => {
         if (statsCount > 1) {
             const penultimateStats = mapsetStatsValues[statsCount - 2];
 
-            const newPlayCountDifference = lastStats!.play_count - penultimateStats.play_count;
-            const newFavouriteCountDifference = lastStats!.favourite_count - penultimateStats.favourite_count;
+            const newPlayCountDifference = mapsetStatsValues[statsCount - 1].play_count - penultimateStats.play_count;
+            const newFavouriteCountDifference = mapsetStatsValues[statsCount - 1].favourite_count - penultimateStats.favourite_count;
 
             setPenultimateStats(penultimateStats);
             setPlayCountDifference(newPlayCountDifference);
             setFavouriteCountDifference(newFavouriteCountDifference);
-            setLastStats(lastStats);
         }
 
     }, [props.map.mapset_stats]);
