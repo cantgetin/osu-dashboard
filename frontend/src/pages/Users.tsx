@@ -28,7 +28,7 @@ const Users = () => {
                         <User user={user} key={user.id} nameOnClick={() => {
                             window.open(`/user/${user.id}`)
                         }}>
-                            <UserCharts data={mapUserStatsToArray(user.user_stats)} onlyPlaycount={true}/>
+                            <UserCharts data={mapUserStatsToArray(user.user_stats)} showAllAsSlideshow={true}/>
                             <UserStatsSummary data={mapUserStatsToArray(user.user_stats)}/>
                         </User>))
                     :

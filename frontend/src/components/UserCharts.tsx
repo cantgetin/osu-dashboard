@@ -1,9 +1,10 @@
 import LineChart from "./LineChart.tsx";
 import {convertDataToDayMonth} from "../utils/utils.ts";
+import {useEffect, useState} from "react";
 
 interface LineChartProps {
     data: UserStatsDataset[]
-    onlyPlaycount?: boolean
+    showAllAsSlideshow?: boolean
 }
 
 const UserCharts = (props: LineChartProps) => {
@@ -71,15 +72,42 @@ const UserCharts = (props: LineChartProps) => {
         )
     }
 
+    const mapCountChart = () => {
+        return (
+            <LineChart
+                chartData={
+                    generateSingleChartData(
+                        mapToChartData(props.data),
+                        'map_count',
+                        'Map count',
+                        '#ffed54'
+                    )
+                }
+            />
+        )
+    }
+
+    const chartsList = [playCountChart, favouritesChart, mapCountChart]
+
+    const intervalInSeconds = 3;
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setCurrentIndex((prevIndex) => (prevIndex + 1) % chartsList.length);
+        }, intervalInSeconds * 1000);
+
+        return () => clearInterval(intervalId);
+    }, [chartsList.length, intervalInSeconds]);
+
     return (
         <>
             {
                 props.data.length > 0 ?
                     <div className="flex gap-3 bg-zinc-900 rounded-lg p-2 box-border w-full">
-                        {props.onlyPlaycount ?
-                            <div className="w-full">
-                                {playCountChart()}
-                            </div> :
+                        {props.showAllAsSlideshow ?
+                            <>{chartsList[currentIndex]()}</>
+                            :
                             <>
                                 <div className="w-1/2">
                                     {playCountChart()}
