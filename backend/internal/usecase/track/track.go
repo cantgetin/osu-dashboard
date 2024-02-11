@@ -36,7 +36,7 @@ func (uc *UseCase) CreateTrackRecord(
 	ctx context.Context,
 ) error {
 	track := &model.Track{
-		TrackedAt: time.Now(),
+		TrackedAt: time.Now().UTC(),
 	}
 
 	if err := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {

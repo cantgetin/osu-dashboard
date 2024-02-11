@@ -44,8 +44,11 @@ func (w *Worker) Start(ctx context.Context) func() error {
 			select {
 			case <-ctx.Done():
 				finished <- struct{}{}
+				err = w.tracker.CreateTrackRecord(ctx)
+				if err != nil {
+					w.lg.Errorf("failed to create track record: %v", err)
+				}
 				w.lg.Infof("tracking finished")
-				_ = w.tracker.CreateTrackRecord(ctx)
 				return
 			case <-time.After(w.cfg.TrackingInterval):
 			}
