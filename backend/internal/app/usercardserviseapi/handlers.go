@@ -22,7 +22,16 @@ func (s *ServiceImpl) Get(c echo.Context) error {
 	}
 	idInt, err := strconv.Atoi(id)
 
-	userCard, err := s.userCardProvider.Get(c.Request().Context(), idInt)
+	page := c.QueryParam("page")
+	pageInt := 1
+	if page != "" {
+		pageInt, err = strconv.Atoi(page)
+		if pageInt <= 0 {
+			return echo.ErrBadRequest
+		}
+	}
+
+	userCard, err := s.userCardProvider.Get(c.Request().Context(), idInt, pageInt)
 	if err != nil {
 		return err
 	}

@@ -7,9 +7,12 @@ import (
 	"playcount-monitor-backend/internal/usecase/mappers"
 )
 
+const mapsetsPerPage = 50
+
 func (uc *UseCase) Get(
 	ctx context.Context,
 	userID int,
+	page int,
 ) (*dto.UserCard, error) {
 	var userCard = new(dto.UserCard)
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
@@ -25,7 +28,7 @@ func (uc *UseCase) Get(
 		}
 
 		// get user mapsets
-		mapsets, err := uc.mapset.ListForUser(ctx, tx, userID)
+		mapsets, err := uc.mapset.ListForUserWithLimitOffset(ctx, tx, userID, mapsetsPerPage, (page-1)*mapsetsPerPage)
 		if err != nil {
 			return err
 		}

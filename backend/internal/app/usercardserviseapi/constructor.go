@@ -12,7 +12,7 @@ type userCardCreator interface {
 }
 
 type userCardProvider interface {
-	Get(ctx context.Context, id int) (*dto.UserCard, error)
+	Get(ctx context.Context, id int, page int) (*dto.UserCard, error)
 }
 
 type userCardUpdater interface {

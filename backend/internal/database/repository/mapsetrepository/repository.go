@@ -56,3 +56,21 @@ func (r *GormRepository) ListForUser(ctx context.Context, tx txmanager.Tx, userI
 
 	return mapsets, nil
 }
+
+func (r *GormRepository) ListForUserWithLimitOffset(
+	ctx context.Context,
+	tx txmanager.Tx,
+	userID int,
+	limit int,
+	offset int,
+) ([]*model.Mapset, error) {
+	var mapsets []*model.Mapset
+	err := tx.DB().WithContext(ctx).Table(mapsetsTableName).
+		Where("user_id = ?", userID).Limit(limit).Offset(offset).Find(&mapsets).Error
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to list mapsets for user %v: %w", userID, err)
+	}
+
+	return mapsets, nil
+}
