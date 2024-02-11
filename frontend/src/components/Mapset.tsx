@@ -17,19 +17,20 @@ const Mapset = (props: MapCardProps) => {
     useEffect(() => {
         const mapsetStatsValues = Object.values(props.map.mapset_stats);
         const statsCount = mapsetStatsValues.length;
+        setLastStats(mapsetStatsValues[statsCount - 1])
 
         if (statsCount > 1) {
-            const lastStats = mapsetStatsValues[statsCount - 1];
             const penultimateStats = mapsetStatsValues[statsCount - 2];
 
-            const newPlayCountDifference = lastStats.play_count - penultimateStats.play_count;
-            const newFavouriteCountDifference = lastStats.favourite_count - penultimateStats.favourite_count;
+            const newPlayCountDifference = lastStats!.play_count - penultimateStats.play_count;
+            const newFavouriteCountDifference = lastStats!.favourite_count - penultimateStats.favourite_count;
 
             setPenultimateStats(penultimateStats);
             setPlayCountDifference(newPlayCountDifference);
             setFavouriteCountDifference(newFavouriteCountDifference);
             setLastStats(lastStats);
         }
+
     }, [props.map.mapset_stats]);
 
     return (
@@ -44,11 +45,8 @@ const Mapset = (props: MapCardProps) => {
                         <a className="text-xl"
                             href={`/beatmapset/${props.map.id}`}>{props.map.artist} - {props.map.title}</a>
                         <div className="flex gap-2 justify-left items-baseline">
-                            <h1 className="text-xl text-green-200">{aveta(lastStats?.play_count) ?? 0} plays</h1>
-                            {penultimateStats ?
-                                <h1 className="text-sm h-full text-pink-200">{aveta(lastStats.favourite_count)} favourites</h1>
-                                : null
-                            }
+                            <h1 className="text-xl text-green-200">{aveta(lastStats.play_count)} plays</h1>
+                            <h1 className="text-sm h-full text-pink-200">{aveta(lastStats.favourite_count)} favourites</h1>
                         </div>
                         <div className='text-xs text-zinc-400'>
                             {props.map.status == "wip" || props.map.status == "pending" ?
