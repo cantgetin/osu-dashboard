@@ -81,20 +81,21 @@ func MapCreateMapsetCommandToMapsetModel(mapset *command.CreateMapsetCommand) (*
 	}
 
 	return &model.Mapset{
-		ID:          mapset.Id,
-		Artist:      mapset.Artist,
-		Title:       mapset.Title,
-		Covers:      covers,
-		Status:      mapset.Status,
-		LastUpdated: mapset.LastUpdated,
-		UserID:      mapset.UserId,
-		Creator:     mapset.Creator,
-		PreviewURL:  mapset.PreviewUrl,
-		Tags:        mapset.Tags,
-		MapsetStats: mapsetStats,
-		BPM:         mapset.Bpm,
-		UpdatedAt:   time.Now().UTC(),
-		CreatedAt:   time.Now().UTC(),
+		ID:            mapset.Id,
+		Artist:        mapset.Artist,
+		Title:         mapset.Title,
+		Covers:        covers,
+		Status:        mapset.Status,
+		LastUpdated:   mapset.LastUpdated,
+		UserID:        mapset.UserId,
+		Creator:       mapset.Creator,
+		PreviewURL:    mapset.PreviewUrl,
+		Tags:          mapset.Tags,
+		MapsetStats:   mapsetStats,
+		BPM:           mapset.Bpm,
+		LastPlaycount: mapset.PlayCount,
+		UpdatedAt:     time.Now().UTC(),
+		CreatedAt:     time.Now().UTC(),
 	}, nil
 }
 
@@ -110,19 +111,20 @@ func MapUpdateMapsetCommandToMapsetModel(mapset *command.UpdateMapsetCommand) (*
 	}
 
 	return &model.Mapset{
-		ID:          mapset.Id,
-		Artist:      mapset.Artist,
-		Title:       mapset.Title,
-		Covers:      covers,
-		Status:      mapset.Status,
-		LastUpdated: mapset.LastUpdated,
-		UserID:      mapset.UserId,
-		Creator:     mapset.Creator,
-		PreviewURL:  mapset.PreviewUrl,
-		Tags:        mapset.Tags,
-		MapsetStats: mapsetStats,
-		BPM:         mapset.Bpm,
-		UpdatedAt:   time.Now().UTC(),
+		ID:            mapset.Id,
+		Artist:        mapset.Artist,
+		Title:         mapset.Title,
+		Covers:        covers,
+		Status:        mapset.Status,
+		LastUpdated:   mapset.LastUpdated,
+		UserID:        mapset.UserId,
+		Creator:       mapset.Creator,
+		PreviewURL:    mapset.PreviewUrl,
+		Tags:          mapset.Tags,
+		MapsetStats:   mapsetStats,
+		BPM:           mapset.Bpm,
+		LastPlaycount: mapset.PlayCount,
+		UpdatedAt:     time.Now().UTC(),
 	}, nil
 }
 

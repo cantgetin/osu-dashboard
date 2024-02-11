@@ -66,7 +66,11 @@ func (r *GormRepository) ListForUserWithLimitOffset(
 ) ([]*model.Mapset, error) {
 	var mapsets []*model.Mapset
 	err := tx.DB().WithContext(ctx).Table(mapsetsTableName).
-		Where("user_id = ?", userID).Limit(limit).Offset(offset).Find(&mapsets).Error
+		Where("user_id = ?", userID).
+		Order("last_playcount DESC").
+		Limit(limit).
+		Offset(offset).
+		Find(&mapsets).Error
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to list mapsets for user %v: %w", userID, err)
