@@ -38,19 +38,19 @@ func (w *Worker) Start(ctx context.Context) func() error {
 					w.lg.Errorf("encountered error while tracking: %v", err)
 					return
 				}
+
+				err = w.tracker.CreateTrackRecord(ctx)
+				if err != nil {
+					w.lg.Errorf("failed to create track record: %v", err)
+				}
+
 				w.lg.Infof("tracked successfully")
 			}()
 
 			select {
 			case <-ctx.Done():
 				finished <- struct{}{}
-				createCtx, cancelCreateCtx := context.WithTimeout(context.Background(), time.Duration(time.Second*5))
-				err = w.tracker.CreateTrackRecord(createCtx)
-				if err != nil {
-					w.lg.Errorf("failed to create track record: %v", err)
-				}
 				w.lg.Infof("tracking finished")
-				cancelCreateCtx()
 				return
 			case <-time.After(w.cfg.TrackingInterval):
 			}
