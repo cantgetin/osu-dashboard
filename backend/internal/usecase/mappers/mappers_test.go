@@ -3,7 +3,9 @@ package mappers
 import (
 	"github.com/stretchr/testify/assert"
 	"playcount-monitor-backend/internal/database/repository"
+	"playcount-monitor-backend/internal/database/repository/model"
 	"testing"
+	"time"
 )
 
 // TODO: refactor
@@ -19,4 +21,18 @@ func Test_AppendNewMapsetStats(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.Equal(t, expectedMergedJSON, mergedJSON)
+}
+
+func Test_KeepLastNKeyValuesFromStats(t *testing.T) {
+	data := model.UserStats{}
+	for i := 0; i < 10; i++ {
+		data[time.Now().UTC().AddDate(0, 0, -i).Truncate(time.Hour)] = &model.UserStatsModel{
+			PlayCount: i,
+			Favorites: i,
+			MapCount:  i,
+		}
+	}
+
+	KeepLastNKeyValuesFromStats(data, 7)
+	assert.Equal(t, 7, len(data))
 }

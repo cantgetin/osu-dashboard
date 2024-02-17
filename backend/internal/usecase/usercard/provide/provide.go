@@ -8,6 +8,7 @@ import (
 )
 
 const mapsetsPerPage = 50
+const statsMaxElements = 7
 
 func (uc *UseCase) Get(
 	ctx context.Context,
@@ -53,5 +54,17 @@ func (uc *UseCase) Get(
 		return nil, txErr
 	}
 
+	KeepLastNStatsValuesFromUserCard(userCard, statsMaxElements)
 	return userCard, nil
+}
+
+func KeepLastNStatsValuesFromUserCard(userCard *dto.UserCard, n int) {
+	mappers.KeepLastNKeyValuesFromStats(userCard.User.UserStats, n)
+
+	for _, mapset := range userCard.Mapsets {
+		mappers.KeepLastNKeyValuesFromStats(mapset.MapsetStats, n)
+		for _, beatmap := range mapset.Beatmaps {
+			mappers.KeepLastNKeyValuesFromStats(beatmap.BeatmapStats, n)
+		}
+	}
 }

@@ -7,6 +7,8 @@ import (
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/dto"
 	"playcount-monitor-backend/internal/usecase/command"
+	"reflect"
+	"sort"
 	"time"
 )
 
@@ -374,6 +376,27 @@ func MapStatsJSONToMapsetStats(j repository.JSON) (model.MapsetStats, error) {
 	}
 
 	return mapsetStats, nil
+}
+
+func KeepLastNKeyValuesFromStats(m interface{}, n int) {
+	mapValue := reflect.ValueOf(m)
+	if mapValue.Kind() != reflect.Map {
+		fmt.Println("Not a map")
+		return
+	}
+
+	keys := mapValue.MapKeys()
+	sort.Slice(keys, func(i, j int) bool {
+		return keys[i].Interface().(time.Time).Before(keys[j].Interface().(time.Time))
+	})
+
+	if len(keys) <= n {
+		return
+	}
+
+	for i := 0; i < len(keys)-n; i++ {
+		mapValue.SetMapIndex(keys[i], reflect.Value{})
+	}
 }
 
 // JSON -> JSON append
