@@ -1,29 +1,51 @@
-import Mapset from "./Mapset.tsx";
-import {useEffect, useState} from "react";
+import Mapset from "./Mapset";
+import {fetchUserCard, selectUserCardPage} from "../store/userCardSlice.ts";
+import {useAppDispatch, useAppSelector} from "../store/hooks.ts";
 
 interface MapsetSummaryProps {
-    Mapsets: Mapset[]
+    Mapsets: Mapset[];
+    MapsetCount: number;
+    userId: string;
 }
 
 const MapsetList = (props: MapsetSummaryProps) => {
+    const numPages = Math.ceil(props.MapsetCount / 50);
 
-    const [sorted, setSorted] = useState<boolean>(false);
+    const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        if (props.Mapsets.length === 0) return;
-        props.Mapsets.sort((a, b) => {
-            const getKey = (mapset: Mapset) : string => Object.keys(mapset.mapset_stats).pop()!;
-            return (getKey(b) ? b.mapset_stats[getKey(b)].play_count : 0) -
-                (getKey(a) ? a.mapset_stats[getKey(a)].play_count : 0);
-        });
-        setSorted(true)
-    }, [props]);
+    const currentPage = useAppSelector<number>(selectUserCardPage);
+
+    const handlePageChange = (page: number) => {
+        dispatch(fetchUserCard({userId: Number(props.userId), page: page}))
+    };
+
+    const renderPaginationButtons = () => {
+        const buttons = [];
+        for (let i = 1; i <= numPages; i++) {
+            buttons.push(
+                <button
+                    key={i}
+                    onClick={() => handlePageChange(i)}
+                    className={i === currentPage ? "w-12 bg-blue-500 text-white" : "w-12"}
+                >
+                    {i}
+                </button>
+            );
+        }
+        return buttons;
+    };
 
     return (
         <div className="flex flex-col gap-2">
-            {sorted ? props.Mapsets.map(mapset =>
-                <Mapset key={mapset.id} map={mapset}/>
-            ) : null}
+            {numPages > 1 && (
+                <div className="flex space-x-2">
+                    <div>Page:</div>
+                    {renderPaginationButtons()}
+                </div>
+            )}
+            {props.Mapsets.map(mapset => (
+                <Mapset key={mapset.id} map={mapset} />
+            ))}
         </div>
     );
 };

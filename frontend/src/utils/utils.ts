@@ -28,6 +28,16 @@ export function mapUserStatsToArray(userStats: UserStats): UserStatsDataset[] {
     }));
 }
 
+export function extractUserMapsCountFromStats(userStats: UserStats): number {
+    let arr = mapUserStatsToArray(userStats);
+    if (arr.length === 0) {
+        return 0
+    }
+
+    const lastElement = arr[arr.length - 1];
+    return lastElement.map_count;
+}
+
 export function formatDateDiff(startDateString: string, endDateString: string): string {
     const startDate = new Date(startDateString);
     const endDate = new Date(endDateString);

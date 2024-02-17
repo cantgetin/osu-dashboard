@@ -4,29 +4,27 @@ import { LoadingState } from '../interfaces/LoadingState';
 
 interface UserCardState {
     userCard: UserCard | null
-    lastTimeFetched: string | null
     loading: LoadingState
+    page: number
 }
 
 const initialState: UserCardState = {
     userCard: null,
-    lastTimeFetched: null,
-    loading: LoadingState.Idle
+    loading: LoadingState.Idle,
+    page: 0
+}
+
+interface fetchUserCardCmd {
+    userId: number
+    page: number
 }
 
 export const fetchUserCard = createAsyncThunk(
     'userCard/fetch',
-    async (userId: number): Promise<{
-        userCard: UserCard,
-        lastTimeFetched: string
-    }> => {
-        const response = await fetch(`/api/user_card/${userId}`);
+    async (cmd : fetchUserCardCmd): Promise<{userCard: UserCard, page: number}> => {
+        const response = await fetch(`/api/user_card/${cmd.userId}?page=${cmd.page}`);
         const userData = await response.json();
-
-        return {
-            userCard: JSON.parse(JSON.stringify(userData)) as UserCard,
-            lastTimeFetched: Date.now().toString()
-        }
+        return {userCard: userData, page: cmd.page}
     }
 )
 
@@ -38,8 +36,8 @@ const userCardSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(fetchUserCard.fulfilled, (state, action) => {
-            state.lastTimeFetched = action.payload.lastTimeFetched
             state.userCard = action.payload.userCard
+            state.page = action.payload.page
             state.loading = LoadingState.Succeeded
         })
         builder.addCase(fetchUserCard.pending, (state) => {
@@ -53,6 +51,8 @@ const userCardSlice = createSlice({
 
 export const { } = userCardSlice.actions
 
-export const selectUserCard = (state: RootState) => state.userCardSlice.userCard
+export const selectUserCard = (state: RootState) => state.userCardSlice.userCard as UserCard
+export const selectLoadingState = (state: RootState) => state.userCardSlice.loading as LoadingState
+export const selectUserCardPage = (state: RootState) => state.userCardSlice.page as number
 
 export default userCardSlice.reducer
