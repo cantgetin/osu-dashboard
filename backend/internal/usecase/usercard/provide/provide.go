@@ -54,6 +54,7 @@ func (uc *UseCase) Get(
 		return nil, txErr
 	}
 
+	userCard.User.UserMapCounts = mappers.GetUserMapCounts(userCard.Mapsets)
 	KeepLastNStatsValuesFromUserCard(userCard, statsMaxElements)
 	return userCard, nil
 }

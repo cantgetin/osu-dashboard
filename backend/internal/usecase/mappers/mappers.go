@@ -476,3 +476,30 @@ func AppendNewBeatmapStats(json1, json2 repository.JSON) (repository.JSON, error
 
 	return mergedJSON, nil
 }
+
+// other
+
+func GetUserMapCounts(mapsets []*dto.Mapset) *dto.UserMapCounts {
+	res := &dto.UserMapCounts{}
+
+	for _, mapset := range mapsets {
+		switch mapset.Status {
+		case "graveyard":
+			res.Graveyard++
+		case "wip":
+			res.Wip++
+		case "pending":
+			res.Pending++
+		case "ranked":
+			res.Ranked++
+		case "approved":
+			res.Approved++
+		case "qualified":
+			res.Qualified++
+		case "loved":
+			res.Loved++
+		}
+	}
+
+	return res
+}
