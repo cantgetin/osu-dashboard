@@ -13,6 +13,8 @@ TODO frontend
 
 TODO backend
 
+* cicd
+* tests up to date
 * store map comments (check if its possible)
 * search endpoint
 * usercard nginx gzip

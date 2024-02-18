@@ -45,12 +45,10 @@ func (uc *UseCase) Create(
 
 func mapUserDTOToUserModel(dto *dto.User) (*model.User, error) {
 	return &model.User{
-		ID:                       dto.ID,
-		Username:                 dto.Username,
-		AvatarURL:                dto.AvatarURL,
-		GraveyardBeatmapsetCount: dto.GraveyardBeatmapsetCount,
-		UnrankedBeatmapsetCount:  dto.UnrankedBeatmapsetCount,
-		CreatedAt:                time.Now().UTC(),
-		UpdatedAt:                time.Now().UTC(),
+		ID:        dto.ID,
+		Username:  dto.Username,
+		AvatarURL: dto.AvatarURL,
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
 	}, nil
 }

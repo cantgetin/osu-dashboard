@@ -203,13 +203,11 @@ func MapUserModelToUserDTO(user *model.User) (*dto.User, error) {
 	}
 
 	return &dto.User{
-		ID:                       user.ID,
-		Username:                 user.Username,
-		AvatarURL:                user.AvatarURL,
-		GraveyardBeatmapsetCount: user.GraveyardBeatmapsetCount,
-		UnrankedBeatmapsetCount:  user.UnrankedBeatmapsetCount,
-		TrackingSince:            user.CreatedAt,
-		UserStats:                stats,
+		ID:            user.ID,
+		Username:      user.Username,
+		AvatarURL:     user.AvatarURL,
+		TrackingSince: user.CreatedAt,
+		UserStats:     stats,
 	}, nil
 }
 
@@ -479,11 +477,11 @@ func AppendNewBeatmapStats(json1, json2 repository.JSON) (repository.JSON, error
 
 // other
 
-func GetUserMapCounts(mapsets []*dto.Mapset) *dto.UserMapCounts {
+func MapStatusesToUserMapCounts(statuses []string) *dto.UserMapCounts {
 	res := &dto.UserMapCounts{}
 
-	for _, mapset := range mapsets {
-		switch mapset.Status {
+	for _, status := range statuses {
+		switch status {
 		case "graveyard":
 			res.Graveyard++
 		case "wip":

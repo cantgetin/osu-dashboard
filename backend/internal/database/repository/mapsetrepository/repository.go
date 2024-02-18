@@ -57,6 +57,23 @@ func (r *GormRepository) ListForUser(ctx context.Context, tx txmanager.Tx, userI
 	return mapsets, nil
 }
 
+func (r *GormRepository) ListStatusesForUser(
+	ctx context.Context,
+	tx txmanager.Tx,
+	userID int,
+) ([]string, error) {
+	var statuses []string
+	err := tx.DB().WithContext(ctx).Table(mapsetsTableName).
+		Where("user_id = ?", userID).
+		Pluck("status", &statuses).Error
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to list statuses for user %v: %w", userID, err)
+	}
+
+	return statuses, nil
+}
+
 func (r *GormRepository) ListForUserWithLimitOffset(
 	ctx context.Context,
 	tx txmanager.Tx,
