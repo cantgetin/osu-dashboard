@@ -1,6 +1,8 @@
 import Mapset from "./Mapset";
 import {fetchUserCard, selectUserCardPage} from "../store/userCardSlice.ts";
 import {useAppDispatch, useAppSelector} from "../store/hooks.ts";
+import Button from "./Button.tsx";
+import List from "./List.tsx";
 
 interface MapsetSummaryProps {
     Mapsets: Mapset[];
@@ -9,43 +11,44 @@ interface MapsetSummaryProps {
 }
 
 const MapsetList = (props: MapsetSummaryProps) => {
-    const numPages = Math.ceil(props.MapsetCount / 50);
-
     const dispatch = useAppDispatch();
 
+    const pages = Math.ceil(props.MapsetCount / 50);
     const currentPage = useAppSelector<number>(selectUserCardPage);
 
     const handlePageChange = (page: number) => {
         dispatch(fetchUserCard({userId: Number(props.userId), page: page}))
     };
 
-    const renderPaginationButtons = () => {
-        const buttons = [];
-        for (let i = 1; i <= numPages; i++) {
-            buttons.push(
-                <button
-                    key={i}
-                    onClick={() => handlePageChange(i)}
-                    className={i === currentPage ? "w-12 bg-blue-500 text-white" : "w-12"}
-                >
-                    {i}
-                </button>
-            );
-        }
-        return buttons;
-    };
+    const buttons = pages === 1 ? [] : Array.apply(null, Array(pages)).map(function (_, i) {
+        return i + 1;
+    });
 
     return (
         <div className="flex flex-col gap-2">
-            {numPages > 1 && (
-                <div className="flex space-x-2">
-                    <div>Page:</div>
-                    {renderPaginationButtons()}
-                </div>
-            )}
-            {props.Mapsets.map(mapset => (
-                <Mapset key={mapset.id} map={mapset} />
-            ))}
+            <div className="flex gap-2">
+                <List className="flex gap-2"
+                      title="Page:"
+                      items={buttons}
+                      renderItem={(num) =>
+                          <Button keyNumber={num}
+                                  key={num}
+                                  onClick={() => handlePageChange(num)}
+                                  className={"rounded-md w-12 " + (num === currentPage ? "bg-blue-500" : "bg-zinc-800")}
+                                  content={num.toString()}
+                          />
+                      }
+                />
+            </div>
+            <List className="flex flex-col gap-2"
+                  items={props.Mapsets}
+                  renderItem={(mapset: Mapset) =>
+                      <Mapset
+                          key={mapset.id}
+                          map={mapset}
+                      />
+                  }
+            />
         </div>
     );
 };
