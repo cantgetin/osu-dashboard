@@ -34,7 +34,7 @@ const UserPage = () => {
                 {loaded == LoadingState.Succeeded ?
                     <div className="p-10 pt-0 flex flex-col gap-2 2xl:w-1/2">
                         <User user={userCard.User} nameOnClick={() => userNameOnClick(userCard.User.id)}>
-                            <MapStatsSummary data={userCard}/>
+                            <MapStatsSummary user={userCard.User}/>
                             <UserStatsSummary data={mapUserStatsToArray(userCard.User.user_stats)}/>
                         </User>
                         <UserCharts data={mapUserStatsToArray(userCard.User.user_stats)}/>

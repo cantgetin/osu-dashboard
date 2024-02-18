@@ -7,10 +7,19 @@ interface User {
     id: number;
     avatar_url: string;
     username: string;
-    unranked_beatmapset_count: number;
-    graveyard_beatmapset_count: number;
     tracking_since: string;
     user_stats: UserStats;
+    user_map_counts: UserMapCounts;
+}
+
+interface UserMapCounts {
+    graveyard: number;
+    wip: number;
+    pending: number;
+    ranked: number;
+    approved: number;
+    qualified: number;
+    loved: number;
 }
 
 interface UserStats {

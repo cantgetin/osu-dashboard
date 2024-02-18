@@ -1,24 +1,21 @@
 interface UserStatsSummaryProps {
-    data: UserCard
+    user: User
 }
 
-
-const types = ['graveyard', 'loved', 'nominated', 'pending', 'ranked', 'wip']
-
 const MapStatsSummary = (props: UserStatsSummaryProps) => {
+    const types = Object.keys(props.user.user_map_counts) as Array<keyof UserMapCounts>
+
     return (
         <div className="flex flex-wrap gap-2">
-            {
-                types.map((type) => {
-                    if (props.data.Mapsets.filter(o => o.status == type).length == 0) return null
-                    else return (
-                        <div key={type} className="bg-zinc-800 px-2 py-1 rounded-lg text-sm cursor-pointer">
-                            {type} {props.data.Mapsets.filter(o => o.status == type).length}
-                        </div>
-                    )
-                }
-                )
-            }
+            {types.map((type) => {
+                const count = props.user.user_map_counts[type];
+                if (count === 0) return null;
+                return (
+                    <div key={type} className="bg-zinc-800 px-2 py-1 rounded-lg text-sm cursor-pointer">
+                        {type} {count}
+                    </div>
+                );
+            })}
         </div>
     );
 };
