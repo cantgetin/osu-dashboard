@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 
 interface LineChartProps {
     data: UserStatsDataset[]
-    showAllAsSlideshow?: boolean
+    asSlideshow?: boolean
 }
 
 const UserCharts = (props: LineChartProps) => {
@@ -105,7 +105,7 @@ const UserCharts = (props: LineChartProps) => {
             {
                 props.data.length > 0 ?
                     <div className="flex gap-3 bg-zinc-900 rounded-lg p-2 box-border w-full">
-                        {props.showAllAsSlideshow ?
+                        {props.asSlideshow ?
                             <>{chartsList[currentIndex]()}</>
                             :
                             <>

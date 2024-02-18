@@ -13,7 +13,9 @@ const User = (props: UserProps) => {
             <img src={props.user.avatar_url} className="w-64 h-64" alt="user avatar"/>
             <div className="p-2 flex flex-col min-w-96 gap-2 h-64 w-full">
                 <div>
-                    <h1 className="text-3xl cursor-pointer hover:text-amber-200" onClick={() => props.nameOnClick()}>{props.user.username}</h1>
+                    <h1 className="text-3xl cursor-pointer hover:text-amber-200" onClick={() => props.nameOnClick()}>
+                        {props.user.username}
+                    </h1>
                     <span className="text-xs text-zinc-400 px-1">
                         tracking since {convertDateFormat(props.user.tracking_since)}
                     </span>

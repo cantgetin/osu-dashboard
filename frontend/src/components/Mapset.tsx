@@ -41,7 +41,7 @@ const Mapset = (props: MapCardProps) => {
                             style={{ objectFit: 'cover' }} />
                     </div>
                     <div className="flex flex-col p-2 w-full">
-                        <a className="text-xl"
+                        <a className="text-xl hover:text-amber-200"
                             href={`/beatmapset/${props.map.id}`}>{props.map.artist} - {props.map.title}</a>
                         <div className="flex gap-2 justify-left items-baseline">
                             <h1 className="text-xl text-green-200">{aveta(lastStats.play_count)} plays</h1>

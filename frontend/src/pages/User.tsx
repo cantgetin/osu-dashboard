@@ -25,14 +25,15 @@ const UserPage = () => {
         dispatch(fetchUserCard({userId: Number(userId), page: 1}))
     }, [dispatch, userId])
 
+    const userNameOnClick = (userId: number) => window.open(`https://osu.ppy.sh/users/${userId}`)
+
     return (
         <>
             <Header/>
             <Content className="flex justify-center items-center">
                 {loaded == LoadingState.Succeeded ?
                     <div className="p-10 pt-0 flex flex-col gap-2 2xl:w-1/2">
-                        <User user={userCard.User}
-                              nameOnClick={() => window.open(`https://osu.ppy.sh/users/${userCard.User.id}`)}>
+                        <User user={userCard.User} nameOnClick={() => userNameOnClick(userCard.User.id)}>
                             <MapStatsSummary data={userCard}/>
                             <UserStatsSummary data={mapUserStatsToArray(userCard.User.user_stats)}/>
                         </User>
@@ -43,8 +44,7 @@ const UserPage = () => {
                             userId={userId!}
                         />
                     </div>
-                    :
-                    <LoadingSpinner/>}
+                    : <LoadingSpinner/>}
             </Content>
         </>
     );
