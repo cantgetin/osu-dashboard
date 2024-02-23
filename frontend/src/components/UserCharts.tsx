@@ -87,7 +87,22 @@ const UserCharts = (props: LineChartProps) => {
         )
     }
 
-    const chartsList = [playCountChart, favouritesChart, mapCountChart]
+    const commentsChart = () => {
+        return (
+            <LineChart
+                chartData={
+                    generateSingleChartData(
+                        mapToChartData(props.data),
+                        'comments_count',
+                        'Comment count',
+                        '#f87171'
+                    )
+                }
+            />
+        )
+    }
+
+    const chartsList = [playCountChart, favouritesChart, mapCountChart, commentsChart]
 
     const intervalInSeconds = 3;
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -108,14 +123,20 @@ const UserCharts = (props: LineChartProps) => {
                         {props.asSlideshow ?
                             <>{chartsList[currentIndex]()}</>
                             :
-                            <>
-                                <div className="w-1/2">
+                            <div className="grid grid-cols-2 w-full">
+                                <div className="w-full">
                                     {playCountChart()}
                                 </div>
-                                <div className="w-1/2">
+                                <div>
                                     {favouritesChart()}
                                 </div>
-                            </>
+                                <div>
+                                    {mapCountChart()}
+                                </div>
+                                <div>
+                                    {commentsChart()}
+                                </div>
+                            </div>
                         }
                     </div>
                     : null}
