@@ -6,6 +6,8 @@ networks:
 
 services:
   pmb-service:
+    environment:
+      - GOPROXY=https://proxy.golang.org
     build:
       context: "./"
       dockerfile: Dockerfile.app
@@ -22,6 +24,7 @@ services:
     environment:
       - OSU_API_CLIENT_ID=${OSU_API_CLIENT_ID}
       - OSU_API_CLIENT_SECRET=${OSU_API_CLIENT_SECRET}
+      - GOPROXY=https://proxy.golang.org
     build:
       context: "./"
       dockerfile: Dockerfile.worker
