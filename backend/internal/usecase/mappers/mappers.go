@@ -16,17 +16,19 @@ import (
 
 func MapCreateUserCardCommandToUserModel(cmd *command.CreateUserCardCommand) (*model.User, error) {
 	// get total playcount, favorites, map count
-	var totalUserPlaycount int
+	var playcount int
 	var favorites int
 	var mapCount int
+	var comments int
 
 	for _, ms := range cmd.Mapsets {
-		totalUserPlaycount += ms.PlayCount
+		playcount += ms.PlayCount
 		favorites += ms.FavouriteCount
 		mapCount++
+		comments += ms.CommentsCount
 	}
 
-	stats, err := mapUserInfoToStatsJSON(totalUserPlaycount, favorites, mapCount)
+	stats, err := mapUserInfoToStatsJSON(playcount, favorites, mapCount, comments)
 	if err != nil {
 		return nil, err
 	}
@@ -45,17 +47,19 @@ func MapCreateUserCardCommandToUserModel(cmd *command.CreateUserCardCommand) (*m
 
 func MapUpdateUserCardCommandToUserModel(cmd *command.UpdateUserCardCommand) *model.User {
 	// get total playcount, favorites, map count
-	var totalUserPlaycount int
+	var playcount int
 	var favorites int
 	var mapCount int
+	var comments int
 
 	for _, ms := range cmd.Mapsets {
-		totalUserPlaycount += ms.PlayCount
+		comments += ms.CommentsCount
+		playcount += ms.PlayCount
 		favorites += ms.FavouriteCount
 		mapCount++
 	}
 
-	stats, err := mapUserInfoToStatsJSON(totalUserPlaycount, favorites, mapCount)
+	stats, err := mapUserInfoToStatsJSON(playcount, favorites, mapCount, comments)
 	if err != nil {
 		return nil
 	}
@@ -72,7 +76,7 @@ func MapUpdateUserCardCommandToUserModel(cmd *command.UpdateUserCardCommand) *mo
 }
 
 func MapCreateMapsetCommandToMapsetModel(mapset *command.CreateMapsetCommand) (*model.Mapset, error) {
-	mapsetStats, err := MapMapsetInfoToStatsJSON(mapset.PlayCount, mapset.FavouriteCount)
+	mapsetStats, err := MapMapsetInfoToStatsJSON(mapset.PlayCount, mapset.FavouriteCount, mapset.CommentsCount)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +106,7 @@ func MapCreateMapsetCommandToMapsetModel(mapset *command.CreateMapsetCommand) (*
 }
 
 func MapUpdateMapsetCommandToMapsetModel(mapset *command.UpdateMapsetCommand) (*model.Mapset, error) {
-	mapsetStats, err := MapMapsetInfoToStatsJSON(mapset.PlayCount, mapset.FavouriteCount)
+	mapsetStats, err := MapMapsetInfoToStatsJSON(mapset.PlayCount, mapset.FavouriteCount, mapset.CommentsCount)
 	if err != nil {
 		return nil, err
 	}
@@ -300,12 +304,13 @@ func MapCoversJSONToMapsetCovers(covers repository.JSON) (map[string]string, err
 
 // stats -> JSON
 
-func mapUserInfoToStatsJSON(playcount, favorites, mapcount int) (repository.JSON, error) {
+func mapUserInfoToStatsJSON(playcount, favorites, mapcount, comments int) (repository.JSON, error) {
 	var stats = make(model.UserStats)
 	stats[time.Now().UTC()] = &model.UserStatsModel{
 		PlayCount: playcount,
 		Favorites: favorites,
 		MapCount:  mapcount,
+		Comments:  comments,
 	}
 
 	statsJson, err := json.Marshal(stats)
@@ -331,11 +336,12 @@ func MapBeatmapInfoToStatsJSON(playcount, passcount int) (repository.JSON, error
 	return statsJson, nil
 }
 
-func MapMapsetInfoToStatsJSON(playcount, favourites int) (repository.JSON, error) {
+func MapMapsetInfoToStatsJSON(playcount, favourites, comments int) (repository.JSON, error) {
 	var stats = make(model.MapsetStats)
 	stats[time.Now().UTC()] = &model.MapsetStatsModel{
 		Playcount: playcount,
 		Favorites: favourites,
+		Comments:  comments,
 	}
 
 	statsJson, err := json.Marshal(stats)

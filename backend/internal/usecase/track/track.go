@@ -73,6 +73,7 @@ func (uc *UseCase) Track(
 		return fmt.Errorf("no following users present in db")
 	}
 
+	// max 300 requests a minute
 	for _, following := range follows {
 		// get data from api
 		user, userMapsets, err := uc.osuApiService.GetUserWithMapsets(ctx, strconv.Itoa(following.ID))
@@ -103,6 +104,9 @@ func (uc *UseCase) Track(
 
 			return nil
 		})
+
+		time.Sleep(time.Minute)
+
 		if txErr != nil {
 			return txErr
 		}

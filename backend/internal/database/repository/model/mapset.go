@@ -28,4 +28,5 @@ type MapsetStats map[time.Time]*MapsetStatsModel
 type MapsetStatsModel struct {
 	Playcount int `json:"play_count"`
 	Favorites int `json:"favourite_count"`
+	Comments  int `json:"comments_count"`
 }

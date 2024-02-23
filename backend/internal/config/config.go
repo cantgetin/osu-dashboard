@@ -10,7 +10,7 @@ type Config struct {
 	PgIdleConn     int           `env:"PG_MAX_IDLE_CONN" envDefault:"5"`
 	PgPingInterval time.Duration `env:"PG_PING_INTERVAL" envDefault:"5s"`
 
-	TrackingTimeout  time.Duration `env:"TRACKING_TIMEOUT" envDefault:"5m"`
+	TrackingTimeout  time.Duration `env:"TRACKING_TIMEOUT" envDefault:"30m"`
 	TrackingInterval time.Duration `env:"TRACKING_INTERVAL" envDefault:"24h"`
 
 	OsuAPIClientID     string `env:"OSU_API_CLIENT_ID" envDefault:""`

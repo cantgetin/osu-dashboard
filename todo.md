@@ -16,6 +16,7 @@ TODO backend
 * cicd
 * tests up to date
 * store map comments (check if its possible)
+* store map hypes
 * search endpoint
 * usercard nginx gzip
 * list most played mapsets for all users with limit offset endpoint

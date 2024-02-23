@@ -18,6 +18,45 @@ const (
 	Ranked    BeatmapType = "ranked"
 )
 
+func (s *Service) GetMapsetCommentsCount(ctx context.Context, mapsetID string) (int, error) {
+	token, err := s.tokenProvider.GetToken(ctx)
+	if err != nil {
+		return 0, err
+	}
+
+	// https://osu.ppy.sh/api/v2/comments
+	req, err := http.NewRequest("GET",
+		s.cfg.OsuAPIHost+"/comments?commentable_type=beatmapset&commentable_id="+mapsetID+"&sort=new", nil)
+	if err != nil {
+		return 0, fmt.Errorf("failed to create http request: %w", err)
+	}
+
+	headers := map[string]string{
+		"Content-Type":  "application/json",
+		"Accept":        "application/json",
+		"Authorization": "Bearer " + token,
+	}
+
+	for key, value := range headers {
+		req.Header.Set(key, value)
+	}
+
+	resp, err := s.httpClient.Do(req)
+	if err != nil {
+		return 0, fmt.Errorf("failed to invoke request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	// Parsing JSON response
+	var comments *Comments
+	err = json.NewDecoder(resp.Body).Decode(&comments)
+	if err != nil {
+		return 0, fmt.Errorf("failed to decode response body: %w", err)
+	}
+
+	return comments.Total, nil
+}
+
 func (s *Service) GetUserWithMapsets(ctx context.Context, userID string) (*User, []*Mapset, error) {
 	user, err := s.GetUser(ctx, userID)
 	if err != nil {
@@ -27,6 +66,13 @@ func (s *Service) GetUserWithMapsets(ctx context.Context, userID string) (*User,
 	userMapsets, err := s.GetUserMapsets(ctx, userID)
 	if err != nil {
 		return nil, nil, err
+	}
+
+	for _, mapset := range userMapsets {
+		mapset.CommentsCount, err = s.GetMapsetCommentsCount(ctx, strconv.Itoa(mapset.Id))
+		if err != nil {
+			return nil, nil, err
+		}
 	}
 
 	return user, userMapsets, nil
@@ -71,7 +117,7 @@ func (s *Service) GetUser(ctx context.Context, userID string) (*User, error) {
 }
 
 func (s *Service) GetUserMapsets(ctx context.Context, userID string) ([]*Mapset, error) {
-	var BeatmapTypes = []BeatmapType{Graveyard, Loved, Pending, Ranked}
+	var BeatmapTypes = []BeatmapType{Graveyard, Loved, Pending, Ranked, Nominated}
 
 	token, err := s.tokenProvider.GetToken(ctx)
 	if err != nil {

@@ -22,4 +22,5 @@ type UserStatsModel struct {
 	PlayCount int `json:"play_count"`
 	Favorites int `json:"favourite_count"`
 	MapCount  int `json:"map_count"`
+	Comments  int `json:"comments_count"`
 }

@@ -38,7 +38,7 @@ func (uc *UseCase) Get(
 			return err
 		}
 
-		// for each mapset get its maps and map to DTO
+		// for each mapset get its beatmaps and map to DTO
 		for _, mapset := range mapsets {
 			beatmaps, err := uc.beatmap.ListForMapset(ctx, tx, mapset.ID)
 			if err != nil {

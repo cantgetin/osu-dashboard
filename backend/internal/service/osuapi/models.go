@@ -2,6 +2,10 @@ package osuapi
 
 import "time"
 
+type Comments struct {
+	Total int `json:"total"`
+}
+
 type User struct {
 	ID                       int    `json:"id"`
 	AvatarURL                string `json:"avatar_url"`
@@ -22,6 +26,7 @@ type Mapset struct {
 	Tags           string            `json:"tags"`
 	PlayCount      int               `json:"play_count"`
 	FavouriteCount int               `json:"favourite_count"`
+	CommentsCount  int               `json:"comments_count"`
 	Bpm            float64           `json:"bpm"`
 	Creator        string            `json:"creator"`
 	Beatmaps       []*Beatmap        `json:"beatmaps"`
