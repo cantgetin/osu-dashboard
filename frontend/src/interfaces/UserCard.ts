@@ -64,6 +64,7 @@ interface MapsetStats {
 interface MapsetStatsModel {
     play_count: number;
     favourite_count: number;
+    comments_count: number;
 }
 
 interface Beatmap {
