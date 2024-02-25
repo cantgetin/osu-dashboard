@@ -13,6 +13,7 @@ type BeatmapType string
 const (
 	Graveyard BeatmapType = "graveyard"
 	Loved     BeatmapType = "loved"
+	// Nominated we not use this cause it shows maps that user nominated (from others) which breaks mapset FK
 	Nominated BeatmapType = "nominated"
 	Pending   BeatmapType = "pending"
 	Ranked    BeatmapType = "ranked"
@@ -117,7 +118,7 @@ func (s *Service) GetUser(ctx context.Context, userID string) (*User, error) {
 }
 
 func (s *Service) GetUserMapsets(ctx context.Context, userID string) ([]*Mapset, error) {
-	var BeatmapTypes = []BeatmapType{Graveyard, Loved, Pending, Ranked, Nominated}
+	var BeatmapTypes = []BeatmapType{Graveyard, Loved, Pending, Ranked}
 
 	token, err := s.tokenProvider.GetToken(ctx)
 	if err != nil {

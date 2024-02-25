@@ -12,7 +12,7 @@ const mapsetsTableName = "mapsets"
 func (r *GormRepository) Create(ctx context.Context, tx txmanager.Tx, mapset *model.Mapset) error {
 	err := tx.DB().WithContext(ctx).Table(mapsetsTableName).Create(mapset).Error
 	if err != nil {
-		return fmt.Errorf("failed to create user: %w", err)
+		return fmt.Errorf("failed to create mapset: %w", err)
 	}
 
 	return nil
