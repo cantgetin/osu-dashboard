@@ -73,7 +73,7 @@ const Mapset = (props: MapCardProps) => {
                             <>
                                 <StatsDifference difference={favouriteCountDifference} className="text-pink-300"/>
                                 <StatsDifference difference={playCountDifference} className="text-green-300"/>
-                                <StatsDifference difference={commentsCountDifference} className="text-green-300"/>
+                                <StatsDifference difference={commentsCountDifference} className="text-red-300"/>
                             </>
                             : null
                         }
