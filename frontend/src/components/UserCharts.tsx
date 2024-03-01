@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 interface LineChartProps {
     data: UserStatsDataset[]
     asSlideshow?: boolean
+    className?: string
 }
 
 const UserCharts = (props: LineChartProps) => {
@@ -119,23 +120,15 @@ const UserCharts = (props: LineChartProps) => {
         <>
             {
                 props.data.length > 0 ?
-                    <div className="flex gap-3 bg-zinc-900 rounded-lg p-2 box-border w-full">
+                    <div className={`flex gap-3 bg-zinc-900 rounded-lg box-border w-full ${props.className}`}>
                         {props.asSlideshow ?
                             <>{chartsList[currentIndex]()}</>
                             :
                             <div className="grid grid-cols-2 w-full">
-                                <div className="w-full">
-                                    {playCountChart()}
-                                </div>
-                                <div>
-                                    {favouritesChart()}
-                                </div>
-                                <div>
-                                    {mapCountChart()}
-                                </div>
-                                <div>
-                                    {commentsChart()}
-                                </div>
+                                <div>{playCountChart()}</div>
+                                <div>{favouritesChart()}</div>
+                                <div>{mapCountChart()}</div>
+                                <div>{commentsChart()}</div>
                             </div>
                         }
                     </div>

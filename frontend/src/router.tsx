@@ -4,6 +4,7 @@ import User from "./pages/User.tsx";
 import Beatmapset from "./pages/Beatmapset.tsx";
 import Users from "./pages/Users.tsx";
 import Beatmapsets from "./pages/Beatmapsets.tsx";
+import AddUser from "./pages/AddUser.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -13,6 +14,10 @@ export const router = createBrowserRouter([
     {
         path: "/user/:userId",
         element: <User/>,
+    },
+    {
+        path: "/users/add",
+        element: <AddUser/>,
     },
     {
         path: "/beatmapset/:mapId",

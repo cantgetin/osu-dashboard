@@ -26,20 +26,6 @@ const MapsetList = (props: MapsetSummaryProps) => {
 
     return (
         <div className="flex flex-col gap-2">
-            <div className="flex gap-2">
-                <List className="flex gap-2"
-                      title="Page:"
-                      items={buttons}
-                      renderItem={(num) =>
-                          <Button keyNumber={num}
-                                  key={num}
-                                  onClick={() => handlePageChange(num)}
-                                  className={"rounded-md w-12 " + (num === currentPage ? "bg-blue-500" : "bg-zinc-800")}
-                                  content={num.toString()}
-                          />
-                      }
-                />
-            </div>
             <List className="flex flex-col gap-2"
                   items={props.Mapsets}
                   renderItem={(mapset: Mapset) =>
@@ -49,6 +35,20 @@ const MapsetList = (props: MapsetSummaryProps) => {
                       />
                   }
             />
+            <div className="flex gap-2 justify-end">
+                <List className="flex gap-2"
+                      title="Page:"
+                      items={buttons}
+                      renderItem={(num) =>
+                          <Button keyNumber={num}
+                                  key={num}
+                                  onClick={() => handlePageChange(num)}
+                                  className={"rounded-md w-12 " + (num === currentPage ? "bg-white text-black" : "bg-zinc-800")}
+                                  content={num.toString()}
+                          />
+                      }
+                />
+            </div>
         </div>
     );
 };

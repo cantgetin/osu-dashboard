@@ -30,14 +30,16 @@ const UserPage = () => {
     return (
         <>
             <Header/>
-            <Content className="flex justify-center items-center">
+            <Content className="flex md:justify-center xs:justify-start">
                 {loaded == LoadingState.Succeeded ?
-                    <div className="p-10 pt-0 flex flex-col gap-2 2xl:w-1/2">
+                    <div className="p-10 pt-0 flex flex-col gap-2 2xl:w-1/2 min-w-[800px]">
                         <User user={userCard.User} nameOnClick={() => userNameOnClick(userCard.User.id)}>
                             <MapStatsSummary user={userCard.User}/>
                             <UserStatsSummary data={mapUserStatsToArray(userCard.User.user_stats)}/>
                         </User>
-                        <UserCharts data={mapUserStatsToArray(userCard.User.user_stats)}/>
+                        <UserCharts
+                            className="p-4"
+                            data={mapUserStatsToArray(userCard.User.user_stats)}/>
                         <MapsetList
                             Mapsets={userCard.Mapsets}
                             MapsetCount={extractUserMapsCountFromStats(userCard.User.user_stats)}

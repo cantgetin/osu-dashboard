@@ -47,7 +47,7 @@ const Mapset = (props: MapCardProps) => {
                         <img src={props.map.covers.card} className='h-full w-64 min-w-64' alt="map bg"
                              style={{objectFit: 'cover'}}/>
                     </div>
-                    <div className="flex flex-col p-2 w-full">
+                    <div className="flex flex-col p-4 w-full">
                         <div className="flex gap-2 items-center">
                             <a className="text-xl hover:text-amber-200"
                                href={`/beatmapset/${props.map.id}`}>{props.map.artist} - {props.map.title}</a>

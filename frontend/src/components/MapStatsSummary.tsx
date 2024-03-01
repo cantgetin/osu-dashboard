@@ -11,7 +11,7 @@ const MapStatsSummary = (props: UserStatsSummaryProps) => {
                 const count = props.user.user_map_counts[type];
                 if (count === 0) return null;
                 return (
-                    <div key={type} className="bg-zinc-800 px-2 py-1 rounded-lg text-sm cursor-pointer">
+                    <div key={type} className="bg-zinc-800 px-2 py-1 rounded-lg text-sm cursor-pointer h-7">
                         {type} {count}
                     </div>
                 );
