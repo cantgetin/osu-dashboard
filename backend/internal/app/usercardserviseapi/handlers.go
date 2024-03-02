@@ -26,6 +26,9 @@ func (s *ServiceImpl) Get(c echo.Context) error {
 	pageInt := 1
 	if page != "" {
 		pageInt, err = strconv.Atoi(page)
+		if err != nil {
+			return echo.ErrBadRequest
+		}
 		if pageInt <= 0 {
 			return echo.ErrBadRequest
 		}

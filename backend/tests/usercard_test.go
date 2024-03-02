@@ -635,11 +635,9 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 				in: "1",
 				out: &dto.UserCard{
 					User: &dto.User{
-						ID:                       1,
-						AvatarURL:                "avatarurl.com",
-						Username:                 "username",
-						UnrankedBeatmapsetCount:  1,
-						GraveyardBeatmapsetCount: 1,
+						ID:        1,
+						AvatarURL: "avatarurl.com",
+						Username:  "username",
 					},
 					Mapsets: []*dto.Mapset{
 						{
@@ -725,9 +723,7 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 				s.Assert().Equal(expectedUser.ID, actual.User.ID)
 				s.Assert().Equal(expectedUser.AvatarURL, actual.User.AvatarURL)
 				s.Assert().Equal(expectedUser.Username, actual.User.Username)
-				s.Assert().Equal(expectedUser.UnrankedBeatmapsetCount, actual.User.UnrankedBeatmapsetCount)
-				s.Assert().Equal(expectedUser.GraveyardBeatmapsetCount, actual.User.GraveyardBeatmapsetCount)
-				
+
 				s.Assert().Equal(len(actual.User.UserStats), 1)
 
 				s.Assert().Equal(1, len(actual.Mapsets))

@@ -13,4 +13,5 @@ func (s *Server) setupRoutes() {
 	s.server.GET("api/users/list", s.user.List)
 
 	s.server.GET("api/beatmapset/:id", s.mapset.Get)
+	s.server.GET("api/beatmapset/list", s.mapset.List)
 }

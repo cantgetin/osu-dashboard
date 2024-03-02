@@ -16,16 +16,15 @@ import (
 )
 
 func InitDB(cfg *config.Config) (*gorm.DB, error) {
-	logger := log.Logger{}
 	gormConfig := &gorm.Config{
 		DisableAutomaticPing: true,
 		Logger: gormLogger.New(
-			&logger,
+			&log.Logger{},
 			gormLogger.Config{
 				SlowThreshold:             time.Second,
-				LogLevel:                  gormLogger.Silent,
+				LogLevel:                  gormLogger.Info,
 				IgnoreRecordNotFoundError: true,
-				Colorful:                  false,
+				Colorful:                  true,
 			},
 		)}
 

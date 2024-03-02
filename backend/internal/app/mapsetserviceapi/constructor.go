@@ -5,6 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"playcount-monitor-backend/internal/dto"
 	"playcount-monitor-backend/internal/usecase/command"
+	mapsetprovide "playcount-monitor-backend/internal/usecase/mapset/provide"
 )
 
 type mapsetCreator interface {
@@ -13,6 +14,7 @@ type mapsetCreator interface {
 
 type mapsetProvider interface {
 	Get(ctx context.Context, id int) (*dto.Mapset, error)
+	List(ctx context.Context, cmd *mapsetprovide.ListCommand) ([]*dto.Mapset, error)
 }
 
 type ServiceImpl struct {

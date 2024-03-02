@@ -8,15 +8,16 @@ import (
 	"strconv"
 )
 
-type BeatmapType string
+type MapsetStatusAPIOption string
 
 const (
-	Graveyard BeatmapType = "graveyard"
-	Loved     BeatmapType = "loved"
-	// Nominated we not use this cause it shows maps that user nominated (from others) which breaks mapset FK
-	Nominated BeatmapType = "nominated"
-	Pending   BeatmapType = "pending"
-	Ranked    BeatmapType = "ranked"
+	Graveyard MapsetStatusAPIOption = "graveyard"
+	Loved     MapsetStatusAPIOption = "loved"
+	Pending   MapsetStatusAPIOption = "pending"
+	Ranked    MapsetStatusAPIOption = "ranked"
+
+	// Nominated we don't use this cause it shows maps that user nominated (from others) which breaks mapset FK
+	Nominated MapsetStatusAPIOption = "nominated"
 )
 
 func (s *Service) GetMapsetCommentsCount(ctx context.Context, mapsetID string) (int, error) {
@@ -118,7 +119,7 @@ func (s *Service) GetUser(ctx context.Context, userID string) (*User, error) {
 }
 
 func (s *Service) GetUserMapsets(ctx context.Context, userID string) ([]*Mapset, error) {
-	var BeatmapTypes = []BeatmapType{Graveyard, Loved, Pending, Ranked}
+	var mapsetTypes = []MapsetStatusAPIOption{Graveyard, Loved, Pending, Ranked}
 
 	token, err := s.tokenProvider.GetToken(ctx)
 	if err != nil {
@@ -132,8 +133,8 @@ func (s *Service) GetUserMapsets(ctx context.Context, userID string) ([]*Mapset,
 	}
 
 	beatmapsets := []*Mapset{}
-	for _, beatmapType := range BeatmapTypes {
-		beatmapsets, err = s.fetchBeatmapsets(userID, string(beatmapType), 0, headers, beatmapsets)
+	for _, mapsetType := range mapsetTypes {
+		beatmapsets, err = s.fetchBeatmapsets(userID, string(mapsetType), 0, headers, beatmapsets)
 		if err != nil {
 			return nil, err
 		}
@@ -144,14 +145,14 @@ func (s *Service) GetUserMapsets(ctx context.Context, userID string) ([]*Mapset,
 
 func (s *Service) fetchBeatmapsets(
 	userID string,
-	beatmapType string,
+	mapsetType string,
 	offset int,
 	headers map[string]string,
 	beatmapsets []*Mapset,
 ) ([]*Mapset, error) {
-	req, err := http.NewRequest("GET", s.cfg.OsuAPIHost+"/users/"+userID+"/beatmapsets/"+beatmapType+"?limit=100&offset="+strconv.Itoa(offset), nil)
+	req, err := http.NewRequest("GET", s.cfg.OsuAPIHost+"/users/"+userID+"/beatmapsets/"+mapsetType+"?limit=100&offset="+strconv.Itoa(offset), nil)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create http request for user %s and beatmap type %s: %w", userID, beatmapType, err)
+		return nil, fmt.Errorf("failed to create http request for user %s and beatmap type %s: %w", userID, mapsetType, err)
 	}
 
 	for key, value := range headers {
@@ -175,7 +176,7 @@ func (s *Service) fetchBeatmapsets(
 
 	if len(maps) >= 100 {
 		// If there are 100 or more maps, fetch the next page
-		return s.fetchBeatmapsets(userID, beatmapType, offset+100, headers, beatmapsets)
+		return s.fetchBeatmapsets(userID, mapsetType, offset+100, headers, beatmapsets)
 	}
 
 	return beatmapsets, nil

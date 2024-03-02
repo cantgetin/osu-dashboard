@@ -13,6 +13,9 @@ TODO frontend
 
 TODO backend
 
+* move search %?% to separate mapset field filter logic
+* fix integration tests
+* github actions run tests
 * cicd
 * tests up to date
 * store map comments (check if its possible)

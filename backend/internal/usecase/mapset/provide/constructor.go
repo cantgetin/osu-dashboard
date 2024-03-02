@@ -20,6 +20,14 @@ type mapsetStore interface {
 	Get(ctx context.Context, tx txmanager.Tx, id int) (*model.Mapset, error)
 	Update(ctx context.Context, tx txmanager.Tx, mapset *model.Mapset) error
 	Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error)
+	ListWithFilterSortLimitOffset(
+		ctx context.Context,
+		tx txmanager.Tx,
+		filter model.MapsetFilter,
+		sort model.MapsetSort,
+		limit int,
+		offset int,
+	) ([]*model.Mapset, error)
 }
 
 type UseCase struct {

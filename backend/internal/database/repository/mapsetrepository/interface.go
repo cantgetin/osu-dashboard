@@ -14,4 +14,12 @@ type Interface interface {
 	ListForUser(ctx context.Context, tx txmanager.Tx, userID int) ([]*model.Mapset, error)
 	ListForUserWithLimitOffset(ctx context.Context, tx txmanager.Tx, userID int, limit int, offset int) ([]*model.Mapset, error)
 	ListStatusesForUser(ctx context.Context, tx txmanager.Tx, userID int) ([]string, error)
+	ListWithFilterSortLimitOffset(
+		ctx context.Context,
+		tx txmanager.Tx,
+		filter model.MapsetFilter,
+		sort model.MapsetSort,
+		limit int,
+		offset int,
+	) ([]*model.Mapset, error)
 }

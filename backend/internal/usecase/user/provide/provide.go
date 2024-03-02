@@ -8,6 +8,8 @@ import (
 	"playcount-monitor-backend/internal/usecase/mappers"
 )
 
+const statsMaxElements = 7
+
 func (uc *UseCase) Get(
 	ctx context.Context,
 	id int,
@@ -67,5 +69,14 @@ func (uc *UseCase) List(
 		return nil, txErr
 	}
 
-	return mappers.MapUserModelsToUserDTOs(users)
+	outUsers, err := mappers.MapUserModelsToUserDTOs(users)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, user := range outUsers {
+		mappers.KeepLastNKeyValuesFromStats(user.UserStats, statsMaxElements)
+	}
+
+	return outUsers, nil
 }
