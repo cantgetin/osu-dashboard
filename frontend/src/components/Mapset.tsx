@@ -1,11 +1,12 @@
 import {useEffect, useState} from "react";
-import {getRemainingPendingTime} from "../utils/utils";
-import aveta from 'aveta';
-import Button from "./Button.tsx";
 import StatsDifference from "./StatsDifference.tsx";
+import aveta from "aveta";
+import {getRemainingPendingTime} from "../utils/utils.ts";
 
 interface MapCardProps {
     map: Mapset
+    showMapper?: boolean
+    className?: string
 }
 
 // todo: refactor this crap
@@ -37,38 +38,47 @@ const Mapset = (props: MapCardProps) => {
 
     }, [props.map.mapset_stats]);
 
-    const mapsetExternalLinkOnClick = (mapsetId: number) => window.open(`https://osu.ppy.sh/beatmapsets/${mapsetId}`)
+    // const mapsetExternalLinkOnClick = (mapsetId: number) => window.open(`https://osu.ppy.sh/beatmapsets/${mapsetId}`)
+
 
     return (
         <>
             {lastStats != null ?
-                <div className="flex bg-zinc-900 text-white w-full rounded-lg overflow-hidden">
+                <div className={`flex bg-zinc-900 text-white w-full rounded-lg overflow-hidden ${props.className}`}>
                     <div>
                         <img src={props.map.covers.card} className='h-full w-64 min-w-64' alt="map bg"
                              style={{objectFit: 'cover'}}/>
                     </div>
-                    <div className="flex flex-col p-4 w-full">
-                        <div className="flex gap-2 items-center">
-                            <a className="text-xl hover:text-amber-200"
-                               href={`/beatmapset/${props.map.id}`}>{props.map.artist} - {props.map.title}</a>
-                            <Button className="rounded-md w-12 h-6 text-sm bg-zinc-800"
-                                    onClick={() => mapsetExternalLinkOnClick(props.map.id)}
-                                    content="osu!"
-                                    keyNumber={1}
-                            />
-                        </div>
-                        <div className="flex gap-2 justify-left items-baseline">
-                            <h1 className="text-xl text-green-200">{aveta(lastStats.play_count)} plays</h1>
-                            <h1 className="text-sm h-full text-pink-200">{aveta(lastStats.favourite_count)} favorites</h1>
-                            <h1 className="text-sm h-full text-red-400">{aveta(lastStats.comments_count)} comments</h1>
-                        </div>
-                        <div className='text-xs text-zinc-400'>
-                            {props.map.status == "wip" || props.map.status == "pending" ?
-                                getRemainingPendingTime(props.map.last_updated)
-                                : props.map.status}
+                    <div className="flex flex-col p-4 w-full gap-1">
+                        <a className="h-12 hover:text-amber-200" href={`/beatmapset/${props.map.id}`}>
+                            <div className="h-6 text-lg">{props.map.title}</div>
+                            <div className="h-6 text-md text-zinc-400">by {props.map.artist}</div>
+                        </a>
+                        <div>
+                            <div className="flex gap-2 justify-left items-baseline">
+                                <h1 className="text-md text-green-200">{aveta(lastStats.play_count)} plays</h1>
+                                <h1 className="text-sm h-full text-pink-200">{aveta(lastStats.favourite_count)} favorites</h1>
+                                <h1 className="text-sm h-full text-red-400">{aveta(lastStats.comments_count)} comments</h1>
+                            </div>
+                            <div className="flex gap-2 items-center">
+                                <h1 className="text-sm text-zinc-400">
+                                    {props.map.status == "wip" || props.map.status == "pending" ?
+                                        getRemainingPendingTime(props.map.last_updated)
+                                        : props.map.status}
+                                </h1>
+                                <div className="text-sm flex gap-1">
+                                    {props.showMapper ?
+                                        <>
+                                            <h1>mapped by</h1>
+                                            <a className="text-blue-300">{props.map.creator}</a>
+                                        </>
+
+                                        : null}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div className="px-4 flex flex-col gap-1 justify-center items-center">
+                    <div className="px-4 flex flex-col justify-center items-center">
                         {penultimateStats ?
                             <>
                                 <StatsDifference difference={favouriteCountDifference} className="text-pink-300"/>

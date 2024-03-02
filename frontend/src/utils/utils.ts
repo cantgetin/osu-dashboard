@@ -74,8 +74,7 @@ export function getRemainingPendingTime(expirationTimeStr: string): string {
     const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
 
-    const result = `pending for ${days} days ${hours} hours ${minutes} minutes`;
+    const result = `pending for ${days}d ${hours}h ${minutes}m`;
 
     return result;
 }
-

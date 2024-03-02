@@ -11,7 +11,7 @@ export default function List<T>(props: ListProps<T>) {
     return (
         <div className={props.className}>
             {props.items.length > 0 && props.title}
-            {props.items.map(props.renderItem)}
+            {props.items.length > 0 ? props.items.map(props.renderItem) : null}
         </div>
     )
 }
