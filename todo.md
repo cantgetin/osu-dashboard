@@ -13,6 +13,9 @@ TODO frontend
 
 TODO backend
 
+* mapset component osu! site external link 
+* mapset search for mapper name
+* list mapsets trim json to last 7 entries
 * move search %?% to separate mapset field filter logic
 * fix integration tests
 * github actions run tests

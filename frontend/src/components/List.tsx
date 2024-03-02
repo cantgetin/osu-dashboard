@@ -10,8 +10,13 @@ interface ListProps<T> {
 export default function List<T>(props: ListProps<T>) {
     return (
         <div className={props.className}>
-            {props.items.length > 0 && props.title}
-            {props.items.length > 0 ? props.items.map(props.renderItem) : null}
+            {props.items != null || undefined ?
+                <>
+                    {props.items.length > 0 && props.title}
+                    {props.items.length > 0 ? props.items.map(props.renderItem) : null}
+                </>
+                : null}
+
         </div>
     )
 }
