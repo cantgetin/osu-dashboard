@@ -32,6 +32,10 @@ func (s *IntegrationSuite) SetupSuite() {
 		s.T().Fatalf("failed to parse cfg, %v", err)
 	}
 
+	if !s.cfg.RunIntegrationTest {
+		s.T().SkipNow()
+	}
+
 	s.ctx, s.cancelCtx = context.WithCancel(
 		context.WithValue(context.Background(), "environment", "integration-test"),
 	)

@@ -1,6 +1,7 @@
 package mappers
 
 import (
+	"encoding/json"
 	"github.com/stretchr/testify/assert"
 	"playcount-monitor-backend/internal/database/repository"
 	"playcount-monitor-backend/internal/database/repository/model"
@@ -10,17 +11,65 @@ import (
 
 // TODO: refactor
 func Test_AppendNewMapsetStats(t *testing.T) {
-	// Create sample JSON data
-	json1 := repository.JSON(`{"2023-12-23T10:00:00Z":{"play_count":1,"favourite_count":1}}`)
+	sampleTime1 := time.Date(2023, 12, 23, 10, 0, 0, 0, time.UTC)
+	sampleTime2 := time.Date(2023, 12, 24, 12, 0, 0, 0, time.UTC)
 
-	json2 := repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":2,"favourite_count":2}}`)
+	stats1 := model.MapsetStats{
+		sampleTime1: &model.MapsetStatsModel{
+			Playcount: 1,
+			Favorites: 1,
+			Comments:  1,
+		},
+	}
 
-	expectedMergedJSON := repository.JSON(`{"2023-12-23T10:00:00Z":{"play_count":1,"favourite_count":1},"2023-12-24T12:00:00Z":{"play_count":2,"favourite_count":2}}`)
+	stats2 := model.MapsetStats{
+		sampleTime2: &model.MapsetStatsModel{
+			Playcount: 2,
+			Favorites: 2,
+			Comments:  2,
+		},
+	}
+
+	json1, err := json.Marshal(stats1)
+	if err != nil {
+		t.Error(err)
+	}
+
+	json2, err := json.Marshal(stats2)
+	if err != nil {
+		t.Error(err)
+	}
+
+	expectedMergedStats := model.MapsetStats{
+		sampleTime1: &model.MapsetStatsModel{
+			Playcount: 1,
+			Favorites: 1,
+			Comments:  1,
+		},
+		sampleTime2: &model.MapsetStatsModel{
+			Playcount: 2,
+			Favorites: 2,
+			Comments:  2,
+		},
+	}
+
+	expectedMergedJSONBytes, err := json.Marshal(expectedMergedStats)
+	if err != nil {
+		t.Error(err)
+	}
+
+	expectedMergedJSON := repository.JSON(expectedMergedJSONBytes)
 
 	mergedJSON, err := AppendNewMapsetStats(json1, json2)
+	if err != nil {
+		t.Error(err)
+	}
+
+	// Convert mergedJSON to repository.JSON
+	actualMergedJSON := repository.JSON(mergedJSON)
 
 	assert.NoError(t, err)
-	assert.Equal(t, expectedMergedJSON, mergedJSON)
+	assert.Equal(t, expectedMergedJSON, actualMergedJSON)
 }
 
 func Test_KeepLastNKeyValuesFromStats(t *testing.T) {

@@ -18,4 +18,6 @@ type Config struct {
 
 	OsuAPIHost   string `env:"OSU_API_HOST" envDefault:"https://osu.ppy.sh/api/v2"`
 	OsuOAuthHost string `env:"OSU_OAUTH_HOST" envDefault:"https://osu.ppy.sh/oauth/token"`
+
+	RunIntegrationTest bool `env:"RUN_INTEGRATION_TEST" envDefault:"false"`
 }
