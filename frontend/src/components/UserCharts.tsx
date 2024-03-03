@@ -3,136 +3,71 @@ import {convertDataToDayMonth} from "../utils/utils.ts";
 import {useEffect, useState} from "react";
 
 interface LineChartProps {
-    data: UserStatsDataset[]
-    asSlideshow?: boolean
-    className?: string
+    data: UserStatsDataset[];
+    asSlideshow?: boolean;
+    className?: string;
 }
 
-const UserCharts = (props: LineChartProps) => {
+const charts: { property: keyof UserStatsDataset, name: string, color: string }[] = [
+    {property: 'play_count', name: 'Play count', color: '#86EFAC'},
+    {property: 'favourite_count', name: 'Favourite count', color: '#FF5DBD'},
+    {property: 'map_count', name: 'Map count', color: '#ffed54'},
+    {property: 'comments_count', name: 'Comment count', color: '#f87171'}
+];
 
-    function mapToChartData(data: UserStatsDataset[]): UserStatsDataset[] {
-        const updatedArray: UserStatsDataset[] = [];
-        data.forEach((obj) => updatedArray.push({...obj, timestamp: convertDataToDayMonth(obj.timestamp)}));
-        return updatedArray
-    }
-
-    type ChartDataProperty = keyof UserStatsDataset;
-
-    const generateSingleChartData = (
-        userData: UserStatsDataset[],
-        property: ChartDataProperty,
-        name: string,
-        color: string
-    ) => {
-        if (userData.length >= 7) {
-            userData = userData.slice(-7)
-        }
-
-        return {
-            labels: userData.map((data) => data.timestamp),
-            datasets: [{
-                data: userData.map((data) => data[property]),
-                backgroundColor: [color],
-                label: name,
-                borderColor: [color],
-                borderWidth: 2,
-                pointStyle: 'circle',
-                pointRadius: 3,
-                pointHoverRadius: 6,
-            }],
-        };
+const generateUserChartData = (
+    userData: UserStatsDataset[],
+    property: keyof UserStatsDataset,
+    name: string,
+    color: string
+) => {
+    const updatedData = userData.map((obj) => ({...obj, timestamp: convertDataToDayMonth(obj.timestamp)}));
+    const slicedData = updatedData.length >= 7 ? updatedData.slice(-7) : updatedData;
+    return {
+        labels: slicedData.map((data) => data.timestamp),
+        datasets: [{
+            data: slicedData.map((data) => data[property]),
+            backgroundColor: [color],
+            label: name,
+            borderColor: [color],
+            borderWidth: 2,
+            pointStyle: 'circle',
+            pointRadius: 3,
+            pointHoverRadius: 6,
+        }],
     };
+};
 
-    const playCountChart = () => {
-        return (
-            <LineChart
-                chartData={
-                    generateSingleChartData(
-                        mapToChartData(props.data),
-                        'play_count',
-                        'Play count',
-                        '#86EFAC'
-                    )
-                }
-            />
-        )
-    }
-
-    const favouritesChart = () => {
-        return (
-            <LineChart
-                chartData={
-                    generateSingleChartData(
-                        mapToChartData(props.data),
-                        'favourite_count',
-                        'Favourite count',
-                        '#FF5DBD'
-                    )
-                }
-            />
-        )
-    }
-
-    const mapCountChart = () => {
-        return (
-            <LineChart
-                chartData={
-                    generateSingleChartData(
-                        mapToChartData(props.data),
-                        'map_count',
-                        'Map count',
-                        '#ffed54'
-                    )
-                }
-            />
-        )
-    }
-
-    const commentsChart = () => {
-        return (
-            <LineChart
-                chartData={
-                    generateSingleChartData(
-                        mapToChartData(props.data),
-                        'comments_count',
-                        'Comment count',
-                        '#f87171'
-                    )
-                }
-            />
-        )
-    }
-
-    const chartsList = [playCountChart, favouritesChart, mapCountChart, commentsChart]
-
-    const intervalInSeconds = 3;
+const UserCharts = ({data, asSlideshow, className}: LineChartProps) => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const intervalInSeconds = 3;
+
+    const renderChart = (chartIndex: number) => {
+        const chart = charts[chartIndex];
+        return (<LineChart chartData={generateUserChartData(data, chart.property, chart.name, chart.color)}/>);
+    };
 
     useEffect(() => {
         const intervalId = setInterval(() => {
-            setCurrentIndex((prevIndex) => (prevIndex + 1) % chartsList.length);
+            setCurrentIndex((prevIndex) => (prevIndex + 1) % charts.length);
         }, intervalInSeconds * 1000);
 
         return () => clearInterval(intervalId);
-    }, [chartsList.length, intervalInSeconds]);
+    }, [charts.length, intervalInSeconds]);
 
     return (
         <>
-            {
-                props.data.length > 0 ?
-                    <div className={`flex gap-3 bg-zinc-900 rounded-lg box-border w-full ${props.className}`}>
-                        {props.asSlideshow ?
-                            <>{chartsList[currentIndex]()}</>
-                            :
-                            <div className="grid grid-cols-2 w-full">
-                                <div>{playCountChart()}</div>
-                                <div>{favouritesChart()}</div>
-                                <div>{mapCountChart()}</div>
-                                <div>{commentsChart()}</div>
-                            </div>
-                        }
-                    </div>
-                    : null}
+            {data.length > 0 && (
+                <div className={`flex bg-zinc-900 rounded-lg box-border w-full ${className}`}>
+                    {asSlideshow ? renderChart(currentIndex) : (
+                        <div className="grid gap-4 grid-cols-2 w-full">
+                            {charts.map((_, index) => (
+                                <div key={index}>{renderChart(index)}</div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
         </>
     );
 };

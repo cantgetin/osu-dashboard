@@ -28,6 +28,13 @@ export function mapUserStatsToArray(userStats: UserStats): UserStatsDataset[] {
     }));
 }
 
+export function mapMapsetStatsToArray(mapsetStats: MapsetStats): MapsetStatsDataset[] {
+    return Object.keys(mapsetStats).map((timestamp) => ({
+        timestamp: timestamp,
+        ...mapsetStats[timestamp],
+    }));
+}
+
 export function extractUserMapsCountFromStats(userStats: UserStats): number {
     let arr = mapUserStatsToArray(userStats);
     if (arr.length === 0) {
@@ -36,28 +43,6 @@ export function extractUserMapsCountFromStats(userStats: UserStats): number {
 
     const lastElement = arr[arr.length - 1];
     return lastElement.map_count;
-}
-
-export function formatDateDiff(startDateString: string, endDateString: string): string {
-    const startDate = new Date(startDateString);
-    const endDate = new Date(endDateString);
-
-    const timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
-    const seconds = Math.floor(timeDiff / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-    const months = Math.floor(days / 30);
-
-    if (months > 0) {
-        return months === 1 ? '1 month' : `${months} months`;
-    } else if (days > 0) {
-        return days === 1 ? '1 day' : `${days} days`;
-    } else if (hours > 0) {
-        return hours === 1 ? '1 hour' : `${hours} hours`;
-    } else {
-        return minutes === 1 ? '1 minute' : `${minutes} minutes`;
-    }
 }
 
 export function getRemainingPendingTime(expirationTimeStr: string): string {

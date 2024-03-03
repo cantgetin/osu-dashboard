@@ -2,6 +2,8 @@
 
 TODO frontend
 
+* refactor beatmapset component
+* chartjs resizing problem
 * map types in user page
 * map types filtering in user page
 * mobile compitability

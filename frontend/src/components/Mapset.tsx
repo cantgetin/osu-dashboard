@@ -38,9 +38,6 @@ const Mapset = (props: MapCardProps) => {
 
     }, [props.map.mapset_stats]);
 
-    // const mapsetExternalLinkOnClick = (mapsetId: number) => window.open(`https://osu.ppy.sh/beatmapsets/${mapsetId}`)
-
-
     return (
         <>
             {lastStats != null ?
@@ -70,7 +67,12 @@ const Mapset = (props: MapCardProps) => {
                                     {props.showMapper ?
                                         <>
                                             <h1>mapped by</h1>
-                                            <a className="text-blue-300">{props.map.creator}</a>
+                                            <a
+                                                href={`/user/${props.map.user_id}`}
+                                                className="text-blue-300 hover:text-yellow-200"
+                                            >
+                                                {props.map.creator}
+                                            </a>
                                         </>
 
                                         : null}

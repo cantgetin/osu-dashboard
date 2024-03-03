@@ -41,15 +41,15 @@ const Beatmapsets = () => {
         <>
             <Header/>
             <Content className="flex flex-col gap-2 min-w-[800px]">
-                <div className="p-5 flex mb-16 gap-2 items-center text-lg rounded-lg min-w-[800px] z-10">
+                <div className="p-5 flex gap-2 items-center text-lg rounded-lg min-w-[800px] z-10">
                     <input
                         onChange={(e) => setSearch(e.target.value)}
-                        className="px-4 py-2 bg-zinc-800 rounded-lg min-w-[400px] w-full border border-zinc-500"
+                        className="px-4 py-2 bg-zinc-800 rounded-lg min-w-[400px] w-full border border-zinc-900"
                         placeholder="Search beatmapsets"
                     />
                     <h1 className="text-md">Status:</h1>
                     <select
-                        className="px-2 py-2  rounded-lg bg-zinc-800 text-white border border-zinc-500"
+                        className="px-2 py-2  rounded-lg bg-zinc-800 text-white border border-zinc-900"
                         value={status}
                         onChange={(e) => setStatus(e.target.value)}
                     >
@@ -64,7 +64,7 @@ const Beatmapsets = () => {
                     </select>
                     <h1 className="text-md">Sort:</h1>
                     <select
-                        className="px-2 py-2  rounded-lg bg-zinc-800 text-white border border-zinc-500"
+                        className="px-2 py-2 rounded-lg bg-zinc-800 text-white border border-zinc-900"
                         value={sort}
                         onChange={(e) => setSort(e.target.value)}
                     >
@@ -80,15 +80,16 @@ const Beatmapsets = () => {
                         items={mapsets}
                         renderItem={(m: Mapset) =>
                             <Mapset
+                                key={m.id}
                                 map={m}
                                 showMapper={true}
                                 className="min-w-[800px]"
                             />
                         }
-                        className="grid xl:grid-cols-2 gap-2 p-5"/>
+                        className="grid xl:grid-cols-2 gap-2 p-5"
+                    />
                     : <LoadingSpinner/>
                 }
-
             </Content>
         </>
     );

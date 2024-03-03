@@ -25,9 +25,9 @@ const Users = () => {
     return (
         <>
             <Header/>
-            <Content className="p-10 min-w-[1000px]">
+            <Content>
                 {users != null ?
-                    <List className="grid 2xl:grid-cols-2 l:grid-cols-1 gap-4" items={users}
+                    <List className="min-w-[1000px] p-10 grid 2xl:grid-cols-2 l:grid-cols-1 gap-4" items={users}
                           renderItem={(user: User) => (
                               <User user={user} key={user.id} nameOnClick={() => userNameOnClick(user.id)}>
                                   <UserCharts
@@ -36,7 +36,8 @@ const Users = () => {
                                   />
                                   <UserStatsSummary data={mapUserStatsToArray(user.user_stats)}/>
                               </User>
-                          )}/>
+                          )}
+                    />
                     : <LoadingSpinner/>}
             </Content>
         </>
