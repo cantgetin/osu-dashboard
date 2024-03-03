@@ -1,4 +1,4 @@
-import { SpinnerCircularFixed } from 'spinners-react';
+import {SpinnerCircularFixed} from 'spinners-react';
 
 const LoadingSpinner = () => {
     return (

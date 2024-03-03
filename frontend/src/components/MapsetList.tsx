@@ -1,7 +1,7 @@
 import Mapset from "./Mapset";
 import {fetchUserCard, selectUserCardPage} from "../store/userCardSlice.ts";
 import {useAppDispatch, useAppSelector} from "../store/hooks.ts";
-import Button from "./Button.tsx";
+import Button from "./ui/Button.tsx";
 import List from "./List.tsx";
 
 interface MapsetSummaryProps {

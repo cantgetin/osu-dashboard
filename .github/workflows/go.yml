@@ -26,7 +26,12 @@ jobs:
         cd backend
         go build -v ./...
 
-    - name: Test
+    - name: Unit test
       run: |
         cd backend
         go test -v -cover ./...
+
+    - name: Integration test
+      run: |
+        cd backend
+        $env:RUN_INTEGRATION_TEST = "true"; go test -v -cover ./tests/...

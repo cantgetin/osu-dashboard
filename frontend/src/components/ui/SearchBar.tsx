@@ -1,4 +1,3 @@
-
 interface SearchBarProps {
     className?: string
     placeholder?: string

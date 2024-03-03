@@ -47,7 +47,7 @@ const MapsetCharts = (props: MapsetChartsProps) => {
             {
                 props.data != null ?
                     <div className={`flex bg-zinc-900 box-border w-full ${props.className}`}>
-                        <div className="grid 2xl:grid-cols-3 lg:grid-cols-2 w-full gap-2">
+                        <div className="grid 2xl:grid-cols-2 lg:grid-cols-2 w-full gap-2">
                             {charts.map((_, index) => (
                                 <div key={index}>{renderChart(index)}</div>
                             ))}
