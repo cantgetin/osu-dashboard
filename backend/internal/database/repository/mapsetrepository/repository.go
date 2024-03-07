@@ -50,6 +50,16 @@ func (r *GormRepository) Exists(ctx context.Context, tx txmanager.Tx, id int) (b
 	return count > 0, nil
 }
 
+func (r *GormRepository) List(ctx context.Context, tx txmanager.Tx) ([]*model.Mapset, error) {
+	var mapsets []*model.Mapset
+	err := tx.DB().WithContext(ctx).Table(mapsetsTableName).Find(&mapsets).Error
+	if err != nil {
+		return nil, fmt.Errorf("failed to list mapsets: %w", err)
+	}
+
+	return mapsets, nil
+}
+
 func (r *GormRepository) ListForUser(ctx context.Context, tx txmanager.Tx, userID int) ([]*model.Mapset, error) {
 	var mapsets []*model.Mapset
 	err := tx.DB().WithContext(ctx).Table(mapsetsTableName).Where("user_id = ?", userID).Find(&mapsets).Error

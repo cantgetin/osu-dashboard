@@ -11,6 +11,7 @@ type Interface interface {
 	Get(ctx context.Context, tx txmanager.Tx, id int) (*model.Mapset, error)
 	Update(ctx context.Context, tx txmanager.Tx, mapset *model.Mapset) error
 	Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error)
+	List(ctx context.Context, tx txmanager.Tx) ([]*model.Mapset, error)
 	ListForUser(ctx context.Context, tx txmanager.Tx, userID int) ([]*model.Mapset, error)
 	ListForUserWithLimitOffset(ctx context.Context, tx txmanager.Tx, userID int, limit int, offset int) ([]*model.Mapset, error)
 	ListStatusesForUser(ctx context.Context, tx txmanager.Tx, userID int) ([]string, error)
