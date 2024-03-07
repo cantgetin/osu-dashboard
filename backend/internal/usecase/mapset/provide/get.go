@@ -34,5 +34,10 @@ func (uc *UseCase) Get(
 		return nil, txErr
 	}
 
+	mappers.KeepLastNKeyValuesFromStats(dtoMapset.MapsetStats, statsMaxElements)
+	for _, beatmap := range dtoMapset.Beatmaps {
+		mappers.KeepLastNKeyValuesFromStats(beatmap.BeatmapStats, statsMaxElements)
+	}
+
 	return dtoMapset, nil
 }

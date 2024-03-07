@@ -28,7 +28,13 @@ func (uc *UseCase) Get(
 		return nil, txErr
 	}
 
-	return mappers.MapUserModelToUserDTO(user)
+	userDto, err := mappers.MapUserModelToUserDTO(user)
+	if err != nil {
+		return nil, err
+	}
+
+	mappers.KeepLastNKeyValuesFromStats(userDto.UserStats, statsMaxElements)
+	return userDto, nil
 }
 
 func (uc *UseCase) GetByName(
@@ -49,7 +55,13 @@ func (uc *UseCase) GetByName(
 		return nil, txErr
 	}
 
-	return mappers.MapUserModelToUserDTO(user)
+	userDto, err := mappers.MapUserModelToUserDTO(user)
+	if err != nil {
+		return nil, err
+	}
+
+	mappers.KeepLastNKeyValuesFromStats(userDto.UserStats, statsMaxElements)
+	return userDto, nil
 }
 
 func (uc *UseCase) List(

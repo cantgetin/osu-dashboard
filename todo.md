@@ -18,7 +18,6 @@ TODO backend
 * find user (untracked) endpoint on service with osuapi call
 * db cleanup script
 * mapset search for mapper name
-* list mapsets trim json to last 7 entries
 * move search %?% to separate mapset field filter logic
 * fix integration tests
 * github actions run tests

@@ -9,6 +9,7 @@ import (
 )
 
 const mapsetsPerPage = 50
+const statsMaxElements = 7
 
 type ListCommand struct {
 	Page   int
@@ -51,9 +52,15 @@ func (uc *UseCase) List(
 
 		return nil
 	})
-
 	if txErr != nil {
 		return nil, txErr
+	}
+
+	for _, mapset := range dtoMapsets {
+		mappers.KeepLastNKeyValuesFromStats(mapset.MapsetStats, statsMaxElements)
+		for _, beatmap := range mapset.Beatmaps {
+			mappers.KeepLastNKeyValuesFromStats(beatmap.BeatmapStats, statsMaxElements)
+		}
 	}
 
 	return dtoMapsets, nil
