@@ -34,4 +34,5 @@ jobs:
     - name: Integration test
       run: |
         cd backend
-        $env:RUN_INTEGRATION_TEST = "true"; go test -v -cover ./tests/...
+        export RUN_INTEGRATION_TEST=true
+        go test -v -cover ./tests/...

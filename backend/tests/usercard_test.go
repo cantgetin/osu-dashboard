@@ -98,7 +98,7 @@ func (s *IntegrationSuite) Test_CreateUseCard() {
 				s.Require().NoError(err)
 
 				out, err := http.Post(
-					"http://localhost:8080/user_card/create",
+					fmt.Sprintf("http://localhost:%s/api/user_card/create", s.port),
 					"application/json",
 					bytes.NewBuffer(inJSON),
 				)
@@ -106,7 +106,7 @@ func (s *IntegrationSuite) Test_CreateUseCard() {
 				s.Require().NoError(err)
 				s.Require().NotNil(out)
 
-				s.Assert().Equal(out.StatusCode, tc.outCode)
+				s.Assert().Equal(tc.outCode, out.StatusCode)
 			})
 		}
 
@@ -163,7 +163,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 					},
 					Beatmaps: []*model.Beatmap{
 						{
-							ID:               3,
+							ID:               77,
 							MapsetID:         123,
 							DifficultyRating: 5.3,
 							Version:          "version1",
@@ -181,7 +181,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 							UpdatedAt:        time.Now().UTC(),
 						},
 						{
-							ID:               4,
+							ID:               78,
 							MapsetID:         123,
 							DifficultyRating: 6.7,
 							Version:          "version2",
@@ -228,7 +228,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 							Creator:        "username1changed",
 							Beatmaps: []*command.UpdateBeatmapCommand{
 								{
-									Id:               3,
+									Id:               77,
 									BeatmapsetId:     123,
 									DifficultyRating: 7.6,
 									Version:          "version1changed",
@@ -245,7 +245,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 									LastUpdated:      time.Now().UTC(),
 								},
 								{
-									Id:               4,
+									Id:               78,
 									BeatmapsetId:     123,
 									DifficultyRating: 1.2,
 									Version:          "version2changed",
@@ -358,7 +358,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 					},
 					Beatmaps: []*model.Beatmap{
 						{
-							ID:               3,
+							ID:               77,
 							MapsetID:         123,
 							DifficultyRating: 7.6,
 							Version:          "version1changed",
@@ -372,7 +372,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 							UserID:           123,
 						},
 						{
-							ID:               4,
+							ID:               78,
 							MapsetID:         123,
 							DifficultyRating: 1.2,
 							Version:          "version2changed",
@@ -438,7 +438,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 				s.Require().NoError(err)
 
 				out, err := http.Post(
-					"http://localhost:8080/user_card/update",
+					fmt.Sprintf("http://localhost:%s/api/user_card/update", s.port),
 					"application/json",
 					bytes.NewBuffer(inJSON),
 				)
@@ -705,7 +705,8 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 					s.Require().NoError(err)
 				}
 
-				out, err := http.Get("http://localhost:8080/user_card/" + tc.in)
+				url := fmt.Sprintf("http://localhost:%s/api/user_card/", s.port)
+				out, err := http.Get(url + tc.in)
 				s.Require().NoError(err)
 				s.Require().Equal(tc.outCode, out.StatusCode)
 

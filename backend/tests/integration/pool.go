@@ -11,6 +11,9 @@ import (
 func Start(t *testing.T, cfg *config.Config) (*dockertest.Pool, CloseFn) {
 	t.Helper()
 
+	pgIntegrationTestExternalPort := cfg.IntegrationTestPgPort
+	pgInternalPort := "5432/tcp"
+
 	pool, err := dockertest.NewPool("")
 	if err != nil {
 		t.Fatal(err)
@@ -24,17 +27,17 @@ func Start(t *testing.T, cfg *config.Config) (*dockertest.Pool, CloseFn) {
 			"POSTGRES_PASSWORD=db",
 			"POSTGRES_DB=db",
 		},
-		ExposedPorts: []string{"5432/tcp"}, // Specify the container's exposed port
+		ExposedPorts: []string{pgInternalPort},
 		PortBindings: map[dc.Port][]dc.PortBinding{
-			"5432/tcp": {{HostIP: "", HostPort: "5432"}}, // Beatmapset the exposed port to the desired host port
+			dc.Port(pgInternalPort): {{HostIP: "", HostPort: pgIntegrationTestExternalPort}},
 		},
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	postgresPort := postgres.GetPort("5432/tcp")
-	cfg.PgDSN = fmt.Sprintf("postgres://db:db@db:%s/?sslmode=disable", postgresPort)
+	cfg.PgDSN = fmt.Sprintf("postgresql://localhost:%s/db?user=db&password=db&sslmode=disable",
+		pgIntegrationTestExternalPort)
 
 	closer := func() error {
 		if err := pool.Purge(postgres); err != nil {

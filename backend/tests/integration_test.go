@@ -24,6 +24,7 @@ type IntegrationSuite struct {
 	cancelCtx func()
 	closers   []func() error
 	db        *gorm.DB
+	port      string
 }
 
 func (s *IntegrationSuite) SetupSuite() {
@@ -35,6 +36,9 @@ func (s *IntegrationSuite) SetupSuite() {
 	if !s.cfg.RunIntegrationTest {
 		s.T().SkipNow()
 	}
+
+	s.port = s.cfg.IntegrationTestHTTPPort
+	s.cfg.HTTPAddr = s.cfg.IntegrationTestHTTPAddr
 
 	s.ctx, s.cancelCtx = context.WithCancel(
 		context.WithValue(context.Background(), "environment", "integration-test"),

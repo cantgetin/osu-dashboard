@@ -96,7 +96,7 @@ func (uc *UseCase) updateExistingMapsetAndItsBeatmaps(
 	// update mapset beatmaps
 	for _, bm := range ms.Beatmaps {
 		var beatmapExist bool
-		beatmapExist, err = uc.beatmap.Exists(ctx, tx, ms.Id)
+		beatmapExist, err = uc.beatmap.Exists(ctx, tx, bm.Id)
 		if err != nil {
 			return err
 		}

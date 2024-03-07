@@ -5,8 +5,10 @@ import (
 	"github.com/ds248a/closer"
 	migrate "github.com/rubenv/sql-migrate"
 	log "github.com/sirupsen/logrus"
+	"path/filepath"
 	"playcount-monitor-backend/internal/config"
 	"playcount-monitor-backend/internal/database/txmanager"
+	"runtime"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -59,8 +61,18 @@ func InitDB(cfg *config.Config) (*gorm.DB, error) {
 }
 
 func ApplyMigrations(gdb *gorm.DB) error {
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		return fmt.Errorf("failed to get current file information")
+	}
+
+	// Get the directory containing the current file
+	baseDir := filepath.Dir(filename)
+	migrationsDir := filepath.Join(baseDir, "..", "..", "migrations")
+
+	// Create a migration source with the absolute path
 	migrations := migrate.FileMigrationSource{
-		Dir: "../../migrations",
+		Dir: migrationsDir,
 	}
 
 	db, err := gdb.DB()
@@ -68,6 +80,7 @@ func ApplyMigrations(gdb *gorm.DB) error {
 		return err
 	}
 
+	// Apply migrations
 	n, err := migrate.Exec(db, "postgres", migrations, migrate.Up)
 	if err != nil {
 		return err

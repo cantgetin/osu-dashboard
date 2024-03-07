@@ -1,8 +1,8 @@
 up:
-	docker-compose up -d
+	docker-compose up -d --no-deps --build
 
 up-no-worker:
-	docker-compose up --scale pmb-worker=0 -d
+	docker-compose up --scale pmb-worker=0 -d --no-deps --build
 
 run:
 	go run cmd/playcount-monitor/main.go || exit 1
@@ -17,7 +17,10 @@ build:
 	go build -o bin/main cmd/playcount-monitor/main.go
 
 test:
-	go test ./tests/... -v -cover
+	go test ./... -v -cover
+
+integration-test:
+	set "RUN_INTEGRATION_TEST=true" && go test ./tests/... -v -cover
 
 add-sample-data:
 	go run tests/data/add_sample_data.go

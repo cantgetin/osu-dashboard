@@ -20,4 +20,10 @@ type Config struct {
 	OsuOAuthHost string `env:"OSU_OAUTH_HOST" envDefault:"https://osu.ppy.sh/oauth/token"`
 
 	RunIntegrationTest bool `env:"RUN_INTEGRATION_TEST" envDefault:"false"`
+
+	IntegrationTestPgDSN  string `env:"INTEGRATION_TEST_PG_DSN" envDefault:"postgresql://db:5467/db?user=db&password=db"`
+	IntegrationTestPgPort string `env:"INTEGRATION_TEST_PG_PORT" envDefault:"5467"`
+
+	IntegrationTestHTTPAddr string `env:"INTEGRATION_TEST_HTTP_ADDR" envDefault:"127.0.0.1:8155"`
+	IntegrationTestHTTPPort string `env:"INTEGRATION_TEST_HTTP_PORT" envDefault:"8155"`
 }

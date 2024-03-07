@@ -17,7 +17,6 @@ type CloseFn func() error
 
 func InitDB(t *testing.T, pool *dockertest.Pool, cfg *config.Config) (*gorm.DB, CloseFn) {
 	var gdb *gorm.DB
-	cfg.PgDSN = "postgresql://localhost:5432/db?user=db&password=db&sslmode=disable"
 
 	if retryErr := pool.Retry(func() error {
 		var err error
