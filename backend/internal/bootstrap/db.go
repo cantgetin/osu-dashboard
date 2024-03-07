@@ -9,6 +9,7 @@ import (
 	"playcount-monitor-backend/internal/config"
 	"playcount-monitor-backend/internal/database/txmanager"
 	"runtime"
+	"strings"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -29,6 +30,9 @@ func InitDB(cfg *config.Config) (*gorm.DB, error) {
 				Colorful:                  true,
 			},
 		)}
+
+	// switch pgDSN to secret password from .env
+	cfg.PgDSN = strings.Replace(cfg.PgDSN, "password=db", "password="+cfg.PgPassword, 1)
 
 	db, err := gorm.Open(postgres.Open(cfg.PgDSN), gormConfig)
 	if err != nil {

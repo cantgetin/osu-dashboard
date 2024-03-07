@@ -2,7 +2,6 @@ package tests
 
 import (
 	"context"
-	"github.com/caarlos0/env"
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/suite"
 	"gorm.io/gorm"
@@ -28,9 +27,10 @@ type IntegrationSuite struct {
 }
 
 func (s *IntegrationSuite) SetupSuite() {
-	s.cfg = &config.Config{}
-	if err := env.Parse(s.cfg); err != nil {
-		s.T().Fatalf("failed to parse cfg, %v", err)
+	var err error
+	s.cfg, err = config.LoadConfig(".env_test")
+	if err != nil {
+		s.T().Fatalf("failed to load config, %v", err)
 	}
 
 	if !s.cfg.RunIntegrationTest {

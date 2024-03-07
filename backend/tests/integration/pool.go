@@ -24,7 +24,7 @@ func Start(t *testing.T, cfg *config.Config) (*dockertest.Pool, CloseFn) {
 		Tag:        "15.2-alpine",
 		Env: []string{
 			"POSTGRES_USER=db",
-			"POSTGRES_PASSWORD=db",
+			"POSTGRES_PASSWORD=" + cfg.PgPassword,
 			"POSTGRES_DB=db",
 		},
 		ExposedPorts: []string{pgInternalPort},
