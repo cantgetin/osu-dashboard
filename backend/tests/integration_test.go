@@ -28,7 +28,7 @@ type IntegrationSuite struct {
 
 func (s *IntegrationSuite) SetupSuite() {
 	var err error
-	s.cfg, err = config.LoadConfig()
+	s.cfg, err = config.LoadConfig(".env_test")
 	if err != nil {
 		s.T().Fatalf("failed to load config, %v", err)
 	}

@@ -37,14 +37,14 @@ type Config struct {
 	IntegrationTestHTTPPort string `env:"INTEGRATION_TEST_HTTP_PORT" envDefault:"8155"`
 }
 
-func LoadConfig() (*Config, error) {
+func LoadConfig(envFileName string) (*Config, error) {
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {
 		return nil, fmt.Errorf("failed to get current file information")
 	}
 
 	baseDir := filepath.Dir(filename)
-	envDir := filepath.Join(baseDir, "..", "..", ".env") // .env file path
+	envDir := filepath.Join(baseDir, "..", "..", envFileName) // .env file path
 
 	if err := godotenv.Load(envDir); err != nil {
 		return nil, err
