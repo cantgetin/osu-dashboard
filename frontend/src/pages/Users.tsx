@@ -21,6 +21,8 @@ const Users = () => {
 
     const userNameOnClick = (userId: number) => window.open(`/user/${userId}`, "_self")
 
+    const userExtLinkOnClick = (userId: number) => window.open(`https://osu.ppy.sh/users/${userId}`)
+
     return (
         <Layout className="flex md:justify-center sm:justify-start">
             {users != null ?
@@ -30,6 +32,7 @@ const Users = () => {
                               user={user}
                               key={user.id}
                               nameOnClick={() => userNameOnClick(user.id)}
+                              externalLinkOnClick={() => userExtLinkOnClick(user.id)}
                           >
                               <UserCharts
                                   className="w-[400px] min-w-[400px] max-w-[400px]"

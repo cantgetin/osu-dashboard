@@ -24,13 +24,16 @@ const UserPage = () => {
         dispatch(fetchUserCard({userId: Number(userId), page: 1}))
     }, [dispatch, userId])
 
-    const userNameOnClick = (userId: number) => window.open(`https://osu.ppy.sh/users/${userId}`)
+    const extLinkOnClick = (userId: number) => window.open(`https://osu.ppy.sh/users/${userId}`)
 
     return (
         <Layout className="flex md:justify-center sm:justify-start">
             {loaded == LoadingState.Succeeded ?
                 <div className="w-[1152px] grid 2xl:grid-cols-1 l:grid-cols-1 gap-4">
-                    <User user={userCard.User} nameOnClick={() => userNameOnClick(userCard.User.id)}>
+                    <User
+                        user={userCard.User}
+                        externalLinkOnClick={() => extLinkOnClick(userCard.User.id)}
+                    >
                         <MapStatsSummary user={userCard.User}/>
                         <UserStatsSummary data={mapUserStatsToArray(userCard.User.user_stats)}/>
                     </User>

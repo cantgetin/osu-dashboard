@@ -1,15 +1,15 @@
 interface ButtonProps {
-    keyNumber: number;
+    keyNumber?: number;
     onClick: (key: number) => void;
     className: string;
-    content: string;
+    content: React.ReactNode;
 }
 
 const Button = (props: ButtonProps) => {
     return (
         <button
             key={props.keyNumber}
-            onClick={() => props.onClick(props.keyNumber)}
+            onClick={() => props.onClick(props.keyNumber != undefined ? props.keyNumber : 1)}
             className={props.className}
         >
             {props.content}

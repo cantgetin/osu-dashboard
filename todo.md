@@ -16,6 +16,7 @@ TODO frontend
 
 TODO backend
 
+* add more tracking logs: each user, total progress
 * add user to track endpoint
 * find user (untracked) endpoint on service with osuapi call
 * finish db cleanup script

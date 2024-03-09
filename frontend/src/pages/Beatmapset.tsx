@@ -5,6 +5,8 @@ import aveta from "aveta";
 import MapsetCharts from "../components/MapsetCharts.tsx";
 import {convertDateFormat, mapMapsetStatsToArray} from "../utils/utils.ts";
 import Layout from "../components/ui/Layout.tsx";
+import {FaExternalLinkAlt} from "react-icons/fa";
+import Button from "../components/ui/Button.tsx";
 
 const Beatmapset = () => {
     const {mapId} = useParams();
@@ -27,21 +29,30 @@ const Beatmapset = () => {
         ? mapsetStats[mapsetStats.length - 2]
         : mapsetStats[mapsetStats.length - 1]
 
+    const externalLinkOnClick = () => window.open(`https://osu.ppy.sh/s/${beatmapset?.id}`, "_blank");
+
 
     return (
         <Layout>
             {beatmapset ?
                 <div className="pt-15 flex flex-col flex-wrap gap-2 relative w-full">
                     <img src={beatmapset.covers['cover@2x']} alt="map bg" className="h-[550px] object-cover rounded-md"/>
-                    <div className="absolute p-10 inset-0 flex justify-center h-[630px]">
-                        <div className="p-4 w-1/2 justify-end flex flex-col gap-6 h-[550px]">
+                    <div className="p-5 absolute inset-0 flex justify-center h-[550px]">
+                        <div className="w-1/2 justify-end flex flex-col gap-6">
                             {/*<div className="flex gap-2">*/}
                             {/*    {beatmapset.beatmaps.map((_, index) =>*/}
                             {/*    <div key={index} className="bg-zinc-900 h-6 w-6 rounded-lg text-center">{index}</div>*/}
                             {/*        )}*/}
                             {/*</div>*/}
                             <div>
-                                <h1 className="text-5xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]">{beatmapset.title}</h1>
+                                <div className="flex gap-4 items-center">
+                                    <h1 className="text-5xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]">{beatmapset.title}</h1>
+                                    <Button
+                                        onClick={() => externalLinkOnClick()}
+                                        className="bg-zinc-800 rounded-md p-1 h-6"
+                                        content={<FaExternalLinkAlt className="h-3"/>}
+                                    />
+                                </div>
                                 <h1 className="text-4xl text-zinc-400 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]">by {beatmapset.artist}</h1>
                             </div>
                             <div className="flex gap-1 flex-wrap max-w-[600px]">
@@ -70,8 +81,8 @@ const Beatmapset = () => {
                                 </a>
                             </div>
                         </div>
-                        <div className="p-4 w-1/2 justify-end flex flex-col ml-auto whitespace-nowrap">
-                            <div className=" px-4 flex flex-col justify-center items-center">
+                        <div className="w-1/2 justify-end flex flex-col ml-auto whitespace-nowrap">
+                            <div className="flex flex-col justify-center items-center">
                                 <div
                                     className='text-4xl flex gap-2 items-center w-full justify-end drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)] text-pink-300'>
                                     <h1>{aveta(lastStats.favourite_count)} Favorites</h1>
