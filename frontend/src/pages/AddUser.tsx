@@ -16,7 +16,7 @@ const AddUser = () => {
     }, [])
 
     return (
-        <Layout className="p-10">
+        <Layout>
             <h1 className="text-4xl leading-tight">Add user</h1>
             <SearchBar className="my-4 rounded-md w-64 px-5 h-8" placeholder="Username..."></SearchBar>
             <div className="w-64">

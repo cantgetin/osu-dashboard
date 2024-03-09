@@ -31,7 +31,7 @@ const Beatmapset = () => {
     return (
         <Layout>
             {beatmapset ?
-                <div className="p-10 pt-15 flex flex-col flex-wrap gap-2 relative w-full">
+                <div className="pt-15 flex flex-col flex-wrap gap-2 relative w-full">
                     <img src={beatmapset.covers['cover@2x']} alt="map bg" className="h-[550px] object-cover rounded-md"/>
                     <div className="absolute p-10 inset-0 flex justify-center h-[630px]">
                         <div className="p-4 w-1/2 justify-end flex flex-col gap-6 h-[550px]">

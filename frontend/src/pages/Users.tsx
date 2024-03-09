@@ -24,9 +24,13 @@ const Users = () => {
     return (
         <Layout className="flex md:justify-center sm:justify-start">
             {users != null ?
-                <List className="min-w-[1152px] p-10 grid 2xl:grid-cols-1 l:grid-cols-1 gap-4" items={users}
+                <List className="w-[1152px] grid 2xl:grid-cols-1 l:grid-cols-1 gap-4" items={users}
                       renderItem={(user: User) => (
-                          <User user={user} key={user.id} nameOnClick={() => userNameOnClick(user.id)}>
+                          <User
+                              user={user}
+                              key={user.id}
+                              nameOnClick={() => userNameOnClick(user.id)}
+                          >
                               <UserCharts
                                   className="w-[400px] min-w-[400px] max-w-[400px]"
                                   data={mapUserStatsToArray(user.user_stats)} asSlideshow={true}

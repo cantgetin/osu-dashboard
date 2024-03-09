@@ -27,9 +27,9 @@ const UserPage = () => {
     const userNameOnClick = (userId: number) => window.open(`https://osu.ppy.sh/users/${userId}`)
 
     return (
-        <Layout className="p-10 flex md:justify-center sm:justify-start">
+        <Layout className="flex md:justify-center sm:justify-start">
             {loaded == LoadingState.Succeeded ?
-                <div className="pt-0 flex flex-col gap-2 2xl:w-[1000px] min-w-[800px]">
+                <div className="w-[1152px] grid 2xl:grid-cols-1 l:grid-cols-1 gap-4">
                     <User user={userCard.User} nameOnClick={() => userNameOnClick(userCard.User.id)}>
                         <MapStatsSummary user={userCard.User}/>
                         <UserStatsSummary data={mapUserStatsToArray(userCard.User.user_stats)}/>

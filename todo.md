@@ -2,6 +2,8 @@
 
 TODO frontend
 
+* mapset search in user page
+* beatmapsets/users display options
 * fix stats in beatmapset component
 * mapset component osu! site external link
 * refactor beatmapset component

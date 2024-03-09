@@ -4,7 +4,7 @@ import Image2 from "../../public/screen2.png"
 
 const Main = () => {
     return (
-        <Layout className="p-10 py-20 flex flex-col gap-10">
+        <Layout className="py-10 flex flex-col gap-10">
             <h1 className="text-7xl leading-tight">
                 Your personal osu! map dashboard
             </h1>

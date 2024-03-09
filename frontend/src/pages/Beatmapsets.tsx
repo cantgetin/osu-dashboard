@@ -37,7 +37,7 @@ const Beatmapsets = () => {
     }, [search, status, sort]);
 
     return (
-        <Layout className="p-10 flex flex-col gap-2 min-w-[800px]">
+        <Layout className="flex flex-col gap-2 min-w-[800px]">
             <div className="flex gap-2 items-center text-lg rounded-lg min-w-[800px] z-10">
                 <input
                     onChange={(e) => setSearch(e.target.value)}
