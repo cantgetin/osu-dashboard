@@ -3,6 +3,8 @@ package http
 func (s *Server) setupRoutes() {
 	s.server.GET("api/ping", s.ping.Ping)
 
+	s.server.GET("api/user/:id", s.user.Get)
+
 	s.server.POST("api/user_card/create", s.userCard.Create)
 	s.server.POST("api/user_card/update", s.userCard.Update)
 	s.server.GET("api/user_card/:id", s.userCard.Get)
@@ -14,4 +16,5 @@ func (s *Server) setupRoutes() {
 
 	s.server.GET("api/beatmapset/:id", s.mapset.Get)
 	s.server.GET("api/beatmapset/list", s.mapset.List)
+	s.server.GET("api/beatmapset/list_for_user/:id", s.mapset.ListForUser)
 }

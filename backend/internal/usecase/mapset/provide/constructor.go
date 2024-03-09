@@ -28,6 +28,7 @@ type mapsetStore interface {
 		limit int,
 		offset int,
 	) ([]*model.Mapset, error)
+	ListForUser(ctx context.Context, tx txmanager.Tx, userId int) ([]*model.Mapset, error)
 }
 
 type UseCase struct {

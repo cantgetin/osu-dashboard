@@ -212,6 +212,7 @@ func MapUserModelToUserDTO(user *model.User) (*dto.User, error) {
 		AvatarURL:     user.AvatarURL,
 		TrackingSince: user.CreatedAt,
 		UserStats:     stats,
+		Tracking:      true,
 	}, nil
 }
 

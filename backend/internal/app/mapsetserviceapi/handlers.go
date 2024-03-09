@@ -75,3 +75,23 @@ func (s *ServiceImpl) List(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, mapsetList)
 }
+
+func (s *ServiceImpl) ListForUser(c echo.Context) error {
+	id := c.Param("id")
+
+	if id == "" {
+		return echo.ErrBadRequest
+	}
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	mapset, err := s.mapsetProvider.ListForUser(c.Request().Context(), idInt)
+
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(200, mapset)
+}

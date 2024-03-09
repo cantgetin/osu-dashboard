@@ -8,6 +8,7 @@ import (
 	"playcount-monitor-backend/internal/database/repository/mapsetrepository"
 	"playcount-monitor-backend/internal/database/repository/userrepository"
 	"playcount-monitor-backend/internal/database/txmanager"
+	"playcount-monitor-backend/internal/service/osuapi"
 	trackingcreate "playcount-monitor-backend/internal/usecase/following/create"
 	trackingprovide "playcount-monitor-backend/internal/usecase/following/provide"
 	mapsetcreate "playcount-monitor-backend/internal/usecase/mapset/create"
@@ -24,6 +25,7 @@ type UseCaseFactory struct {
 	lg        *log.Logger
 	cfg       *config.Config
 	txManager txmanager.TxManager
+	osuApi    osuapi.Interface
 	repos     *Repositories
 }
 
@@ -38,6 +40,7 @@ func New(
 	cfg *config.Config,
 	lg *log.Logger,
 	txManager txmanager.TxManager,
+	osuApi osuapi.Interface,
 	repos *Repositories,
 ) (*UseCaseFactory, error) {
 	return &UseCaseFactory{
@@ -45,6 +48,7 @@ func New(
 		lg:        lg,
 		txManager: txManager,
 		repos:     repos,
+		osuApi:    osuApi,
 	}, nil
 }
 
@@ -83,6 +87,7 @@ func (f *UseCaseFactory) MakeProvideUserUseCase() *userprovide.UseCase {
 		f.lg,
 		f.txManager,
 		f.repos.UserRepo,
+		f.osuApi,
 	)
 }
 

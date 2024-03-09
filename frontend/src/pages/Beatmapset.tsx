@@ -31,7 +31,6 @@ const Beatmapset = () => {
 
     const externalLinkOnClick = () => window.open(`https://osu.ppy.sh/s/${beatmapset?.id}`, "_blank");
 
-
     return (
         <Layout>
             {beatmapset ?

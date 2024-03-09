@@ -11,12 +11,15 @@ import (
 	"playcount-monitor-backend/internal/database/repository/mapsetrepository"
 	"playcount-monitor-backend/internal/database/repository/userrepository"
 	"playcount-monitor-backend/internal/http"
+	"playcount-monitor-backend/internal/service/osuapi"
+	"playcount-monitor-backend/internal/service/osuapitokenprovider"
 	"playcount-monitor-backend/internal/usecase/factory"
 	"syscall"
 	"time"
 
 	"github.com/ds248a/closer"
 	log "github.com/sirupsen/logrus"
+	netHttp "net/http"
 )
 
 func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
@@ -39,8 +42,13 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 	beatmapRepo, err := beatmaprepository.New(cfg, lg)
 	followingRepo, err := followingrepository.New(cfg, lg)
 
+	// init api
+	httpClient := netHttp.Client{}
+	osuTokenProvider := osuapitokenprovider.New(cfg, &httpClient)
+	osuAPI := osuapi.New(cfg, osuTokenProvider, &httpClient)
+
 	// useCase factory
-	f, err := factory.New(cfg, lg, txm, &factory.Repositories{
+	f, err := factory.New(cfg, lg, txm, osuAPI, &factory.Repositories{
 		UserRepo:      userRepo,
 		BeatmapRepo:   beatmapRepo,
 		MapsetRepo:    mapsetRepo,

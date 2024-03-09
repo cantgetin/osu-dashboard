@@ -40,14 +40,14 @@ type trackStore interface {
 }
 
 type UseCase struct {
-	cfg           *config.Config
-	txm           txmanager.TxManager
-	osuApiService osuapi.Interface
-	user          userStore
-	mapset        mapsetStore
-	beatmap       beatmapStore
-	following     followingStore
-	track         trackStore
+	cfg       *config.Config
+	txm       txmanager.TxManager
+	osuApi    osuapi.Interface
+	user      userStore
+	mapset    mapsetStore
+	beatmap   beatmapStore
+	following followingStore
+	track     trackStore
 }
 
 func New(
@@ -61,13 +61,13 @@ func New(
 	track trackStore,
 ) *UseCase {
 	return &UseCase{
-		cfg:           cfg,
-		txm:           txManager,
-		osuApiService: osuAPI,
-		user:          user,
-		mapset:        mapset,
-		beatmap:       beatmap,
-		following:     following,
-		track:         track,
+		cfg:       cfg,
+		txm:       txManager,
+		osuApi:    osuAPI,
+		user:      user,
+		mapset:    mapset,
+		beatmap:   beatmap,
+		following: following,
+		track:     track,
 	}
 }

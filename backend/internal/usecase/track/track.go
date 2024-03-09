@@ -76,7 +76,7 @@ func (uc *UseCase) Track(
 	// max 300 requests a minute
 	for _, following := range follows {
 		// get data from api
-		user, userMapsets, err := uc.osuApiService.GetUserWithMapsets(ctx, strconv.Itoa(following.ID))
+		user, userMapsets, err := uc.osuApi.GetUserWithMapsets(ctx, strconv.Itoa(following.ID))
 		if err != nil {
 			return fmt.Errorf("failed to get info from api, user id: %v, err: %w", following.ID, err)
 		}
