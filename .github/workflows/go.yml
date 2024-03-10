@@ -21,10 +21,21 @@ jobs:
       with:
         go-version: '1.21'
 
-    - name: Build
+    - name: Build backend
       run: |
         cd backend
-        go build -v ./...
+        go build cmd/playcount-monitor/main.go
+
+    - name: Build tracker
+      run: |
+        cd backend
+        go build cmd/playcount-tracker/main.go
+
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm install
+        npm run build
 
     - name: Unit test
       run: |

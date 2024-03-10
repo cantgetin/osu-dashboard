@@ -16,6 +16,9 @@ migrate:
 build:
 	go build -o bin/main cmd/playcount-monitor/main.go
 
+build-tracker:
+	go build -o bin/main cmd/playcount-tracker/main.go
+
 test:
 	go test ./... -v -cover
 
