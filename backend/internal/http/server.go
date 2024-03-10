@@ -6,9 +6,9 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	log "github.com/sirupsen/logrus"
+	"playcount-monitor-backend/internal/app/followingserviceapi"
 	"playcount-monitor-backend/internal/app/mapsetserviceapi"
 	"playcount-monitor-backend/internal/app/pingserviceapi"
-	"playcount-monitor-backend/internal/app/trackingserviceapi"
 	"playcount-monitor-backend/internal/app/usercardserviseapi"
 	"playcount-monitor-backend/internal/app/userserviceapi"
 	"playcount-monitor-backend/internal/config"
@@ -22,7 +22,7 @@ type Server struct {
 	user     *userserviceapi.ServiceImpl
 	ping     *pingserviceapi.ServiceImpl
 	userCard *usercardserviseapi.ServiceImpl
-	tracking *trackingserviceapi.ServiceImpl
+	tracking *followingserviceapi.ServiceImpl
 	mapset   *mapsetserviceapi.ServiceImpl
 }
 
@@ -50,7 +50,7 @@ func New(
 		f.MakeUpdateUserCardUseCase(),
 	)
 
-	tracking := trackingserviceapi.New(
+	tracking := followingserviceapi.New(
 		lg,
 		f.MakeCreateTrackingUseCase(),
 		f.MakeProvideTrackingUseCase(),

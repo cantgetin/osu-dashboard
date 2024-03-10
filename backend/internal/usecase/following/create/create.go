@@ -4,14 +4,22 @@ import (
 	"context"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
+	"time"
 )
 
 func (uc *UseCase) Create(
 	ctx context.Context,
-	tracking *model.Following,
+	id int,
+	username string,
 ) error {
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-		err := uc.following.Create(ctx, tx, tracking)
+		follow := &model.Following{
+			ID:        id,
+			Username:  username,
+			CreatedAt: time.Now().UTC(),
+		}
+
+		err := uc.following.Create(ctx, tx, follow)
 		if err != nil {
 			return err
 		}

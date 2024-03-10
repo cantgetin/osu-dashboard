@@ -12,7 +12,7 @@ const Users = () => {
 
     useEffect(() => {
         (async () => {
-            const response = await fetch(`/api/users/list`);
+            const response = await fetch(`/api/user/list`);
             const userData = await response.json();
 
             setUsers(JSON.parse(JSON.stringify(userData)) as User[])

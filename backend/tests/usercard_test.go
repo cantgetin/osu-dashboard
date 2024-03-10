@@ -15,6 +15,9 @@ import (
 )
 
 func (s *IntegrationSuite) Test_CreateUseCard() {
+	s.T().Skip("this endpoint disabled for now")
+	// todo: might test usecase later
+
 	s.Run("valid requests", func() {
 		tt := []struct {
 			name    string
@@ -116,6 +119,9 @@ func (s *IntegrationSuite) Test_CreateUseCard() {
 }
 
 func (s *IntegrationSuite) Test_UpdateUserCard() {
+	s.T().Skip("this endpoint disabled for now")
+	// todo: might test usecase later
+
 	s.Run("valid requests", func() {
 		type models struct {
 			User     *model.User

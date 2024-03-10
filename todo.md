@@ -16,9 +16,8 @@ TODO frontend
 
 TODO backend
 
-* add more tracking logs: each user, total progress
-* add user to track endpoint
-* find user (untracked) endpoint on service with osuapi call
+* integration test user, mapset, following apis
+* client-server oauth2 authorization 
 * finish db cleanup script
 * mapset search for mapper name
 * move search %?% to separate mapset field filter logic
