@@ -3,6 +3,7 @@ package track
 import (
 	"context"
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
 	"playcount-monitor-backend/internal/service/osuapi"
@@ -54,6 +55,7 @@ func (uc *UseCase) CreateTrackRecord(
 
 func (uc *UseCase) Track(
 	ctx context.Context,
+	lg *log.Logger,
 ) error {
 	// get all following IDs from db and get updated data from api, update data in db
 
@@ -69,12 +71,15 @@ func (uc *UseCase) Track(
 		return err
 	}
 
+	lg.Infof("got following IDs from db, %v total", len(follows))
+
 	if len(follows) == 0 {
 		return fmt.Errorf("no following users present in db")
 	}
 
 	// max 300 requests a minute
-	for _, following := range follows {
+	for i, following := range follows {
+		lg.Infof("fetching user %s with id %v, %v/%v", following.Username, following.ID, i, len(follows))
 		// get data from api
 		user, userMapsets, err := uc.osuApi.GetUserWithMapsets(ctx, strconv.Itoa(following.ID))
 		if err != nil {

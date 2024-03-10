@@ -34,7 +34,7 @@ func (w *Worker) Start(ctx context.Context) func() error {
 				loopCtx, cancel := context.WithTimeout(ctx, w.cfg.TrackingTimeout)
 				defer cancel()
 
-				if err := w.tracker.Track(loopCtx); err != nil {
+				if err := w.tracker.Track(loopCtx, w.lg); err != nil {
 					w.lg.Errorf("encountered error while tracking: %v", err)
 					return
 				}
