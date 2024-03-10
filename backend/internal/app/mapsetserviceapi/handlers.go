@@ -87,11 +87,42 @@ func (s *ServiceImpl) ListForUser(c echo.Context) error {
 		return echo.ErrBadRequest
 	}
 
-	mapset, err := s.mapsetProvider.ListForUser(c.Request().Context(), idInt)
+	page := c.QueryParam("page")
+	pageInt := 1
+	if page != "" {
+		var err error
+		pageInt, err = strconv.Atoi(page)
+		if err != nil {
+			return echo.ErrBadRequest
+		}
+		if pageInt <= 0 {
+			return echo.ErrBadRequest
+		}
+	}
+
+	mapsetSort := mapSortQueryParamsToMapsetSort(
+		c.QueryParam("sort"),
+		c.QueryParam("direction"),
+	)
+
+	mapsetFilter := mapSearchAndFilterQueryParamsToMapsetFilter(
+		c.QueryParam("search"),
+		c.QueryParam("status"),
+	)
+
+	mapsetList, err := s.mapsetProvider.ListForUser(
+		c.Request().Context(),
+		idInt,
+		&mapsetprovide.ListCommand{
+			Page:   pageInt,
+			Sort:   mapsetSort,
+			Filter: mapsetFilter,
+		},
+	)
 
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(200, mapset)
+	return c.JSON(200, mapsetList)
 }

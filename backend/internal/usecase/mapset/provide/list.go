@@ -69,11 +69,20 @@ func (uc *UseCase) List(
 func (uc *UseCase) ListForUser(
 	ctx context.Context,
 	userID int,
+	cmd *ListCommand,
 ) ([]*dto.Mapset, error) {
 	var dtoMapsets []*dto.Mapset
 
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-		mapsets, err := uc.mapset.ListForUser(ctx, tx, userID)
+		mapsets, err := uc.mapset.ListForUserWithFilterSortLimitOffset(
+			ctx,
+			tx,
+			userID,
+			cmd.Filter,
+			cmd.Sort,
+			mapsetsPerPage,
+			(cmd.Page-1)*mapsetsPerPage,
+		)
 		if err != nil {
 			return err
 		}

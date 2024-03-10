@@ -29,6 +29,15 @@ type mapsetStore interface {
 		offset int,
 	) ([]*model.Mapset, error)
 	ListForUser(ctx context.Context, tx txmanager.Tx, userId int) ([]*model.Mapset, error)
+	ListForUserWithFilterSortLimitOffset(
+		ctx context.Context,
+		tx txmanager.Tx,
+		userID int,
+		filter model.MapsetFilter,
+		sort model.MapsetSort,
+		limit int,
+		offset int,
+	) ([]*model.Mapset, error)
 }
 
 type UseCase struct {
