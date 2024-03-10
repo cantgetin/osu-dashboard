@@ -2,6 +2,7 @@
 
 TODO frontend
 
+* split usercard to fetch user/mapset from api not usercard endpnt
 * mapset search in user page
 * beatmapsets/users display options
 * fix stats in beatmapset component
@@ -18,6 +19,8 @@ TODO backend
 
 * integration test user, mapset, following apis
 * client-server oauth2 authorization 
+* rename repo 
+* add schedule backups every day
 * finish db cleanup script
 * mapset search for mapper name
 * move search %?% to separate mapset field filter logic
