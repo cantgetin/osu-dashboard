@@ -20,9 +20,13 @@ const UserStatsSummary = (props: UserStatsSummaryProps) => {
 
     useEffect(() => {
         const previousIndex = lastIndex - forLastNDays;
-        setFavoritesDifference(calculateDifference(lastData.favourite_count, props.data[previousIndex].favourite_count));
-        setCommentsDifference(calculateDifference(lastData.comments_count, props.data[previousIndex].comments_count));
-        setPlayCountDifference(calculateDifference(lastData.play_count, props.data[previousIndex].play_count));
+
+        if (props.data.length > 1) {
+            setFavoritesDifference(calculateDifference(lastData.favourite_count, props.data[previousIndex].favourite_count));
+            setCommentsDifference(calculateDifference(lastData.comments_count, props.data[previousIndex].comments_count));
+            setPlayCountDifference(calculateDifference(lastData.play_count, props.data[previousIndex].play_count));
+        }
+
     }, [forLastNDays, lastIndex, props.data]);
 
     const renderStatsDifference = (count: number, difference: number, name: string, color: string) => {

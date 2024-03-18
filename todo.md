@@ -2,6 +2,7 @@
 
 TODO frontend
 
+* tracks page
 * split usercard to fetch user/mapset from api not usercard endpnt
 * mapset search in user page
 * beatmapsets/users display options
@@ -17,6 +18,7 @@ TODO frontend
 
 TODO backend
 
+* list tracks endpoint
 * integration test user, mapset, following apis
 * client-server oauth2 authorization 
 * rename repo 
