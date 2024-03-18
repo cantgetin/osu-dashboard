@@ -28,9 +28,10 @@ func (uc *UseCase) List(
 	cmd *ListCommand,
 ) (*ListResponse, error) {
 	var dtoMapsets []*dto.Mapset
+	var count int
 
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-		mapsets, err := uc.mapset.ListWithFilterSortLimitOffset(
+		mapsets, c, err := uc.mapset.ListWithFilterSortLimitOffset(
 			ctx,
 			tx,
 			cmd.Filter,
@@ -54,6 +55,7 @@ func (uc *UseCase) List(
 			}
 
 			dtoMapsets = append(dtoMapsets, dtoMapset)
+			count = c
 		}
 
 		return nil
@@ -72,7 +74,7 @@ func (uc *UseCase) List(
 	return &ListResponse{
 		Mapsets:     dtoMapsets,
 		CurrentPage: cmd.Page,
-		Pages:       (len(dtoMapsets) / mapsetsPerPage) + 1,
+		Pages:       (count / mapsetsPerPage) + 1,
 	}, nil
 }
 
@@ -82,9 +84,10 @@ func (uc *UseCase) ListForUser(
 	cmd *ListCommand,
 ) (*ListResponse, error) {
 	var dtoMapsets []*dto.Mapset
+	var count int
 
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-		mapsets, err := uc.mapset.ListForUserWithFilterSortLimitOffset(
+		mapsets, c, err := uc.mapset.ListForUserWithFilterSortLimitOffset(
 			ctx,
 			tx,
 			userID,
@@ -109,6 +112,7 @@ func (uc *UseCase) ListForUser(
 			}
 
 			dtoMapsets = append(dtoMapsets, dtoMapset)
+			count = c
 		}
 
 		return nil
@@ -127,6 +131,6 @@ func (uc *UseCase) ListForUser(
 	return &ListResponse{
 		Mapsets:     dtoMapsets,
 		CurrentPage: cmd.Page,
-		Pages:       (len(dtoMapsets) / mapsetsPerPage) + 1,
+		Pages:       (count / mapsetsPerPage) + 1,
 	}, nil
 }

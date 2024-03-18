@@ -17,7 +17,7 @@ type User struct {
 
 type UserMapCounts struct {
 	Graveyard int `json:"graveyard"`
-	Wip       int `json:"wip"`
+	WIP       int `json:"wip"`
 	Pending   int `json:"pending"`
 	Ranked    int `json:"ranked"`
 	Approved  int `json:"approved"`

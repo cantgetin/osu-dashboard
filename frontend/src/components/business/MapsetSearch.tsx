@@ -17,14 +17,13 @@ const MapsetSearch = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            let trueSort = sort.split(' ')[0]
-            let direction = sort.split(' ')[1]
+            //let trueSort = sort.split(' ')[0]
+            //let direction = sort.split(' ')[1]
 
-
-            const response =
-                await fetch(`/api/beatmapset/list?search=${search}&status=${status}&sort=${trueSort}&direction=${direction}`);
-            const userData = await response.json();
-            setMapsets(JSON.parse(JSON.stringify(userData)) as Mapset[]);
+            // const response =
+            //     await fetch(`/api/beatmapset/list?search=${search}&status=${status}&sort=${trueSort}&direction=${direction}`);
+            // const userData = await response.json();
+            // setMapsets(JSON.parse(JSON.stringify(userData)) as Mapset[]);
         };
 
         const timerId = setTimeout(fetchData, 500);

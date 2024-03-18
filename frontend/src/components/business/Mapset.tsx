@@ -11,7 +11,6 @@ interface MapCardProps {
 
 // todo: refactor this crap
 const Mapset = (props: MapCardProps) => {
-
     const [lastStats, setLastStats] = useState<MapsetStatsModel | null>(null);
     const [penultimateStats, setPenultimateStats] = useState<MapsetStatsModel | null>(null);
     const [playCountDifference, setPlayCountDifference] = useState<number>(0);

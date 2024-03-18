@@ -8,18 +8,17 @@ import MapStatsSummary from "../components/business/MapStatsSummary.tsx";
 import {mapUserStatsToArray} from "../utils/utils.ts";
 import LoadingSpinner from "../components/ui/LoadingSpinner.tsx";
 import {useAppDispatch, useAppSelector} from "../store/hooks.ts";
-import {selectLoadingState, selectUserCard} from "../store/userCardSlice.ts";
 import {LoadingState} from "../interfaces/LoadingState.ts";
 import Layout from "../components/ui/Layout.tsx";
-import {fetchUser} from "../store/userSlice.ts";
+import {fetchUser, selectUser, selectUserLoadingState} from "../store/userSlice.ts";
 
 const UserPage = () => {
     const {userId} = useParams();
 
     const dispatch = useAppDispatch();
 
-    const userCard = useAppSelector<UserCard>(selectUserCard);
-    const loaded = useAppSelector<LoadingState>(selectLoadingState)
+    const user = useAppSelector<User>(selectUser)
+    const userLoaded = useAppSelector<LoadingState>(selectUserLoadingState)
 
     useEffect(() => {
         dispatch(fetchUser(Number(userId)))
@@ -29,18 +28,18 @@ const UserPage = () => {
 
     return (
         <Layout className="flex md:justify-center sm:justify-start">
-            {loaded == LoadingState.Succeeded ?
+            {userLoaded == LoadingState.Succeeded ?
                 <div className="w-[1152px] grid 2xl:grid-cols-1 l:grid-cols-1 gap-4">
                     <User
-                        user={userCard.User}
-                        externalLinkOnClick={() => extLinkOnClick(userCard.User.id)}
+                        user={user}
+                        externalLinkOnClick={() => extLinkOnClick(user.id)}
                     >
-                        <MapStatsSummary user={userCard.User}/>
-                        <UserStatsSummary data={mapUserStatsToArray(userCard.User.user_stats)}/>
+                        <MapStatsSummary user={user}/>
+                        <UserStatsSummary data={mapUserStatsToArray(user.user_stats)}/>
                     </User>
                     <UserCharts
                         className="p-4"
-                        data={mapUserStatsToArray(userCard.User.user_stats)}/>
+                        data={mapUserStatsToArray(user.user_stats)}/>
                     <MapsetList userId={userId!}/>
                 </div>
                 : <LoadingSpinner/>}

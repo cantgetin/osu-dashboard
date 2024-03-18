@@ -33,6 +33,16 @@ func MapCreateUserCardCommandToUserModel(cmd *command.CreateUserCardCommand) (*m
 		return nil, err
 	}
 
+	statuses := make([]string, 0)
+	for _, mapset := range cmd.Mapsets {
+		statuses = append(statuses, mapset.Status)
+	}
+
+	counts, err := MapUserMapsetsToUserCountsJSON(statuses)
+	if err != nil {
+		return nil, err
+	}
+
 	return &model.User{
 		ID:                       cmd.User.ID,
 		Username:                 cmd.User.Username,
@@ -40,12 +50,13 @@ func MapCreateUserCardCommandToUserModel(cmd *command.CreateUserCardCommand) (*m
 		GraveyardBeatmapsetCount: cmd.User.GraveyardBeatmapsetCount,
 		UnrankedBeatmapsetCount:  cmd.User.UnrankedBeatmapsetCount,
 		UserStats:                stats,
+		MapCounts:                counts,
 		UpdatedAt:                time.Now().UTC(),
 		CreatedAt:                time.Now().UTC(),
 	}, nil
 }
 
-func MapUpdateUserCardCommandToUserModel(cmd *command.UpdateUserCardCommand) *model.User {
+func MapUpdateUserCardCommandToUserModel(cmd *command.UpdateUserCardCommand) (*model.User, error) {
 	// get total playcount, favorites, map count
 	var playcount int
 	var favorites int
@@ -61,7 +72,17 @@ func MapUpdateUserCardCommandToUserModel(cmd *command.UpdateUserCardCommand) *mo
 
 	stats, err := mapUserInfoToStatsJSON(playcount, favorites, mapCount, comments)
 	if err != nil {
-		return nil
+		return nil, err
+	}
+
+	statuses := make([]string, 0)
+	for _, mapset := range cmd.Mapsets {
+		statuses = append(statuses, mapset.Status)
+	}
+
+	counts, err := MapUserMapsetsToUserCountsJSON(statuses)
+	if err != nil {
+		return nil, err
 	}
 
 	return &model.User{
@@ -70,9 +91,11 @@ func MapUpdateUserCardCommandToUserModel(cmd *command.UpdateUserCardCommand) *mo
 		AvatarURL:                cmd.User.AvatarURL,
 		GraveyardBeatmapsetCount: cmd.User.GraveyardBeatmapsetCount,
 		UnrankedBeatmapsetCount:  cmd.User.UnrankedBeatmapsetCount,
-		UpdatedAt:                time.Now().UTC(),
 		UserStats:                stats,
-	}
+		MapCounts:                counts,
+		CreatedAt:                time.Time{},
+		UpdatedAt:                time.Now().UTC(),
+	}, nil
 }
 
 func MapCreateMapsetCommandToMapsetModel(mapset *command.CreateMapsetCommand) (*model.Mapset, error) {
@@ -206,12 +229,18 @@ func MapUserModelToUserDTO(user *model.User) (*dto.User, error) {
 		return nil, err
 	}
 
+	counts, err := MapUserCountsJSONToUserDTOCounts(user.MapCounts)
+	if err != nil {
+		return nil, err
+	}
+
 	return &dto.User{
 		ID:            user.ID,
 		Username:      user.Username,
 		AvatarURL:     user.AvatarURL,
 		TrackingSince: user.CreatedAt,
 		UserStats:     stats,
+		UserMapCounts: counts,
 		Tracking:      true,
 	}, nil
 }
@@ -484,27 +513,50 @@ func AppendNewBeatmapStats(json1, json2 repository.JSON) (repository.JSON, error
 
 // other
 
-func MapStatusesToUserMapCounts(statuses []string) *dto.UserMapCounts {
-	res := &dto.UserMapCounts{}
+func MapUserCountsJSONToUserDTOCounts(countsJSON repository.JSON) (*dto.UserMapCounts, error) {
+	var counts *model.MapCounts
+	err := json.Unmarshal(countsJSON, &counts)
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.UserMapCounts{
+		Graveyard: counts.Graveyard,
+		WIP:       counts.WIP,
+		Pending:   counts.Pending,
+		Ranked:    counts.Ranked,
+		Approved:  counts.Approved,
+		Qualified: counts.Qualified,
+		Loved:     counts.Loved,
+	}, nil
+}
+
+func MapUserMapsetsToUserCountsJSON(statuses []string) (repository.JSON, error) {
+	counts := model.MapCounts{}
 
 	for _, status := range statuses {
 		switch status {
 		case "graveyard":
-			res.Graveyard++
+			counts.Graveyard++
 		case "wip":
-			res.Wip++
+			counts.WIP++
 		case "pending":
-			res.Pending++
+			counts.Pending++
 		case "ranked":
-			res.Ranked++
+			counts.Ranked++
 		case "approved":
-			res.Approved++
+			counts.Approved++
 		case "qualified":
-			res.Qualified++
+			counts.Qualified++
 		case "loved":
-			res.Loved++
+			counts.Loved++
 		}
 	}
 
-	return res
+	countsJSON, err := json.Marshal(counts)
+	if err != nil {
+		return nil, err
+	}
+
+	return countsJSON, nil
 }

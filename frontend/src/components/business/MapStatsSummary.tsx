@@ -3,6 +3,9 @@ interface UserStatsSummaryProps {
 }
 
 const MapStatsSummary = (props: UserStatsSummaryProps) => {
+    // console.log('hui')
+    // console.log(props)
+
     const types = Object.keys(props.user.user_map_counts) as Array<keyof UserMapCounts>
 
     return (

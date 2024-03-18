@@ -22,7 +22,7 @@ type Interface interface {
 		sort model.MapsetSort,
 		limit int,
 		offset int,
-	) ([]*model.Mapset, error)
+	) ([]*model.Mapset, int, error)
 	ListForUserWithFilterSortLimitOffset(
 		ctx context.Context,
 		tx txmanager.Tx,
@@ -31,5 +31,5 @@ type Interface interface {
 		sort model.MapsetSort,
 		limit int,
 		offset int,
-	) ([]*model.Mapset, error)
+	) ([]*model.Mapset, int, error)
 }

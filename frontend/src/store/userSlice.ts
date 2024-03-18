@@ -43,6 +43,6 @@ export const {} = userSlice.actions
 
 export const selectUser = (state: RootState) => state.userSlice.user as User
 
-export const selectLoadingState = (state: RootState) => state.userSlice.loading as LoadingState
+export const selectUserLoadingState = (state: RootState) => state.userSlice.loading as LoadingState
 
 export default userSlice.reducer

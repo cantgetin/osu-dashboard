@@ -52,7 +52,7 @@ const userCardSlice = createSlice({
 export const { } = userCardSlice.actions
 
 export const selectUserCard = (state: RootState) => state.userCardSlice.userCard as UserCard
-export const selectLoadingState = (state: RootState) => state.userCardSlice.loading as LoadingState
+export const selectUserCardLoadingState = (state: RootState) => state.userCardSlice.loading as LoadingState
 export const selectUserCardPage = (state: RootState) => state.userCardSlice.page as number
 
 export default userCardSlice.reducer

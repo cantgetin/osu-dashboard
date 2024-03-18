@@ -28,10 +28,6 @@ func (uc *UseCase) Get(
 			return err
 		}
 
-		// get user map counts
-		statuses, err := uc.mapset.ListStatusesForUser(ctx, tx, userID)
-		userCard.User.UserMapCounts = mappers.MapStatusesToUserMapCounts(statuses)
-
 		// get user mapsets
 		mapsets, err := uc.mapset.ListForUserWithLimitOffset(ctx, tx, userID, mapsetsPerPage, (page-1)*mapsetsPerPage)
 		if err != nil {

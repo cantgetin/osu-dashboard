@@ -18,6 +18,9 @@ TODO frontend
 
 TODO backend
 
+* mapset list/list for user sort
+* release
+* UserMapCounts store in users table
 * list tracks endpoint
 * integration test user, mapset, following apis
 * client-server oauth2 authorization 

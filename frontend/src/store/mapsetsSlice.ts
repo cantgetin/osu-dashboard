@@ -1,25 +1,25 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { RootState } from './store';
-import { LoadingState } from '../interfaces/LoadingState';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
+import {RootState} from './store';
+import {LoadingState} from '../interfaces/LoadingState';
 
-interface MapsetState {
+export interface MapsetsState {
     mapsets: Mapset[] | null
-    count: number
-    page: number
+    pages: number
+    currentPage: number
     loading: LoadingState
 }
 
-const initialState: MapsetState = {
+const initialState: MapsetsState = {
     mapsets: null,
-    count: 0,
-    page: 0,
+    pages: 0,
+    currentPage: 0,
     loading: LoadingState.Idle,
 }
 
 interface fetchMapsetsCommand {
     search?: string
     status?: string
-    sort?: boolean
+    sort?: string
     direction?: string
     forUser?: boolean
     userId?: number
@@ -28,30 +28,57 @@ interface fetchMapsetsCommand {
 
 export const fetchMapsets = createAsyncThunk(
     'Mapsets/fetch',
-    async (cmd: fetchMapsetsCommand): Promise<{mapsets: Mapset[]}> => {
-        let queryParams = `?search=${cmd.search}&status=${cmd.status}&sort=${cmd.sort}&direction=${cmd.direction}`
+    async (cmd: fetchMapsetsCommand): Promise<{ mapsets: Mapset[], pages: number, currentPage: number }> => {
+        let queryParams = '?';
+
+        if (cmd.search != null) {
+            queryParams += `&search=${cmd.search}`;
+        }
+        if (cmd.status != null) {
+            queryParams += `&status=${cmd.status}`;
+        }
+        if (cmd.sort != null) {
+            queryParams += `&sort=${cmd.sort}`;
+        }
+        if (cmd.direction != null) {
+            queryParams += `&direction=${cmd.direction}`;
+        }
+        if (cmd.page != null) {
+            queryParams += `&page=${cmd.page}`;
+        }
+
+        if (queryParams === '?') {
+            queryParams = '';
+        }
 
         if (cmd.forUser) {
-            const response = await fetch(`/api/beatmapset/list_for_user/${cmd.userId}`+queryParams);
+            const response = await fetch(`/api/beatmapset/list_for_user/${cmd.userId}${queryParams}`);
             const mapsetsData = await response.json();
-            return {mapsets: mapsetsData}
+            return {
+                mapsets: mapsetsData.mapsets,
+                pages: mapsetsData.pages,
+                currentPage: mapsetsData.current_page,
+            };
         } else {
-            const response = await fetch(`/api/beatmapset/list`+queryParams);
+            const response = await fetch(`/api/beatmapset/list${queryParams}`);
             const mapsetsData = await response.json();
-            return {mapsets: mapsetsData}
+            return {
+                mapsets: mapsetsData.mapsets,
+                pages: mapsetsData.pages,
+                currentPage: mapsetsData.current_page,
+            };
         }
     }
-)
-
+);
 const mapsetSlice = createSlice({
     name: 'Mapsets',
     initialState,
-    reducers: {
-
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder.addCase(fetchMapsets.fulfilled, (state, action) => {
             state.mapsets = action.payload.mapsets
+            state.pages = action.payload.pages
+            state.currentPage = action.payload.currentPage
             state.loading = LoadingState.Succeeded
         })
         builder.addCase(fetchMapsets.pending, (state) => {
@@ -63,11 +90,12 @@ const mapsetSlice = createSlice({
     },
 })
 
-export const { } = mapsetSlice.actions
+export const {} = mapsetSlice.actions
 
+export const selectMapsetsState = (state: RootState) => state.mapsetsSlice
 export const selectMapsets = (state: RootState) => state.mapsetsSlice.mapsets as Mapset[]
-export const selectMapsetsCount = (state: RootState) => state.mapsetsSlice.count
-export const selectMapsetsPage = (state: RootState) => state.mapsetsSlice.page
+export const selectMapsetsCurrentPage = (state: RootState) => state.mapsetsSlice.currentPage
+export const selectMapsetsPages = (state: RootState) => state.mapsetsSlice.pages
 export const selectMapsetsLoading = (state: RootState) => state.mapsetsSlice.loading
 
 export default mapsetSlice.reducer

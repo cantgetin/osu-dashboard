@@ -116,8 +116,9 @@ func (r *GormRepository) ListWithFilterSortLimitOffset(
 	sort model.MapsetSort,
 	limit int,
 	offset int,
-) ([]*model.Mapset, error) {
+) ([]*model.Mapset, int, error) {
 	var mapsets []*model.Mapset
+	var count int64
 
 	query, values := buildListByFilterQuery(filter)
 	filterGormExpr := gorm.Expr(query, values...)
@@ -132,6 +133,15 @@ func (r *GormRepository) ListWithFilterSortLimitOffset(
 
 	err := tx.DB().WithContext(ctx).
 		Table(mapsetsTableName).
+		Where(filterGormExpr).
+		Count(&count).Error
+
+	if err != nil {
+		return nil, 0, fmt.Errorf("failed to count mapsets: %w", err)
+	}
+
+	err = tx.DB().WithContext(ctx).
+		Table(mapsetsTableName).
 		Order(order).
 		Where(filterGormExpr).
 		Limit(limit).
@@ -139,10 +149,10 @@ func (r *GormRepository) ListWithFilterSortLimitOffset(
 		Find(&mapsets).Error
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to list mapsets: %w", err)
+		return nil, 0, fmt.Errorf("failed to list mapsets: %w", err)
 	}
 
-	return mapsets, nil
+	return mapsets, int(count), nil
 }
 
 func (r *GormRepository) ListForUserWithFilterSortLimitOffset(
@@ -153,8 +163,9 @@ func (r *GormRepository) ListForUserWithFilterSortLimitOffset(
 	sort model.MapsetSort,
 	limit int,
 	offset int,
-) ([]*model.Mapset, error) {
+) ([]*model.Mapset, int, error) {
 	var mapsets []*model.Mapset
+	var count int64
 
 	query, values := buildListByFilterQuery(filter)
 	filterGormExpr := gorm.Expr(query, values...)
@@ -169,6 +180,16 @@ func (r *GormRepository) ListForUserWithFilterSortLimitOffset(
 
 	err := tx.DB().WithContext(ctx).
 		Table(mapsetsTableName).
+		Where(filterGormExpr).
+		Where("user_id = ?", userID).
+		Count(&count).Error
+
+	if err != nil {
+		return nil, 0, fmt.Errorf("failed to count mapsets: %w", err)
+	}
+
+	err = tx.DB().WithContext(ctx).
+		Table(mapsetsTableName).
 		Order(order).
 		Where(filterGormExpr).
 		Where("user_id = ?", userID).
@@ -177,10 +198,10 @@ func (r *GormRepository) ListForUserWithFilterSortLimitOffset(
 		Find(&mapsets).Error
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to list mapsets: %w", err)
+		return nil, 0, fmt.Errorf("failed to list mapsets: %w", err)
 	}
 
-	return mapsets, nil
+	return mapsets, int(count), nil
 }
 
 func buildListByFilterQuery(filter model.MapsetFilter) (string, []interface{}) {

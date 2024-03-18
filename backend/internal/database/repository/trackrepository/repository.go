@@ -10,7 +10,16 @@ import (
 const trackTableName = "tracks"
 
 func (r *GormRepository) Create(ctx context.Context, tx txmanager.Tx, track *model.Track) error {
-	err := tx.DB().WithContext(ctx).Table(trackTableName).Create(track).Error
+	// get last track id
+	// todo: fix this auto increment crap
+	var maxID *int
+	err := tx.DB().WithContext(ctx).Table(trackTableName).Select("max(id)").Row().Scan(&maxID)
+	if err != nil {
+		return fmt.Errorf("failed to create track: %w", err)
+	}
+	track.ID = *maxID + 1
+
+	err = tx.DB().WithContext(ctx).Table(trackTableName).Create(track).Error
 	if err != nil {
 		return fmt.Errorf("failed to create track: %w", err)
 	}

@@ -192,7 +192,10 @@ func (uc *UseCase) updateUserCard(
 		return err
 	}
 
-	newUser := mappers.MapUpdateUserCardCommandToUserModel(cmd)
+	newUser, err := mappers.MapUpdateUserCardCommandToUserModel(cmd)
+	if err != nil {
+		return err
+	}
 	newUser.CreatedAt = existingUser.CreatedAt
 
 	// add new map entry to stats json
