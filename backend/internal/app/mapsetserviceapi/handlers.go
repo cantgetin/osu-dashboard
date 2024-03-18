@@ -38,17 +38,9 @@ func (s *ServiceImpl) Get(c echo.Context) error {
 }
 
 func (s *ServiceImpl) List(c echo.Context) error {
-	page := c.QueryParam("page")
-	pageInt := 1
-	if page != "" {
-		var err error
-		pageInt, err = strconv.Atoi(page)
-		if err != nil {
-			return echo.ErrBadRequest
-		}
-		if pageInt <= 0 {
-			return echo.ErrBadRequest
-		}
+	pageInt, err := getPageQueryParam(c)
+	if err != nil {
+		return echo.ErrBadRequest
 	}
 
 	mapsetSort := mapSortQueryParamsToMapsetSort(
@@ -61,7 +53,7 @@ func (s *ServiceImpl) List(c echo.Context) error {
 		c.QueryParam("status"),
 	)
 
-	mapsetList, err := s.mapsetProvider.List(
+	listResp, err := s.mapsetProvider.List(
 		c.Request().Context(),
 		&mapsetprovide.ListCommand{
 			Page:   pageInt,
@@ -73,31 +65,24 @@ func (s *ServiceImpl) List(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
-	return c.JSON(http.StatusOK, mapsetList)
+	response := MapsetListResponse{
+		Mapsets:     listResp.Mapsets,
+		CurrentPage: listResp.CurrentPage,
+		Pages:       listResp.Pages,
+	}
+
+	return c.JSON(http.StatusOK, response)
 }
 
 func (s *ServiceImpl) ListForUser(c echo.Context) error {
-	id := c.Param("id")
-
-	if id == "" {
-		return echo.ErrBadRequest
-	}
-	idInt, err := strconv.Atoi(id)
+	idInt, err := getUserIDFromContext(c)
 	if err != nil {
 		return echo.ErrBadRequest
 	}
 
-	page := c.QueryParam("page")
-	pageInt := 1
-	if page != "" {
-		var err error
-		pageInt, err = strconv.Atoi(page)
-		if err != nil {
-			return echo.ErrBadRequest
-		}
-		if pageInt <= 0 {
-			return echo.ErrBadRequest
-		}
+	pageInt, err := getPageQueryParam(c)
+	if err != nil {
+		return echo.ErrBadRequest
 	}
 
 	mapsetSort := mapSortQueryParamsToMapsetSort(
@@ -110,7 +95,7 @@ func (s *ServiceImpl) ListForUser(c echo.Context) error {
 		c.QueryParam("status"),
 	)
 
-	mapsetList, err := s.mapsetProvider.ListForUser(
+	listResp, err := s.mapsetProvider.ListForUser(
 		c.Request().Context(),
 		idInt,
 		&mapsetprovide.ListCommand{
@@ -119,10 +104,15 @@ func (s *ServiceImpl) ListForUser(c echo.Context) error {
 			Filter: mapsetFilter,
 		},
 	)
-
 	if err != nil {
-		return err
+		return c.JSON(http.StatusInternalServerError, err)
 	}
 
-	return c.JSON(200, mapsetList)
+	response := MapsetListResponse{
+		Mapsets:     listResp.Mapsets,
+		CurrentPage: listResp.CurrentPage,
+		Pages:       listResp.Pages,
+	}
+
+	return c.JSON(http.StatusOK, response)
 }

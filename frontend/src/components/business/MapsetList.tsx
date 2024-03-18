@@ -1,25 +1,27 @@
-import Mapset from "./Mapset";
-import {fetchUserCard, selectUserCardPage} from "../store/userCardSlice.ts";
-import {useAppDispatch, useAppSelector} from "../store/hooks.ts";
-import Button from "./ui/Button.tsx";
+import Mapset from "./Mapset.tsx";
+import {useAppDispatch, useAppSelector} from "../../store/hooks.ts";
+import Button from "../ui/Button.tsx";
 import List from "./List.tsx";
+import {fetchMapsets, selectMapsets} from "../../store/mapsetsSlice.ts";
 
-interface MapsetSummaryProps {
-    Mapsets: Mapset[];
-    MapsetCount: number;
-    userId: string;
+interface MapsetListProps {
+    userId?: string;
 }
 
-const MapsetList = (props: MapsetSummaryProps) => {
+const MapsetList = (props: MapsetListProps) => {
     const dispatch = useAppDispatch();
 
-    const pages = Math.ceil(props.MapsetCount / 50);
-    const currentPage = useAppSelector<number>(selectUserCardPage);
+    const mapsets = useAppSelector<Mapset[]>(selectMapsets);
+
+    // todo add mapset count prop to list mapset backend handler
+    const pages = 10
+    const currentPage = 1
 
     const handlePageChange = (page: number) => {
-        dispatch(fetchUserCard({userId: Number(props.userId), page: page}))
+        dispatch(fetchMapsets({userId: Number(props.userId), page: page}))
     };
 
+    // @ts-ignore
     const buttons = pages === 1 ? [] : Array.apply(null, Array(pages)).map(function (_, i) {
         return i + 1;
     });
@@ -27,7 +29,7 @@ const MapsetList = (props: MapsetSummaryProps) => {
     return (
         <div className="flex flex-col gap-2">
             <List className="flex flex-col gap-2"
-                  items={props.Mapsets}
+                  items={mapsets}
                   renderItem={(mapset: Mapset) =>
                       <Mapset
                           key={mapset.id}

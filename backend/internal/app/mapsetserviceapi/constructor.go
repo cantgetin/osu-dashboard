@@ -14,8 +14,8 @@ type mapsetCreator interface {
 
 type mapsetProvider interface {
 	Get(ctx context.Context, id int) (*dto.Mapset, error)
-	List(ctx context.Context, cmd *mapsetprovide.ListCommand) ([]*dto.Mapset, error)
-	ListForUser(ctx context.Context, userID int, cmd *mapsetprovide.ListCommand) ([]*dto.Mapset, error)
+	List(ctx context.Context, cmd *mapsetprovide.ListCommand) (*mapsetprovide.ListResponse, error)
+	ListForUser(ctx context.Context, userID int, cmd *mapsetprovide.ListCommand) (*mapsetprovide.ListResponse, error)
 }
 
 type ServiceImpl struct {

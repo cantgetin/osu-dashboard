@@ -17,10 +17,16 @@ type ListCommand struct {
 	Filter model.MapsetFilter
 }
 
+type ListResponse struct {
+	Mapsets     []*dto.Mapset
+	CurrentPage int
+	Pages       int
+}
+
 func (uc *UseCase) List(
 	ctx context.Context,
 	cmd *ListCommand,
-) ([]*dto.Mapset, error) {
+) (*ListResponse, error) {
 	var dtoMapsets []*dto.Mapset
 
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
@@ -63,14 +69,18 @@ func (uc *UseCase) List(
 		}
 	}
 
-	return dtoMapsets, nil
+	return &ListResponse{
+		Mapsets:     dtoMapsets,
+		CurrentPage: cmd.Page,
+		Pages:       (len(dtoMapsets) / mapsetsPerPage) + 1,
+	}, nil
 }
 
 func (uc *UseCase) ListForUser(
 	ctx context.Context,
 	userID int,
 	cmd *ListCommand,
-) ([]*dto.Mapset, error) {
+) (*ListResponse, error) {
 	var dtoMapsets []*dto.Mapset
 
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
@@ -114,5 +124,9 @@ func (uc *UseCase) ListForUser(
 		}
 	}
 
-	return dtoMapsets, nil
+	return &ListResponse{
+		Mapsets:     dtoMapsets,
+		CurrentPage: cmd.Page,
+		Pages:       (len(dtoMapsets) / mapsetsPerPage) + 1,
+	}, nil
 }

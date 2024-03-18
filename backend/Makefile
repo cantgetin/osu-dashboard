@@ -23,7 +23,11 @@ test:
 	go test ./... -v -cover
 
 integration-test:
-	set "RUN_INTEGRATION_TEST=true" && go test ./tests/... -v -cover
+    ifeq ($(OS),Windows_NT)
+	    set RUN_INTEGRATION_TEST=true && go test ./tests/... -v -cover
+    else
+	    export RUN_INTEGRATION_TEST=true && go test ./tests/... -v -cover
+    endif
 
 add-sample-data:
 	go run tests/data/add_sample_data.go

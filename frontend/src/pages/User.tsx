@@ -1,16 +1,17 @@
 import {useParams} from "react-router-dom";
 import {useEffect} from "react";
-import User from "../components/User.tsx";
-import UserStatsSummary from "../components/UserStatsSummary.tsx";
-import UserCharts from "../components/UserCharts.tsx";
-import MapsetList from "../components/MapsetList.tsx";
-import MapStatsSummary from "../components/MapStatsSummary.tsx";
-import {extractUserMapsCountFromStats, mapUserStatsToArray} from "../utils/utils.ts";
+import User from "../components/business/User.tsx";
+import UserStatsSummary from "../components/business/UserStatsSummary.tsx";
+import UserCharts from "../components/business/UserCharts.tsx";
+import MapsetList from "../components/business/MapsetList.tsx";
+import MapStatsSummary from "../components/business/MapStatsSummary.tsx";
+import {mapUserStatsToArray} from "../utils/utils.ts";
 import LoadingSpinner from "../components/ui/LoadingSpinner.tsx";
 import {useAppDispatch, useAppSelector} from "../store/hooks.ts";
-import {fetchUserCard, selectLoadingState, selectUserCard} from "../store/userCardSlice.ts";
+import {selectLoadingState, selectUserCard} from "../store/userCardSlice.ts";
 import {LoadingState} from "../interfaces/LoadingState.ts";
 import Layout from "../components/ui/Layout.tsx";
+import {fetchUser} from "../store/userSlice.ts";
 
 const UserPage = () => {
     const {userId} = useParams();
@@ -21,7 +22,7 @@ const UserPage = () => {
     const loaded = useAppSelector<LoadingState>(selectLoadingState)
 
     useEffect(() => {
-        dispatch(fetchUserCard({userId: Number(userId), page: 1}))
+        dispatch(fetchUser(Number(userId)))
     }, [dispatch, userId])
 
     const extLinkOnClick = (userId: number) => window.open(`https://osu.ppy.sh/users/${userId}`)
@@ -40,11 +41,7 @@ const UserPage = () => {
                     <UserCharts
                         className="p-4"
                         data={mapUserStatsToArray(userCard.User.user_stats)}/>
-                    <MapsetList
-                        Mapsets={userCard.Mapsets}
-                        MapsetCount={extractUserMapsCountFromStats(userCard.User.user_stats)}
-                        userId={userId!}
-                    />
+                    <MapsetList userId={userId!}/>
                 </div>
                 : <LoadingSpinner/>}
         </Layout>

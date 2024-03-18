@@ -1,5 +1,5 @@
 import LineChart from "./LineChart.tsx";
-import {convertDataToDayMonth} from "../utils/utils.ts";
+import {convertDataToDayMonth} from "../../utils/utils.ts";
 import {useEffect, useState} from "react";
 
 interface LineChartProps {

@@ -34,6 +34,7 @@ func (s *IntegrationSuite) SetupSuite() {
 	}
 
 	if !s.cfg.RunIntegrationTest {
+		s.T().Log("skipping integration tests ...")
 		s.T().SkipNow()
 	}
 

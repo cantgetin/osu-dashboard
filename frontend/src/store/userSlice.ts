@@ -13,7 +13,7 @@ const initialState: UserState = {
 }
 
 export const fetchUser = createAsyncThunk(
-    'userCard/fetch',
+    'user/fetch',
     async (userId: number): Promise<{ user: User }> => {
         const response = await fetch(`/api/user/${userId}`);
         const userData = await response.json();

@@ -2,7 +2,7 @@ import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import LoadingSpinner from "../components/ui/LoadingSpinner.tsx";
 import aveta from "aveta";
-import MapsetCharts from "../components/MapsetCharts.tsx";
+import MapsetCharts from "../components/business/MapsetCharts.tsx";
 import {convertDateFormat, mapMapsetStatsToArray} from "../utils/utils.ts";
 import Layout from "../components/ui/Layout.tsx";
 import {FaExternalLinkAlt} from "react-icons/fa";

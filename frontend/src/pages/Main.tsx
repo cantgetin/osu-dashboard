@@ -1,6 +1,6 @@
 import Layout from "../components/ui/Layout.tsx";
-import Image1 from "../../public/screen1.png"
-import Image2 from "../../public/screen2.png"
+import Image1 from "../images/screen1.png"
+import Image2 from "../images/screen2.png"
 
 const Main = () => {
     return (

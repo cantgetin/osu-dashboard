@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import StatsDifference from "./StatsDifference.tsx";
 import aveta from "aveta";
-import {getRemainingPendingTime} from "../utils/utils.ts";
+import {getRemainingPendingTime} from "../../utils/utils.ts";
 
 interface MapCardProps {
     map: Mapset

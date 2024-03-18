@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react";
-import User from "../components/User.tsx";
+import User from "../components/business/User.tsx";
 import {mapUserStatsToArray} from "../utils/utils.ts";
-import UserStatsSummary from "../components/UserStatsSummary.tsx";
-import UserCharts from "../components/UserCharts.tsx";
+import UserStatsSummary from "../components/business/UserStatsSummary.tsx";
+import UserCharts from "../components/business/UserCharts.tsx";
 import LoadingSpinner from "../components/ui/LoadingSpinner.tsx";
-import List from "../components/List.tsx";
+import List from "../components/business/List.tsx";
 import Layout from "../components/ui/Layout.tsx";
 
 const Users = () => {
