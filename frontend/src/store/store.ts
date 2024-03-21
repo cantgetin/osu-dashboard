@@ -2,12 +2,16 @@ import {configureStore, ThunkAction, Action} from '@reduxjs/toolkit';
 import userCardSlice from './userCardSlice';
 import userSlice from "./userSlice.ts";
 import mapsetsSlice from "./mapsetsSlice.ts";
+import usersSlice from "./usersSlice.ts";
+import mapsetSlice from "./mapsetSlice.ts";
 
 export const store = configureStore({
     reducer: {
         userCardSlice: userCardSlice,
         userSlice: userSlice,
-        mapsetsSlice: mapsetsSlice
+        usersSlice: usersSlice,
+        mapsetsSlice: mapsetsSlice,
+        mapsetSlice: mapsetSlice
     },
 });
 

@@ -1,33 +1,38 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import debounce from "lodash.debounce";
+import {fetchMapsetsProps} from "../../store/mapsetsSlice.ts";
 
-const MapsetSearch = () => {
+interface MapsetSearchProps {
+    update: (props: fetchMapsetsProps) => void
+}
 
+const MapsetSearch = (props: MapsetSearchProps) => {
     const [search, setSearch] = useState<string>('');
     const [sort, setSort] = useState<string>('');
     const [status, setStatus] = useState<string>('');
 
+    const debouncedUpdate = debounce(() => {
+        props.update({
+            search: search,
+            status: status,
+            sort: sort.split(' ')[0],
+            direction: sort.split(' ')[1],
+        });
+    }, 500);
+
+    const isFirstRun = useRef(true);
+
     useEffect(() => {
-        const debouncedSearchSetter = debounce(setSearch, 500);
+        if (isFirstRun.current) {
+            isFirstRun.current = false;
+            return;
+        }
+        
+        debouncedUpdate();
 
         return () => {
-            debouncedSearchSetter.cancel();
+            debouncedUpdate.cancel();
         };
-    }, []);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            //let trueSort = sort.split(' ')[0]
-            //let direction = sort.split(' ')[1]
-
-            // const response =
-            //     await fetch(`/api/beatmapset/list?search=${search}&status=${status}&sort=${trueSort}&direction=${direction}`);
-            // const userData = await response.json();
-            // setMapsets(JSON.parse(JSON.stringify(userData)) as Mapset[]);
-        };
-
-        const timerId = setTimeout(fetchData, 500);
-        return () => clearTimeout(timerId);
     }, [search, status, sort]);
 
     return (

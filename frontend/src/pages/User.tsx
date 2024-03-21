@@ -16,7 +16,6 @@ const UserPage = () => {
     const {userId} = useParams();
 
     const dispatch = useAppDispatch();
-
     const user = useAppSelector<User>(selectUser)
     const userLoaded = useAppSelector<LoadingState>(selectUserLoadingState)
 
@@ -39,8 +38,15 @@ const UserPage = () => {
                     </User>
                     <UserCharts
                         className="p-4"
-                        data={mapUserStatsToArray(user.user_stats)}/>
-                    <MapsetList userId={userId!}/>
+                        data={mapUserStatsToArray(user.user_stats)}
+                    />
+                    <MapsetList
+                        userId={user.id}
+                        forUser={true}
+                        page={1}
+                        sort="last_playcount"
+                        direction="desc"
+                    />
                 </div>
                 : <LoadingSpinner/>}
         </Layout>

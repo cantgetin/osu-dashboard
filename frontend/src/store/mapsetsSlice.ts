@@ -16,7 +16,7 @@ const initialState: MapsetsState = {
     loading: LoadingState.Idle,
 }
 
-interface fetchMapsetsCommand {
+export interface fetchMapsetsProps {
     search?: string
     status?: string
     sort?: string
@@ -28,7 +28,7 @@ interface fetchMapsetsCommand {
 
 export const fetchMapsets = createAsyncThunk(
     'Mapsets/fetch',
-    async (cmd: fetchMapsetsCommand): Promise<{ mapsets: Mapset[], pages: number, currentPage: number }> => {
+    async (cmd: fetchMapsetsProps): Promise<{ mapsets: Mapset[], pages: number, currentPage: number }> => {
         let queryParams = '?';
 
         if (cmd.search != null) {
@@ -46,7 +46,6 @@ export const fetchMapsets = createAsyncThunk(
         if (cmd.page != null) {
             queryParams += `&page=${cmd.page}`;
         }
-
         if (queryParams === '?') {
             queryParams = '';
         }
@@ -70,7 +69,7 @@ export const fetchMapsets = createAsyncThunk(
         }
     }
 );
-const mapsetSlice = createSlice({
+const mapsetsSlice = createSlice({
     name: 'Mapsets',
     initialState,
     reducers: {},
@@ -90,7 +89,7 @@ const mapsetSlice = createSlice({
     },
 })
 
-export const {} = mapsetSlice.actions
+export const {} = mapsetsSlice.actions
 
 export const selectMapsetsState = (state: RootState) => state.mapsetsSlice
 export const selectMapsets = (state: RootState) => state.mapsetsSlice.mapsets as Mapset[]
@@ -98,4 +97,4 @@ export const selectMapsetsCurrentPage = (state: RootState) => state.mapsetsSlice
 export const selectMapsetsPages = (state: RootState) => state.mapsetsSlice.pages
 export const selectMapsetsLoading = (state: RootState) => state.mapsetsSlice.loading
 
-export default mapsetSlice.reducer
+export default mapsetsSlice.reducer

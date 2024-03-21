@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import LoadingSpinner from "../components/ui/LoadingSpinner.tsx";
 import aveta from "aveta";
 import MapsetCharts from "../components/business/MapsetCharts.tsx";
@@ -7,24 +7,23 @@ import {convertDateFormat, mapMapsetStatsToArray} from "../utils/utils.ts";
 import Layout from "../components/ui/Layout.tsx";
 import {FaExternalLinkAlt} from "react-icons/fa";
 import Button from "../components/ui/Button.tsx";
+import {useAppDispatch, useAppSelector} from "../store/hooks.ts";
+import {LoadingState} from "../interfaces/LoadingState.ts";
+import {fetchMapset, selectMapset, selectMapsetLoading} from "../store/mapsetSlice.ts";
 
 const Beatmapset = () => {
     const {mapId} = useParams();
-    const [beatmapset, setBeatmapset] = useState<Mapset>();
+
+    const dispatch = useAppDispatch();
+    const beatmapset = useAppSelector<Mapset>(selectMapset);
+    const beatmapsetLoaded = useAppSelector<LoadingState>(selectMapsetLoading)
 
     useEffect(() => {
-        (async () => {
-            const response = await fetch(`/api/beatmapset/${mapId}`);
-            const mapsetData = await response.json();
-
-            setBeatmapset(JSON.parse(JSON.stringify(mapsetData)) as Mapset)
-        })();
-    }, [mapId]);
+        dispatch(fetchMapset(mapId as string))
+    }, [dispatch])
 
     const mapsetStats = beatmapset ? mapMapsetStatsToArray(beatmapset.mapset_stats) : [];
-
     const lastStats = mapsetStats[mapsetStats.length - 1]
-
     const penultimateStats = mapsetStats[mapsetStats.length - 2] != undefined
         ? mapsetStats[mapsetStats.length - 2]
         : mapsetStats[mapsetStats.length - 1]
@@ -33,7 +32,7 @@ const Beatmapset = () => {
 
     return (
         <Layout>
-            {beatmapset ?
+            {beatmapsetLoaded == LoadingState.Succeeded ?
                 <div className="pt-15 flex flex-col flex-wrap gap-2 relative w-full">
                     <img src={beatmapset.covers['cover@2x']} alt="map bg" className="h-[550px] object-cover rounded-md"/>
                     <div className="p-5 absolute inset-0 flex justify-center h-[550px]">
