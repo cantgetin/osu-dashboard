@@ -24,7 +24,7 @@ test:
 
 integration-test:
     ifeq ($(OS),Windows_NT)
-	    set RUN_INTEGRATION_TEST=true && go test ./tests/... -v -cover
+	    set "RUN_INTEGRATION_TEST=true" && go test ./tests/... -v -cover
     else
 	    export RUN_INTEGRATION_TEST=true && go test ./tests/... -v -cover
     endif

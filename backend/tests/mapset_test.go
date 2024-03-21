@@ -104,6 +104,35 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 				out: &mapsetserviceapi.MapsetListResponse{
 					Mapsets: []*dto.Mapset{
 						{
+							Id:          2,
+							Artist:      "artist2",
+							Title:       "title2",
+							Covers:      map[string]string{"cover1": "cover1", "cover2": "cover2"},
+							Status:      "graveyard",
+							LastUpdated: time.Now().UTC(),
+							UserId:      1,
+							PreviewUrl:  "previewurl.com",
+							Tags:        "tags shmags",
+							Bpm:         220,
+							Creator:     "username",
+							Beatmaps: []*dto.Beatmap{
+								{
+									Id:               2,
+									BeatmapsetId:     2,
+									DifficultyRating: 5.4,
+									Version:          "version2",
+									Accuracy:         5,
+									Ar:               7.5,
+									Bpm:              210,
+									Cs:               3.3,
+									Status:           "graveyard",
+									Url:              "url2.com",
+									TotalLength:      102,
+									UserId:           1,
+								},
+							},
+						},
+						{
 							Id:          1,
 							Artist:      "artist",
 							Title:       "title",
@@ -170,11 +199,9 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 					s.Require().NoError(err)
 				}
 
-				url := fmt.Sprintf("http://localhost:%s/api/beatmapset/list", s.port)
-				s.T().Log(url)
+				url := fmt.Sprintf("http://localhost:%s/api/beatmapset/list?sort=created_at&order=desc", s.port)
 				out, err := http.Get(url)
-				s.T().Log(out)
-				s.T().Log(err)
+
 				s.Require().NoError(err)
 				s.Require().Equal(tc.outCode, out.StatusCode)
 
@@ -232,4 +259,8 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 			return
 		}
 	})
+	err := integration.ClearTables(s.ctx, s.db)
+	if err != nil {
+		s.T().Fatal(err)
+	}
 }

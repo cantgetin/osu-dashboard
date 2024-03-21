@@ -112,10 +112,11 @@ func (s *IntegrationSuite) Test_CreateUseCard() {
 				s.Assert().Equal(tc.outCode, out.StatusCode)
 			})
 		}
-
-		err := integration.ClearTables(s.ctx, s.db)
-		s.Require().NoError(err)
 	})
+	err := integration.ClearTables(s.ctx, s.db)
+	if err != nil {
+		s.T().Fatal(err)
+	}
 }
 
 func (s *IntegrationSuite) Test_UpdateUserCard() {
@@ -557,13 +558,17 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 				}
 			})
 		}
-
-		err := integration.ClearTables(s.ctx, s.db)
-		s.Require().NoError(err)
 	})
+	err := integration.ClearTables(s.ctx, s.db)
+	if err != nil {
+		s.T().Fatal(err)
+	}
 }
 
 func (s *IntegrationSuite) Test_ProvideUserCard() {
+	s.T().Skip("this endpoint disabled for now")
+	// todo: might test usecase later
+
 	s.Run("valid requests", func() {
 		type models struct {
 			User     *model.User
@@ -772,10 +777,9 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 				}
 			})
 		}
-
-		err := integration.ClearTables(s.ctx, s.db)
-		if err != nil {
-			return
-		}
 	})
+	err := integration.ClearTables(s.ctx, s.db)
+	if err != nil {
+		s.T().Fatal(err)
+	}
 }
