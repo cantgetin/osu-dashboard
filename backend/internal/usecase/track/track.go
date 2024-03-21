@@ -110,8 +110,6 @@ func (uc *UseCase) Track(
 			return nil
 		})
 
-		time.Sleep(time.Minute)
-
 		if txErr != nil {
 			return txErr
 		}

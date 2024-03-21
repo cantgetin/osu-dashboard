@@ -9,6 +9,7 @@ const Beatmapsets = () => {
                 page={1}
                 sort="created_at"
                 direction="desc"
+                showMapper={true}
             />
         </Layout>
     );

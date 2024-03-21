@@ -3,8 +3,6 @@
 TODO frontend
 
 * tracks page
-* split usercard to fetch user/mapset from api not usercard endpnt
-* mapset search in user page
 * beatmapsets/users display options
 * fix stats in beatmapset component
 * mapset component osu! site external link
@@ -12,15 +10,13 @@ TODO frontend
 * chartjs resizing problem
 * map filtering in user page
 * mobile compatibility
-* redux store
 * about page
 * header search
 
 TODO backend
 
-* mapset list/list for user sort
+* checks fetch delays (user with 100+ beatmaps loads 3mins+)
 * release
-* UserMapCounts store in users table
 * list tracks endpoint
 * integration test user, mapset, following apis
 * client-server oauth2 authorization 

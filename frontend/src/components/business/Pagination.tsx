@@ -9,6 +9,10 @@ interface PaginationProps {
 }
 
 const Pagination = (props: PaginationProps) => {
+    if (props.pages <= 1) {
+        return null;
+    }
+
     const buttons = Array.apply(null, Array(props.pages)).map(function (_, i) {
         return i + 1
     })

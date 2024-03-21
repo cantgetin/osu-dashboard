@@ -8,7 +8,12 @@ import LoadingSpinner from "../ui/LoadingSpinner.tsx";
 import Pagination from "./Pagination.tsx";
 import MapsetSearch from "./MapsetSearch.tsx";
 
-const MapsetList = (mapsetProps: fetchMapsetsProps) => {
+interface MapsetListProps extends fetchMapsetsProps {
+    showMapper?: boolean;
+    // Define any additional props here
+}
+
+const MapsetList = ({ showMapper, ...mapsetProps } : MapsetListProps ) => {
     const dispatch = useAppDispatch();
     const mapsetsState = useAppSelector<MapsetsState>(selectMapsetsState);
 
@@ -32,7 +37,7 @@ const MapsetList = (mapsetProps: fetchMapsetsProps) => {
 
     return (
         <>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-5">
                 <MapsetSearch update={onSearch}/>
                 {
                     mapsetsState.loading == LoadingState.Succeeded ?
@@ -49,6 +54,7 @@ const MapsetList = (mapsetProps: fetchMapsetsProps) => {
                                       <Mapset
                                           key={mapset.id}
                                           map={mapset}
+                                          showMapper={showMapper}
                                       />
                                   }
                             />
