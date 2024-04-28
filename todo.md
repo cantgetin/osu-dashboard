@@ -2,6 +2,7 @@
 
 TODO frontend
 
+* user map genres/languages/starrate diagram
 * tracks page
 * beatmapsets/users display options
 * fix stats in beatmapset component
