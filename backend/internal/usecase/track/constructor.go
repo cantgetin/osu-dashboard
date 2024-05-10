@@ -21,6 +21,7 @@ type mapsetStore interface {
 	Get(ctx context.Context, tx txmanager.Tx, id int) (*model.Mapset, error)
 	Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error)
 	Update(ctx context.Context, tx txmanager.Tx, mapset *model.Mapset) error
+	ListForUser(ctx context.Context, tx txmanager.Tx, userID int) ([]*model.Mapset, error)
 }
 
 type beatmapStore interface {

@@ -6,6 +6,16 @@ type Comments struct {
 	Total int `json:"total"`
 }
 
+type MapsetLangGenre struct {
+	Genre    Entity `json:"genre"`
+	Language Entity `json:"language"`
+}
+
+type Entity struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 type User struct {
 	ID                       int    `json:"id"`
 	AvatarURL                string `json:"avatar_url"`
@@ -26,7 +36,6 @@ type Mapset struct {
 	Tags           string            `json:"tags"`
 	PlayCount      int               `json:"play_count"`
 	FavouriteCount int               `json:"favourite_count"`
-	CommentsCount  int               `json:"comments_count"`
 	Bpm            float64           `json:"bpm"`
 	Creator        string            `json:"creator"`
 	Beatmaps       []*Beatmap        `json:"beatmaps"`
@@ -48,4 +57,11 @@ type Beatmap struct {
 	Passcount        int       `json:"passcount"`
 	Playcount        int       `json:"playcount"`
 	LastUpdated      time.Time `json:"last_updated"`
+}
+
+type MapsetExtended struct {
+	CommentsCount int    `json:"comments_count"`
+	Genre         string `json:"genre"`
+	Language      string `json:"language"`
+	*Mapset
 }

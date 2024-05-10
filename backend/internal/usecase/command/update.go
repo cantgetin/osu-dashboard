@@ -30,6 +30,8 @@ type UpdateMapsetCommand struct {
 	CommentsCount  int                     `json:"comments_count"`
 	Bpm            float64                 `json:"bpm"`
 	Creator        string                  `json:"creator"`
+	Language       string                  `json:"language"`
+	Genre          string                  `json:"genre"`
 	Beatmaps       []*UpdateBeatmapCommand `json:"beatmaps"`
 }
 

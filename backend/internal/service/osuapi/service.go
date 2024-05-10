@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"playcount-monitor-backend/internal/bootstrap"
 	"strconv"
 )
 
@@ -19,6 +20,78 @@ const (
 	// Nominated we don't use this cause it shows maps that user nominated (from others) which breaks mapset FK
 	Nominated MapsetStatusAPIOption = "nominated"
 )
+
+func (s *Service) GetOutgoingRequestCount() int {
+	return s.httpClient.Transport.(*bootstrap.CounterTransport).RequestCount()
+}
+
+func (s *Service) ResetOutgoingRequestCount() {
+	s.httpClient.Transport.(*bootstrap.CounterTransport).ResetCount()
+}
+
+func (s *Service) GetUserWithMapsets(ctx context.Context, userID string) (*User, []*MapsetExtended, error) {
+	user, err := s.GetUser(ctx, userID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	userMapsets, err := s.GetUserMapsets(ctx, userID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var mapsetsExtended []*MapsetExtended
+	for _, mapset := range userMapsets {
+		commentCount, err := s.GetMapsetCommentsCount(ctx, strconv.Itoa(mapset.Id))
+		if err != nil {
+			return nil, nil, err
+		}
+
+		mapsetsExtended = append(mapsetsExtended, &MapsetExtended{
+			Mapset:        mapset,
+			CommentsCount: commentCount,
+		})
+	}
+
+	return user, mapsetsExtended, nil
+}
+
+func (s *Service) GetMapsetExtended(ctx context.Context, mapsetID string) (*MapsetLangGenre, error) {
+	token, err := s.tokenProvider.GetToken(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// https://osu.ppy.sh/api/v2/beatmapsets
+	req, err := http.NewRequest("GET", s.cfg.OsuAPIHost+"/beatmapsets/"+mapsetID, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create http request: %w", err)
+	}
+
+	headers := map[string]string{
+		"Content-Type":  "application/json",
+		"Accept":        "application/json",
+		"Authorization": "Bearer " + token,
+	}
+
+	for key, value := range headers {
+		req.Header.Set(key, value)
+	}
+
+	resp, err := s.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to invoke request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var mapsetExt *MapsetLangGenre
+	err = json.NewDecoder(resp.Body).Decode(&mapsetExt)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode response body: %w", err)
+	}
+
+	return mapsetExt, nil
+}
 
 func (s *Service) GetMapsetCommentsCount(ctx context.Context, mapsetID string) (int, error) {
 	token, err := s.tokenProvider.GetToken(ctx)
@@ -57,27 +130,6 @@ func (s *Service) GetMapsetCommentsCount(ctx context.Context, mapsetID string) (
 	}
 
 	return comments.Total, nil
-}
-
-func (s *Service) GetUserWithMapsets(ctx context.Context, userID string) (*User, []*Mapset, error) {
-	user, err := s.GetUser(ctx, userID)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	userMapsets, err := s.GetUserMapsets(ctx, userID)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	for _, mapset := range userMapsets {
-		mapset.CommentsCount, err = s.GetMapsetCommentsCount(ctx, strconv.Itoa(mapset.Id))
-		if err != nil {
-			return nil, nil, err
-		}
-	}
-
-	return user, userMapsets, nil
 }
 
 func (s *Service) GetUser(ctx context.Context, userID string) (*User, error) {
@@ -132,7 +184,7 @@ func (s *Service) GetUserMapsets(ctx context.Context, userID string) ([]*Mapset,
 		"Authorization": "Bearer " + token,
 	}
 
-	beatmapsets := []*Mapset{}
+	var beatmapsets []*Mapset
 	for _, mapsetType := range mapsetTypes {
 		beatmapsets, err = s.fetchBeatmapsets(userID, string(mapsetType), 0, headers, beatmapsets)
 		if err != nil {

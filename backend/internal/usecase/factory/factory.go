@@ -13,6 +13,7 @@ import (
 	trackingprovide "playcount-monitor-backend/internal/usecase/following/provide"
 	mapsetcreate "playcount-monitor-backend/internal/usecase/mapset/create"
 	mapsetprovide "playcount-monitor-backend/internal/usecase/mapset/provide"
+	statisticprovide "playcount-monitor-backend/internal/usecase/statistic/provide"
 	usercreate "playcount-monitor-backend/internal/usecase/user/create"
 	userprovide "playcount-monitor-backend/internal/usecase/user/provide"
 	userupdate "playcount-monitor-backend/internal/usecase/user/update"
@@ -148,5 +149,15 @@ func (f *UseCaseFactory) MakeProvideTrackingUseCase() *trackingprovide.UseCase {
 		f.lg,
 		f.txManager,
 		f.repos.FollowingRepo,
+	)
+}
+
+func (f *UseCaseFactory) MakeProvideStatisticUseCase() *statisticprovide.UseCase {
+	return statisticprovide.New(
+		f.cfg,
+		f.lg,
+		f.txManager,
+		f.repos.BeatmapRepo,
+		f.repos.MapsetRepo,
 	)
 }

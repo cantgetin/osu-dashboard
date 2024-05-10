@@ -9,35 +9,11 @@ import (
 )
 
 type beatmapStore interface {
-	Create(ctx context.Context, tx txmanager.Tx, beatmap *model.Beatmap) error
-	Update(ctx context.Context, tx txmanager.Tx, beatmap *model.Beatmap) error
-	Get(ctx context.Context, tx txmanager.Tx, id int) (*model.Beatmap, error)
 	ListForMapset(ctx context.Context, tx txmanager.Tx, mapsetId int) ([]*model.Beatmap, error)
 }
 
 type mapsetStore interface {
-	Create(ctx context.Context, tx txmanager.Tx, mapset *model.Mapset) error
-	Get(ctx context.Context, tx txmanager.Tx, id int) (*model.Mapset, error)
-	Update(ctx context.Context, tx txmanager.Tx, mapset *model.Mapset) error
-	Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error)
-	ListWithFilterSortLimitOffset(
-		ctx context.Context,
-		tx txmanager.Tx,
-		filter model.MapsetFilter,
-		sort model.MapsetSort,
-		limit int,
-		offset int,
-	) ([]*model.Mapset, int, error)
 	ListForUser(ctx context.Context, tx txmanager.Tx, userId int) ([]*model.Mapset, error)
-	ListForUserWithFilterSortLimitOffset(
-		ctx context.Context,
-		tx txmanager.Tx,
-		userID int,
-		filter model.MapsetFilter,
-		sort model.MapsetSort,
-		limit int,
-		offset int,
-	) ([]*model.Mapset, int, error)
 }
 
 type UseCase struct {

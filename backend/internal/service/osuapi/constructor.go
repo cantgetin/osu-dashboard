@@ -11,24 +11,23 @@ type (
 	Service struct {
 		cfg           *config.Config
 		tokenProvider osuapitokenprovider.Interface
-		httpClient    HTTPClientInterface
+		httpClient    *http.Client
 	}
 
 	Interface interface {
 		GetUser(ctx context.Context, userID string) (*User, error)
 		GetUserMapsets(ctx context.Context, userID string) ([]*Mapset, error)
-		GetUserWithMapsets(ctx context.Context, userID string) (*User, []*Mapset, error)
-	}
-
-	HTTPClientInterface interface {
-		Do(req *http.Request) (*http.Response, error)
+		GetUserWithMapsets(ctx context.Context, userID string) (*User, []*MapsetExtended, error)
+		GetMapsetExtended(ctx context.Context, mapsetID string) (*MapsetLangGenre, error)
+		GetOutgoingRequestCount() int
+		ResetOutgoingRequestCount()
 	}
 )
 
 func New(
 	cfg *config.Config,
 	tokenProvider osuapitokenprovider.Interface,
-	httpClient HTTPClientInterface,
+	httpClient *http.Client,
 ) *Service {
 	return &Service{
 		cfg:           cfg,

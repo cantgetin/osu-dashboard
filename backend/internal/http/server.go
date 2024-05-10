@@ -9,6 +9,7 @@ import (
 	"playcount-monitor-backend/internal/app/followingserviceapi"
 	"playcount-monitor-backend/internal/app/mapsetserviceapi"
 	"playcount-monitor-backend/internal/app/pingserviceapi"
+	"playcount-monitor-backend/internal/app/statisticserviceapi"
 	"playcount-monitor-backend/internal/app/usercardserviseapi"
 	"playcount-monitor-backend/internal/app/userserviceapi"
 	"playcount-monitor-backend/internal/config"
@@ -24,6 +25,7 @@ type Server struct {
 	userCard  *usercardserviseapi.ServiceImpl
 	following *followingserviceapi.ServiceImpl
 	mapset    *mapsetserviceapi.ServiceImpl
+	statistic *statisticserviceapi.ServiceImpl
 }
 
 func New(
@@ -62,6 +64,11 @@ func New(
 		f.MakeCreateMapsetUseCase(),
 	)
 
+	statistic := statisticserviceapi.New(
+		lg,
+		f.MakeProvideStatisticUseCase(),
+	)
+
 	return &Server{
 		cfg:       cfg,
 		server:    server,
@@ -71,6 +78,7 @@ func New(
 		userCard:  userCard,
 		following: following,
 		mapset:    mapset,
+		statistic: statistic,
 	}, nil
 }
 

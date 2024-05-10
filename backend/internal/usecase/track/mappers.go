@@ -17,8 +17,8 @@ func mapOsuApiUserToCreateUserCommand(user *osuapi.User) *command.CreateUserComm
 	}
 }
 
-func mapOsuApiMapsetsToCreateMapsetCommands(mapsets []*osuapi.Mapset) []*command.CreateMapsetCommand {
-	cmds := []*command.CreateMapsetCommand{}
+func mapOsuApiMapsetsToCreateMapsetCommands(mapsets []*osuapi.MapsetExtended) []*command.CreateMapsetCommand {
+	var cmds []*command.CreateMapsetCommand
 	for _, m := range mapsets {
 		cmds = append(cmds, &command.CreateMapsetCommand{
 			Id:             m.Id,
@@ -35,6 +35,8 @@ func mapOsuApiMapsetsToCreateMapsetCommands(mapsets []*osuapi.Mapset) []*command
 			CommentsCount:  m.CommentsCount,
 			Bpm:            m.Bpm,
 			Creator:        m.Creator,
+			Language:       m.Language,
+			Genre:          m.Genre,
 			Beatmaps:       mapOsuApiBeatmapsToCreateBeatmapCommands(m.Beatmaps),
 		})
 	}
@@ -42,7 +44,7 @@ func mapOsuApiMapsetsToCreateMapsetCommands(mapsets []*osuapi.Mapset) []*command
 }
 
 func mapOsuApiBeatmapsToCreateBeatmapCommands(beatmaps []*osuapi.Beatmap) []*command.CreateBeatmapCommand {
-	cmds := []*command.CreateBeatmapCommand{}
+	var cmds []*command.CreateBeatmapCommand
 	for _, b := range beatmaps {
 		cmds = append(cmds, &command.CreateBeatmapCommand{
 			Id:               b.Id,
@@ -77,8 +79,8 @@ func mapOsuApiUserToUpdateUserCommand(user *osuapi.User) *command.UpdateUserComm
 	}
 }
 
-func mapOsuApiMapsetsToUpdateMapsetCommands(mapsets []*osuapi.Mapset) []*command.UpdateMapsetCommand {
-	cmds := []*command.UpdateMapsetCommand{}
+func mapOsuApiMapsetsToUpdateMapsetCommands(mapsets []*osuapi.MapsetExtended) []*command.UpdateMapsetCommand {
+	var cmds []*command.UpdateMapsetCommand
 	for _, m := range mapsets {
 		cmds = append(cmds, &command.UpdateMapsetCommand{
 			Id:             m.Id,
@@ -95,6 +97,8 @@ func mapOsuApiMapsetsToUpdateMapsetCommands(mapsets []*osuapi.Mapset) []*command
 			CommentsCount:  m.CommentsCount,
 			Bpm:            m.Bpm,
 			Creator:        m.Creator,
+			Language:       m.Language,
+			Genre:          m.Genre,
 			Beatmaps:       mapOsuApiBeatmapsToUpdateBeatmapCommands(m.Beatmaps),
 		})
 	}
@@ -102,7 +106,7 @@ func mapOsuApiMapsetsToUpdateMapsetCommands(mapsets []*osuapi.Mapset) []*command
 }
 
 func mapOsuApiBeatmapsToUpdateBeatmapCommands(beatmaps []*osuapi.Beatmap) []*command.UpdateBeatmapCommand {
-	cmds := []*command.UpdateBeatmapCommand{}
+	var cmds []*command.UpdateBeatmapCommand
 	for _, b := range beatmaps {
 		cmds = append(cmds, &command.UpdateBeatmapCommand{
 			Id:               b.Id,

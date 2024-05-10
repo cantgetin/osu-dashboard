@@ -118,13 +118,15 @@ func MapCreateMapsetCommandToMapsetModel(mapset *command.CreateMapsetCommand) (*
 		LastUpdated:   mapset.LastUpdated,
 		UserID:        mapset.UserId,
 		Creator:       mapset.Creator,
+		Language:      mapset.Language,
+		Genre:         mapset.Genre,
 		PreviewURL:    mapset.PreviewUrl,
 		Tags:          mapset.Tags,
-		MapsetStats:   mapsetStats,
 		BPM:           mapset.Bpm,
+		MapsetStats:   mapsetStats,
 		LastPlaycount: mapset.PlayCount,
-		UpdatedAt:     time.Now().UTC(),
 		CreatedAt:     time.Now().UTC(),
+		UpdatedAt:     time.Now().UTC(),
 	}, nil
 }
 
@@ -153,6 +155,8 @@ func MapUpdateMapsetCommandToMapsetModel(mapset *command.UpdateMapsetCommand) (*
 		MapsetStats:   mapsetStats,
 		BPM:           mapset.Bpm,
 		LastPlaycount: mapset.PlayCount,
+		Language:      mapset.Language,
+		Genre:         mapset.Genre,
 		UpdatedAt:     time.Now().UTC(),
 	}, nil
 }
@@ -275,6 +279,8 @@ func MapMapsetModelToMapsetDTO(mapset *model.Mapset, beatmaps []*model.Beatmap) 
 		Bpm:         mapset.BPM,
 		MapsetStats: stats,
 		Beatmaps:    beatmapsDTOs,
+		Genre:       mapset.Genre,
+		Language:    mapset.Language,
 	}, nil
 }
 

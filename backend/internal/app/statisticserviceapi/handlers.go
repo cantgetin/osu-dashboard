@@ -2,24 +2,23 @@ package statisticserviceapi
 
 import (
 	"github.com/labstack/echo/v4"
+	"strconv"
 )
 
 func (s *ServiceImpl) GetUserMapStatistics(c echo.Context) error {
-	// get user id from request context
-	userID := c.Get("userID").(string)
+	userID := c.Param("id")
 	if userID == "" {
 		return echo.ErrBadRequest
 	}
+	idInt, err := strconv.Atoi(userID)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
 
-	//userStatistics := s.statisticProvider.GetForUser()
+	userStatistics, err := s.statisticProvider.GetForUser(c.Request().Context(), idInt)
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
 
-	return c.JSON(200, nil)
-}
-
-type UserMapStatisticsResponse struct {
-	MostPopularTags      map[string]int `json:"most_popular_tags"`
-	MostPopularGenres    map[string]int `json:"most_popular_genres"`
-	MostPopularLanguages map[string]int `json:"most_popular_languages"`
-	MostPopularStarrates map[string]int `json:"most_popular_starrates"`
-	MostPopularBpms      map[string]int `json:"most_popular_bpms"`
+	return c.JSON(200, userStatistics)
 }

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	log "github.com/sirupsen/logrus"
-	"net/http"
 	"playcount-monitor-backend/internal/app/trackingworkerapi"
 	"playcount-monitor-backend/internal/bootstrap"
 	"playcount-monitor-backend/internal/config"
@@ -44,7 +43,7 @@ func RunTrackingWorker(
 	trackRepo := trackrepository.New(cfg, lg)
 
 	// init api
-	httpClient := http.Client{}
+	httpClient := bootstrap.NewHTTPClient()
 	osuTokenProvider := osuapitokenprovider.New(cfg, &httpClient)
 	osuAPI := osuapi.New(cfg, osuTokenProvider, &httpClient)
 
