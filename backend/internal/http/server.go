@@ -16,14 +16,14 @@ import (
 )
 
 type Server struct {
-	cfg      *config.Config
-	server   *echo.Echo
-	lg       *log.Logger
-	user     *userserviceapi.ServiceImpl
-	ping     *pingserviceapi.ServiceImpl
-	userCard *usercardserviseapi.ServiceImpl
-	tracking *followingserviceapi.ServiceImpl
-	mapset   *mapsetserviceapi.ServiceImpl
+	cfg       *config.Config
+	server    *echo.Echo
+	lg        *log.Logger
+	user      *userserviceapi.ServiceImpl
+	ping      *pingserviceapi.ServiceImpl
+	userCard  *usercardserviseapi.ServiceImpl
+	following *followingserviceapi.ServiceImpl
+	mapset    *mapsetserviceapi.ServiceImpl
 }
 
 func New(
@@ -50,7 +50,7 @@ func New(
 		f.MakeUpdateUserCardUseCase(),
 	)
 
-	tracking := followingserviceapi.New(
+	following := followingserviceapi.New(
 		lg,
 		f.MakeCreateTrackingUseCase(),
 		f.MakeProvideTrackingUseCase(),
@@ -63,14 +63,14 @@ func New(
 	)
 
 	return &Server{
-		cfg:      cfg,
-		server:   server,
-		lg:       lg,
-		ping:     ping,
-		user:     user,
-		userCard: userCard,
-		tracking: tracking,
-		mapset:   mapset,
+		cfg:       cfg,
+		server:    server,
+		lg:        lg,
+		ping:      ping,
+		user:      user,
+		userCard:  userCard,
+		following: following,
+		mapset:    mapset,
 	}, nil
 }
 

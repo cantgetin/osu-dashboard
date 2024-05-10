@@ -2,8 +2,9 @@ package dto
 
 import "time"
 
-type Tracking struct {
-	ID            int       `json:"id"`
-	Username      string    `json:"username"`
-	TrackingSince time.Time `json:"tracking_since"`
+type Following struct {
+	ID             int       `json:"id"`
+	Username       string    `json:"username"`
+	FollowingSince time.Time `json:"following_since"`
+	LastFetched    time.Time `json:"last_fetched"`
 }

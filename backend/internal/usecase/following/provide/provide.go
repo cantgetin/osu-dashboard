@@ -9,7 +9,7 @@ import (
 
 func (uc *UseCase) List(
 	ctx context.Context,
-) ([]*dto.Tracking, error) {
+) ([]*dto.Following, error) {
 	var trackList []*model.Following
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		var err error
@@ -27,13 +27,14 @@ func (uc *UseCase) List(
 	return mapTrackingModelToTrackingDTO(trackList), nil
 }
 
-func mapTrackingModelToTrackingDTO(trackList []*model.Following) []*dto.Tracking {
-	var trackDTOList []*dto.Tracking
-	for _, track := range trackList {
-		trackDTOList = append(trackDTOList, &dto.Tracking{
-			ID:            track.ID,
-			Username:      track.Username,
-			TrackingSince: track.CreatedAt,
+func mapTrackingModelToTrackingDTO(followingList []*model.Following) []*dto.Following {
+	var trackDTOList []*dto.Following
+	for _, follow := range followingList {
+		trackDTOList = append(trackDTOList, &dto.Following{
+			ID:             follow.ID,
+			Username:       follow.Username,
+			FollowingSince: follow.CreatedAt,
+			LastFetched:    follow.LastFetched,
 		})
 	}
 

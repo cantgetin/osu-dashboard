@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
+	"time"
 )
 
 const followingTableName = "following"
@@ -32,6 +33,25 @@ func (r *GormRepository) Delete(ctx context.Context, tx txmanager.Tx, id int) er
 	err := tx.DB().WithContext(ctx).Table(followingTableName).Where("id = ?", id).Delete(&model.Following{}).Error
 	if err != nil {
 		return fmt.Errorf("failed to delete follow with id %v: %w", id, err)
+	}
+
+	return nil
+}
+
+func (r *GormRepository) SetLastFetchedForUser(
+	ctx context.Context,
+	tx txmanager.Tx,
+	username string,
+	lastFetched time.Time,
+) error {
+	err := tx.DB().WithContext(ctx).
+		Table(followingTableName).
+		Where("username = ?", username).
+		Update("last_fetched", lastFetched).
+		Error
+
+	if err != nil {
+		return fmt.Errorf("failed to set last fetched for following %v: %w", username, err)
 	}
 
 	return nil

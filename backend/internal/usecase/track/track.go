@@ -107,6 +107,11 @@ func (uc *UseCase) Track(
 				}
 			}
 
+			err = uc.following.SetLastFetchedForUser(ctx, tx, following.Username, time.Now().UTC())
+			if err != nil {
+				return fmt.Errorf("failed to set last fetched for following %v: %w", following.Username, err)
+			}
+
 			return nil
 		})
 

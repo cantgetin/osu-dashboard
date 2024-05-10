@@ -2,6 +2,8 @@
 
 TODO frontend
 
+* fetch jobs page
+* user page for user that is not in db with button "add"
 * user map genres/languages/starrate diagram
 * tracks page
 * beatmapsets/users display options
@@ -16,6 +18,10 @@ TODO frontend
 
 TODO backend
 
+* tracks handler 
+* handler with starrate for user for all his beatmaps
+* handler with Genre, Language for user for all his beatmaps
+* handler with most popular tags for user for all his beatmaps
 * checks fetch delays (user with 100+ beatmaps loads 3mins+)
 * release
 * list tracks endpoint

@@ -11,7 +11,7 @@ type followingCreator interface {
 }
 
 type followingProvider interface {
-	List(ctx context.Context) ([]*dto.Tracking, error)
+	List(ctx context.Context) ([]*dto.Following, error)
 }
 
 type ServiceImpl struct {

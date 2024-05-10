@@ -6,6 +6,7 @@ import (
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
 	"playcount-monitor-backend/internal/service/osuapi"
+	"time"
 )
 
 type userStore interface {
@@ -31,6 +32,7 @@ type beatmapStore interface {
 
 type followingStore interface {
 	List(ctx context.Context, tx txmanager.Tx) ([]*model.Following, error)
+	SetLastFetchedForUser(ctx context.Context, tx txmanager.Tx, username string, lastFetched time.Time) error
 }
 
 type trackStore interface {
