@@ -16,7 +16,7 @@ func main() {
 
 	lg := log.New()
 
-	ctx, _ := context.WithCancel(context.Background())
+	ctx := context.Background()
 
 	if err := app.Run(ctx, cfg, lg); err != nil {
 		log.Fatalf("failed to start app, %v", err)

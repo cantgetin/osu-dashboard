@@ -37,11 +37,11 @@ func RunTrackingWorker(
 	txm := bootstrap.ConnectTxManager("tracking-worker", waitForConnection, db, lg)
 
 	// init repos
-	userRepo, err := userrepository.New(cfg, lg)
-	mapsetRepo, err := mapsetrepository.New(cfg, lg)
-	beatmapRepo, err := beatmaprepository.New(cfg, lg)
-	followingRepo, err := followingrepository.New(cfg, lg)
-	trackRepo, err := trackrepository.New(cfg, lg)
+	userRepo := userrepository.New(cfg, lg)
+	mapsetRepo := mapsetrepository.New(cfg, lg)
+	beatmapRepo := beatmaprepository.New(cfg, lg)
+	followingRepo := followingrepository.New(cfg, lg)
+	trackRepo := trackrepository.New(cfg, lg)
 
 	// init api
 	httpClient := http.Client{}

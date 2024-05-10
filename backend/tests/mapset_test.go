@@ -3,7 +3,7 @@ package tests
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"playcount-monitor-backend/internal/app/mapsetserviceapi"
 	"playcount-monitor-backend/internal/database/repository"
@@ -207,7 +207,7 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 
 				defer out.Body.Close()
 
-				body, err := ioutil.ReadAll(out.Body)
+				body, err := io.ReadAll(out.Body)
 				s.Require().NoError(err)
 
 				var actual mapsetserviceapi.MapsetListResponse

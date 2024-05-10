@@ -1,7 +1,7 @@
 up:
 	docker-compose up -d --no-deps --build
 
-up-no-worker:
+up-no-tracker:
 	docker-compose up --scale pmb-worker=0 -d --no-deps --build
 
 run:
@@ -28,6 +28,9 @@ integration-test:
     else
 	    export RUN_INTEGRATION_TEST=true && go test ./tests/... -v -cover
     endif
+
+lint:
+	golangci-lint run
 
 add-sample-data:
 	go run tests/data/add_sample_data.go

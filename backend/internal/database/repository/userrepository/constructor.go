@@ -10,10 +10,10 @@ type GormRepository struct {
 	cfg *config.Config
 }
 
-func New(cfg *config.Config, lg *log.Logger) (*GormRepository, error) {
+func New(cfg *config.Config, lg *log.Logger) *GormRepository {
 
 	return &GormRepository{
 		lg:  lg,
 		cfg: cfg,
-	}, nil
+	}
 }

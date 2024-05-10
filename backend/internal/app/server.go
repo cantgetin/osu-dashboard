@@ -23,7 +23,6 @@ import (
 )
 
 func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
-
 	db, err := bootstrap.InitDB(cfg)
 	if err != nil {
 		return err
@@ -36,11 +35,10 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 
 	txm := bootstrap.ConnectTxManager("playcount-monitor-backend", 5, db, lg)
 
-	// init repos
-	userRepo, err := userrepository.New(cfg, lg)
-	mapsetRepo, err := mapsetrepository.New(cfg, lg)
-	beatmapRepo, err := beatmaprepository.New(cfg, lg)
-	followingRepo, err := followingrepository.New(cfg, lg)
+	userRepo := userrepository.New(cfg, lg)
+	mapsetRepo := mapsetrepository.New(cfg, lg)
+	beatmapRepo := beatmaprepository.New(cfg, lg)
+	followingRepo := followingrepository.New(cfg, lg)
 
 	// init api
 	httpClient := netHttp.Client{}

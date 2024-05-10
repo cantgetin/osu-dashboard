@@ -12,6 +12,10 @@ import (
 	"time"
 )
 
+type ContextKey string
+
+const EnvKey ContextKey = "environment"
+
 func TestIntegration(t *testing.T) {
 	suite.Run(t, &IntegrationSuite{})
 }
@@ -42,7 +46,7 @@ func (s *IntegrationSuite) SetupSuite() {
 	s.cfg.HTTPAddr = s.cfg.IntegrationTestHTTPAddr
 
 	s.ctx, s.cancelCtx = context.WithCancel(
-		context.WithValue(context.Background(), "environment", "integration-test"),
+		context.WithValue(context.Background(), EnvKey, "integration-test"),
 	)
 
 	s.T().Log("Starting Docker containers...")

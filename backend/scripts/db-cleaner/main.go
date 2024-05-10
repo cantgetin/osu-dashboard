@@ -26,7 +26,7 @@ func main() {
 
 	lg := log.New()
 
-	ctx, _ := context.WithCancel(context.Background())
+	ctx := context.Background()
 
 	if err := cleanDBJSONB(ctx, cfg, lg); err != nil {
 		log.Fatalf("failed to start db cleaner, %v", err)
@@ -46,21 +46,9 @@ func cleanDBJSONB(ctx context.Context, cfg *config.Config, log *log.Logger) erro
 	}
 
 	// init user, mapset, beatmap repo (things that have stats jsonb)
-	userRepo, err := userrepository.New(cfg, log)
-	if err != nil {
-		return err
-	}
-
-	mapsetRepo, err := mapsetrepository.New(cfg, log)
-	if err != nil {
-		return err
-	}
-
-	beatmapRepo, err := beatmaprepository.New(cfg, log)
-	if err != nil {
-		return err
-	}
-
+	userRepo := userrepository.New(cfg, log)
+	mapsetRepo := mapsetrepository.New(cfg, log)
+	beatmapRepo := beatmaprepository.New(cfg, log)
 	txm := bootstrap.ConnectTxManager("", time.Second, db, nil)
 
 	txErr := txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {

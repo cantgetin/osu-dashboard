@@ -247,6 +247,9 @@ func MapUserModelToUserDTO(user *model.User) (*dto.User, error) {
 
 func MapMapsetModelToMapsetDTO(mapset *model.Mapset, beatmaps []*model.Beatmap) (*dto.Mapset, error) {
 	beatmapsDTOs, err := MapBeatmapModelsToBeatmapDTOs(beatmaps)
+	if err != nil {
+		return nil, err
+	}
 
 	covers, err := MapCoversJSONToMapsetCovers(mapset.Covers)
 	if err != nil {

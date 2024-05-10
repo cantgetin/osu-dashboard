@@ -17,7 +17,7 @@ func (w *Worker) Start(ctx context.Context) func() error {
 		}
 	}
 
-	hoursSinceLastFetch := time.Now().Sub(*lastTimeTracked).Hours()
+	hoursSinceLastFetch := time.Since(*lastTimeTracked).Hours()
 	if hoursSinceLastFetch <= 24 {
 		waitDuration := time.Duration(24-hoursSinceLastFetch) * time.Hour
 		w.lg.Errorf("persisted last time tracked:, waiting %v until next fetch", waitDuration)

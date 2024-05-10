@@ -15,15 +15,17 @@ import (
 	"time"
 )
 
+type ContextKey string
+
+const EnvKey ContextKey = "environment"
+
 func main() {
 	cfg := &config.Config{}
 	if err := env.Parse(cfg); err != nil {
 		log.Fatalf("failed to parse cfg, %v", err)
 	}
 
-	ctx, _ := context.WithCancel(
-		context.WithValue(context.Background(), "environment", "integration-test"),
-	)
+	ctx := context.WithValue(context.Background(), EnvKey, "integration-test")
 
 	if err := addSampleData(ctx, cfg); err != nil {
 		log.Fatalf("failed to start app, %v", err)

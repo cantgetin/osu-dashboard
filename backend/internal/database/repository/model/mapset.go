@@ -14,6 +14,8 @@ type Mapset struct {
 	LastUpdated   time.Time
 	UserID        int
 	Creator       string
+	Language      string
+	Genre         string
 	PreviewURL    string
 	Tags          string
 	BPM           float64

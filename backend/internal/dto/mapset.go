@@ -11,6 +11,8 @@ type Mapset struct {
 	Title       string            `json:"title"`
 	Covers      map[string]string `json:"covers"`
 	Status      string            `json:"status"`
+	Genre       string            `json:"genre"`
+	Language    string            `json:"language"`
 	LastUpdated time.Time         `json:"last_updated"`
 	UserId      int               `json:"user_id"`
 	PreviewUrl  string            `json:"preview_url"`

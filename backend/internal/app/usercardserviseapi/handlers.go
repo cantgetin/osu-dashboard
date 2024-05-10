@@ -21,6 +21,9 @@ func (s *ServiceImpl) Get(c echo.Context) error {
 		return echo.ErrBadRequest
 	}
 	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
 
 	page := c.QueryParam("page")
 	pageInt := 1
