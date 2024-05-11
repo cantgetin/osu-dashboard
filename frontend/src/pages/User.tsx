@@ -11,6 +11,7 @@ import {useAppDispatch, useAppSelector} from "../store/hooks.ts";
 import {LoadingState} from "../interfaces/LoadingState.ts";
 import Layout from "../components/ui/Layout.tsx";
 import {fetchUser, selectUser, selectUserLoadingState} from "../store/userSlice.ts";
+import UserDiagrams from "../components/business/UserDiagrams.tsx";
 
 const UserPage = () => {
     const {userId} = useParams();
@@ -36,10 +37,16 @@ const UserPage = () => {
                         <MapStatsSummary user={user}/>
                         <UserStatsSummary data={mapUserStatsToArray(user.user_stats)}/>
                     </User>
-                    <UserCharts
-                        className="p-4"
-                        data={mapUserStatsToArray(user.user_stats)}
-                    />
+                    <div className="flex gap-4">
+                        <UserCharts
+                            className="p-4 w-1/2"
+                            data={mapUserStatsToArray(user.user_stats)}
+                        />
+                        <UserDiagrams
+                            className="p-4 w-1/2"
+                            userId={user.id}
+                        />
+                    </div>
                     <MapsetList
                         userId={user.id}
                         forUser={true}

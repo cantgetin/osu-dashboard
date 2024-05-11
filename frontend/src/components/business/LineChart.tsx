@@ -3,54 +3,73 @@ import { Line } from "react-chartjs-2";
 import 'chart.js/auto';
 import type {ChartOptions} from "chart.js";
 import aveta from "aveta";
+import {MakeChartHeightPlugin} from "./UserDiagrams.tsx";
 
 interface LineChartProps {
-    chartData: any;
+    data: any;
+    options: ChartOptions<'line'>;
 }
 
 const gridColor = 'rgba(115,115,115,0.2)';
 
-const options: ChartOptions<'line'> = {
-    aspectRatio: 2.5,
-    plugins:{
-        legend: {
-            position: 'top',
-        },
-    },
-    interaction: {
-        intersect: false,
-        mode: 'index',
-    },
-    scales: {
-        x: {
-            border: {
-                display: true
+export function generateOptions(titleText: string): ChartOptions<'line'> {
+    return {
+        aspectRatio: 2.5,
+        plugins: {
+            legend: {
+                position: 'top',
+                display: false,
             },
-            grid: {
+            title: {
+                align: 'center',
                 display: true,
-                drawOnChartArea: true,
-                drawTicks: true,
-                color: gridColor,
-            }
-        },
-        y: {
-            grid: {
-                display: true,
-                drawOnChartArea: true,
-                drawTicks: true,
-                color: gridColor,
+                text: titleText,
+                position: 'top',
+                font: {
+                    size: 14,
+                    style: 'normal',
+                    weight: 'normal',
+                    family: 'Roboto',
+                },
+                color: 'rgb(255,255,255)',
             },
-            ticks: {
-                callback: (value) => {
-                    return aveta(Number(value))
+        },
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+        scales: {
+            x: {
+                border: {
+                    display: true
+                },
+                grid: {
+                    display: true,
+                    drawOnChartArea: true,
+                    drawTicks: true,
+                    color: gridColor,
+                }
+            },
+            y: {
+                grid: {
+                    display: true,
+                    drawOnChartArea: true,
+                    drawTicks: true,
+                    color: gridColor,
+                },
+                ticks: {
+                    callback: (value) => {
+                        return aveta(Number(value))
+                    }
                 }
             }
         }
-    }
+    };
 }
 
-const LineChart: React.FC<LineChartProps> = ({ chartData }) => {
-    return <Line data={chartData} options={options} />;
+
+const LineChart: React.FC<LineChartProps> = ({ data, options }) => {
+    return <Line  plugins={[MakeChartHeightPlugin(10)]} data={data} options={options} />;
 };
 
 export default LineChart;

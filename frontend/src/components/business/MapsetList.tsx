@@ -37,18 +37,12 @@ const MapsetList = ({ showMapper, ...mapsetProps } : MapsetListProps ) => {
 
     return (
         <>
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-5 bg-zinc-900 p-4 rounded-lg">
                 <MapsetSearch update={onSearch}/>
                 {
                     mapsetsState.loading == LoadingState.Succeeded ?
                         <>
-                            <Pagination
-                                pages={mapsetsState.pages}
-                                currentPage={mapsetsState.currentPage}
-                                onPageChange={onPageChange}
-                                className="flex gap-2 justify-end text-md"
-                            />
-                            <List className="flex flex-col gap-2"
+                            <List className="flex flex-col gap-4 rounded-lg"
                                   items={mapsetsState.mapsets!}
                                   renderItem={(mapset: Mapset) =>
                                       <Mapset
@@ -57,6 +51,12 @@ const MapsetList = ({ showMapper, ...mapsetProps } : MapsetListProps ) => {
                                           showMapper={showMapper}
                                       />
                                   }
+                            />
+                            <Pagination
+                                pages={mapsetsState.pages}
+                                currentPage={mapsetsState.currentPage}
+                                onPageChange={onPageChange}
+                                className="flex gap-2 justify-end text-md"
                             />
                         </>
                         : <LoadingSpinner/>

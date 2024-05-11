@@ -40,7 +40,7 @@ const Mapset = (props: MapCardProps) => {
     return (
         <>
             {lastStats != null ?
-                <div className={`flex bg-zinc-900 text-white w-full rounded-lg overflow-hidden ${props.className}`}>
+                <div className={`flex bg-zinc-800 bg-opacity-30 text-white w-full overflow-hidden rounded-lg ${props.className}`}>
                     <div>
                         <img src={props.map.covers.card} className='h-full w-64 min-w-64' alt="map bg"
                              style={{objectFit: 'cover'}}/>

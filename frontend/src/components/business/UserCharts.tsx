@@ -1,4 +1,4 @@
-import LineChart from "./LineChart.tsx";
+import LineChart, {generateOptions} from "./LineChart.tsx";
 import {convertDataToDayMonth} from "../../utils/utils.ts";
 import {useEffect, useState} from "react";
 
@@ -9,10 +9,9 @@ interface LineChartProps {
 }
 
 const charts: { property: keyof UserStatsDataset, name: string, color: string }[] = [
-    {property: 'play_count', name: 'Play count', color: '#86EFAC'},
-    {property: 'favourite_count', name: 'Favourite count', color: '#FF5DBD'},
-    {property: 'map_count', name: 'Map count', color: '#ffed54'},
-    {property: 'comments_count', name: 'Comment count', color: '#f87171'}
+    {property: 'play_count', name: 'Plays', color: '#86EFAC'},
+    {property: 'favourite_count', name: 'Favourites', color: '#FF5DBD'},
+    {property: 'comments_count', name: 'Comments', color: '#f87171'}
 ];
 
 const generateUserChartData = (
@@ -44,7 +43,10 @@ const UserCharts = ({data, asSlideshow, className}: LineChartProps) => {
 
     const renderChart = (chartIndex: number) => {
         const chart = charts[chartIndex];
-        return (<LineChart chartData={generateUserChartData(data, chart.property, chart.name, chart.color)}/>);
+        return (<LineChart
+            data={generateUserChartData(data, chart.property, chart.name, chart.color)}
+            options={generateOptions(chart.name)}
+        />);
     };
 
     useEffect(() => {
@@ -58,9 +60,9 @@ const UserCharts = ({data, asSlideshow, className}: LineChartProps) => {
     return (
         <>
             {data.length > 0 && (
-                <div className={`flex bg-zinc-900 rounded-lg box-border w-full ${className}`}>
+                <div className={`flex bg-zinc-900 rounded-lg box-border ${className}`}>
                     {asSlideshow ? renderChart(currentIndex) : (
-                        <div className="grid gap-4 grid-cols-2 w-full">
+                        <div className="grid gap-4 grid-cols-1 w-full">
                             {charts.map((_, index) => (
                                 <div key={index}>{renderChart(index)}</div>
                             ))}

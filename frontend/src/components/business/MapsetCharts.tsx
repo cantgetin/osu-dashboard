@@ -1,5 +1,5 @@
 import {convertDataToDayMonth} from "../../utils/utils.ts";
-import LineChart from "./LineChart.tsx";
+import LineChart, {generateOptions} from "./LineChart.tsx";
 
 interface MapsetChartsProps {
     data: MapsetStatsDataset[]
@@ -39,7 +39,10 @@ const MapsetCharts = (props: MapsetChartsProps) => {
 
     const renderChart = (chartIndex: number) => {
         const chart = charts[chartIndex];
-        return (<LineChart chartData={generateMapChartData(props.data, chart.property, chart.name, chart.color)}/>);
+        return (<LineChart
+            data={generateMapChartData(props.data, chart.property, chart.name, chart.color)}
+            options={generateOptions(chart.name)}
+        />);
     };
 
     return (
