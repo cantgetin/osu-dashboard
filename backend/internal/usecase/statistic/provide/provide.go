@@ -63,11 +63,11 @@ func (uc *UseCase) GetForUser(
 	}
 
 	// keep only highest 10 values for each map
-	tags = top10Values(tags)
-	languages = top10Values(languages)
-	genres = top10Values(genres)
-	BPMs = top10Values(BPMs)
-	starrates = top10Values(starrates)
+	tags = top5Values(tags)
+	languages = top5Values(languages)
+	genres = top5Values(genres)
+	BPMs = top5Values(BPMs)
+	starrates = top5Values(starrates)
 
 	return &UserMapStatistics{
 		Tags:      tags,
@@ -118,8 +118,8 @@ func filterMapByKey(originalMap map[string]int, keys []string) map[string]int {
 	return filteredMap
 }
 
-func top10Values(inputMap map[string]int) map[string]int {
-	topKeys := getTopNKeys(inputMap, 10)
+func top5Values(inputMap map[string]int) map[string]int {
+	topKeys := getTopNKeys(inputMap, 5)
 	result := filterMapByKey(inputMap, topKeys)
 
 	return result
