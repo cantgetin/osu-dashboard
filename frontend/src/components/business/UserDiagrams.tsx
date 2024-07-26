@@ -126,7 +126,7 @@ const UserDiagrams = (props: UserDiagramsProps) => {
     }
 
     return (
-        <div className={`p-4 bg-zinc-900 rounded-lg${props.className}`}>
+        <div className={`p-4 bg-zinc-900 rounded-lg ${props.className}`}>
             <div className="grid grid-cols-2 gap-4">
                 {userStats && Object.entries(resp).map(([key, value]) => (
                     <div key={key} className='h-80'>
