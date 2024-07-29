@@ -102,6 +102,10 @@ const Beatmapset = () => {
                             </div>
                         </div>
                     </div>
+                    {/*<div className="flex bg-zinc-900 box-border w-full rounded-lg p-4">*/}
+                    {/*    <h1>Description</h1>*/}
+                    {/*    <p className="text-zinc-400">lol?</p>*/}
+                    {/*</div>*/}
                     <div className="justify-center flex w-full">
                         <MapsetCharts
                             data={mapMapsetStatsToArray(beatmapset.mapset_stats)}
