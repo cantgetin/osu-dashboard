@@ -15,6 +15,7 @@ TODO frontend
 * mobile compatibility
 * about page
 * header search
+* two different map display features 
 
 TODO backend
 
