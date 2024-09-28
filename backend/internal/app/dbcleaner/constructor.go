@@ -1,4 +1,4 @@
-package trackingworkerapi
+package dbcleaner
 
 import (
 	"context"
@@ -8,27 +8,27 @@ import (
 )
 
 type (
-	tracker interface {
-		Track(ctx context.Context, lg *log.Logger) error
-		GetLastTimeTracked(ctx context.Context) (*time.Time, error)
-		CreateTrackRecord(ctx context.Context) error
+	cleaner interface {
+		Clean(ctx context.Context) error
+		GetLastTimeCleaned(ctx context.Context) (*time.Time, error)
+		CreateCleanRecord(ctx context.Context) error
 	}
 
 	Worker struct {
 		cfg     *config.Config
 		lg      *log.Logger
-		tracker tracker
+		cleaner cleaner
 	}
 )
 
 func New(
 	cfg *config.Config,
 	lg *log.Logger,
-	tracker tracker,
+	cleaner cleaner,
 ) *Worker {
 	return &Worker{
 		cfg:     cfg,
 		lg:      lg,
-		tracker: tracker,
+		cleaner: cleaner,
 	}
 }

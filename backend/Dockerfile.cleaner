@@ -1,0 +1,9 @@
+FROM golang:alpine
+
+COPY . /go/src/app
+
+WORKDIR /go/src/app/cmd/db-cleaner
+
+RUN go build -o app main.go
+
+CMD ["./app"]

@@ -1,4 +1,4 @@
-package trackingworkerapi
+package trackingworker
 
 import (
 	"context"

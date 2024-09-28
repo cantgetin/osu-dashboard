@@ -1,5 +1,7 @@
 version: "3.8"
 
+# pmb stands for Playcount Monitor Backend
+
 networks:
   pmb-network:
     external: false
@@ -16,7 +18,7 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      "db":
+      "pmb-db":
         condition: service_healthy
     restart: "on-failure"
 
@@ -35,7 +37,20 @@ services:
         condition: service_started
     restart: "on-failure"
 
-  db:
+  pmb-cleaner:
+    environment:
+      - GOPROXY=https://proxy.golang.org
+    build:
+      context: "./"
+      dockerfile: Dockerfile.cleaner
+    networks:
+      - "pmb-network"
+    depends_on:
+      "pmb-service":
+        condition: service_started
+    restart: "on-failure"
+
+  pmb-db:
     image: "postgres:15.2-alpine"
     ports:
       - 5432:5432
@@ -55,12 +70,12 @@ services:
       retries: 5
     restart: "on-failure"
 
-  adminer:
+  pmb-adminer:
     image: "adminer"
     networks:
       - "pmb-network"
     restart: "on-failure"
     depends_on:
-      - "db"
+      - "pmb-db"
     ports:
       - "8081:8080"

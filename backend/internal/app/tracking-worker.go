@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	log "github.com/sirupsen/logrus"
-	"playcount-monitor-backend/internal/app/trackingworkerapi"
+	"playcount-monitor-backend/internal/app/trackingworker"
 	"playcount-monitor-backend/internal/bootstrap"
 	"playcount-monitor-backend/internal/config"
 	"playcount-monitor-backend/internal/database/repository/beatmaprepository"
@@ -32,6 +32,11 @@ func RunTrackingWorker(
 		return fmt.Errorf("failed to init db: %w", err)
 	}
 
+	err = bootstrap.ApplyMigrations(db)
+	if err != nil {
+		return err
+	}
+
 	const waitForConnection = 5 * time.Second
 	txm := bootstrap.ConnectTxManager("tracking-worker", waitForConnection, db, lg)
 
@@ -47,7 +52,7 @@ func RunTrackingWorker(
 	osuTokenProvider := osuapitokenprovider.New(cfg, &httpClient)
 	osuAPI := osuapi.New(cfg, osuTokenProvider, &httpClient)
 
-	worker := trackingworkerapi.New(cfg, lg, track.New(
+	worker := trackingworker.New(cfg, lg, track.New(
 		cfg,
 		txm,
 		osuAPI,

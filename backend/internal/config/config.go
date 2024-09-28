@@ -13,7 +13,7 @@ type Config struct {
 	AppName  string `env:"APP_NAME" envDefault:"playcount-monitor-backend"`
 	HTTPAddr string `env:"HTTP_ADDR" envDefault:":8080"`
 
-	PgDSN          string        `env:"PG_DSN" envDefault:"postgresql://db:5432/db?user=db&password=db"`
+	PgDSN          string        `env:"PG_DSN" envDefault:"postgresql://pmb-db:5432/db?user=db&password=db"`
 	PgMaxOpenConn  int           `env:"PG_MAX_OPEN_CONN" envDefault:"5"`
 	PgIdleConn     int           `env:"PG_MAX_IDLE_CONN" envDefault:"5"`
 	PgPingInterval time.Duration `env:"PG_PING_INTERVAL" envDefault:"5s"`
@@ -21,6 +21,9 @@ type Config struct {
 
 	TrackingTimeout  time.Duration `env:"TRACKING_TIMEOUT" envDefault:"30m"`
 	TrackingInterval time.Duration `env:"TRACKING_INTERVAL" envDefault:"24h"`
+
+	CleaningTimeout  time.Duration `env:"CLEANING_TIMEOUT" envDefault:"30m"`
+	CleaningInterval time.Duration `env:"CLEANING_INTERVAL" envDefault:"24h"`
 
 	OsuAPIClientID     string `env:"OSU_API_CLIENT_ID" envDefault:""`
 	OsuAPIClientSecret string `env:"OSU_API_CLIENT_SECRET" envDefault:""`
