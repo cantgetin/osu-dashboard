@@ -90,7 +90,7 @@ func (uc *UseCase) Track(
 	reqs := uc.osuApi.GetOutgoingRequestCount()
 	avgReqsPerMin := float64(reqs) / elapsed.Minutes()
 
-	lg.Infof("Sent %v requests to api in %s minutes", reqs, elapsed.Minutes())
+	lg.Infof("Sent %v requests to api in %v minutes", reqs, elapsed.Minutes())
 	lg.Infof("Average requests per minute: %f", avgReqsPerMin)
 
 	uc.osuApi.ResetOutgoingRequestCount()
