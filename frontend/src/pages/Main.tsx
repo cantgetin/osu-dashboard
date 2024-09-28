@@ -5,6 +5,7 @@ import Mapset from "../images/mapset.png"
 import Diagrams from "../images/diagrams.png"
 import Button from "../components/ui/Button.tsx";
 import Summarized from "../images/summarized.png"
+import Filtering from "../images/filtering.png"
 
 const Main = () => {
     // @ts-ignore
@@ -43,19 +44,25 @@ const Main = () => {
                     Features
                 </h1>
                 <h1 className="text-3xl text-gray-400">
-                    Track your total daily map plays, favourites, comments
+                    Track your total daily map plays, favourites, comments on charts
                 </h1>
                 <div className="px-4">
                     <img className="z-0 opacity-70 rounded-lg overflow-hidden" src={Charts}/>
                 </div>
                 <h1 className="text-3xl text-gray-400">
-                    Track user summarized statistics
+                    Track summarized user statistics for last 24 hours and 7 days
                 </h1>
                 <div className="px-4">
                     <img className="z-0 opacity-70 rounded-lg overflow-hidden" src={User}/>
                 </div>
                 <h1 className="text-3xl text-gray-400">
-                    Track specific map statistics
+                    Filter and sort your mapsets with multiple options
+                </h1>
+                <div className="px-4">
+                    <img className="z-0 opacity-70 rounded-lg overflow-hidden" src={Filtering}/>
+                </div>
+                <h1 className="text-3xl text-gray-400">
+                    Track specific mapset and beatmap statistics
                 </h1>
                 <div className="px-4">
                     <img className="z-0 opacity-70 rounded-lg overflow-hidden" src={Mapset}/>
