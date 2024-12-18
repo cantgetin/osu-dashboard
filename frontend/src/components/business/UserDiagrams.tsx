@@ -27,13 +27,17 @@ export const MakeChartHeightPlugin = (height: number) => {
 }
 
 const UserDiagrams = (props: UserDiagramsProps) => {
-    const [userStats, setUserStats] = useState<UserStats | null>(null);
+    const [userStats, setUserStats] = useState<UserStatistics | null>(null);
 
     useEffect(() => {
         fetch(`/api/user/statistic/${props.userId}`)
             .then(response => response.json())
-            .then((data: UserStats) => setUserStats(data));
+            .then((data: UserStatistics) => setUserStats(data))
     }, [props.userId]);
+
+    useEffect(() => {
+        console.log(userStats)
+    }, [userStats]);
 
     function makeOptions(key: string): ChartOptions<'doughnut'> {
         return {
@@ -88,66 +92,32 @@ const UserDiagrams = (props: UserDiagramsProps) => {
 
         return nameMap[key];
     }
-
-    interface Response {
-        [key: string]: {
-            [key: string]: number;
-        };
-    }
-
-    const resp: Response = {
-        "most_popular_tags": {
-            "hip": 32,
-            "hop": 32,
-            "hyperpop": 21,
-            "pop": 38,
-            "rap": 58
-        },
-        "most_popular_genres": {
-            "Electronic": 3,
-            "Hip Hop": 10,
-            "Rock": 3,
-            "Unspecified": 45
-        },
-        "most_popular_bpms": {
-            "140": 10,
-            "150": 9,
-            "160": 14,
-            "170": 8,
-            "200": 5
-        },
-        "most_popular_starrates": {
-            "4": 15,
-            "5": 24,
-            "6": 21,
-            "7": 4,
-            "8": 3
-        }
-    }
-
+    
     return (
         <div className={`p-4 bg-zinc-900 rounded-lg ${props.className}`}>
             <div className="grid grid-cols-2 gap-4">
-                {userStats && Object.entries(resp).map(([key, value]) => (
-                    <div key={key} className='h-80'>
-                        <Doughnut
-                            height="200px"
-                            width="200px"
-                            plugins={[MakeChartHeightPlugin(80)]}
-                            data={{
-                                labels: Object.keys(value),
-                                datasets: [{
-                                    data: Object.values(value),
-                                    backgroundColor: ['#003f5c', '#58508d', '#bc5090', "#ff6361", "#ffa600"],
-                                    borderRadius: 0,
-                                    borderWidth: 0,
-                                    label: getNameFromKey(key),
-                                }],
-                            }}
-                            options={makeOptions(key)}
-                            className="h-1/3"
-                        />
-                    </div>
+                {userStats && Object.entries(userStats).map(([key, value]) => (
+                    getNameFromKey(key) != undefined ?
+                        <div key={key} className='h-80'>
+                            <Doughnut
+                                height="200px"
+                                width="200px"
+                                plugins={[MakeChartHeightPlugin(80)]}
+                                data={{
+                                    labels: Object.keys(value),
+                                    datasets: [{
+                                        data: Object.values(value),
+                                        backgroundColor: ['#003f5c', '#58508d', '#34ab9c', "#ff6361", '#983a73'],
+                                        borderRadius: 0,
+                                        borderWidth: 0,
+                                        label: getNameFromKey(key),
+                                    }],
+                                }}
+                                options={makeOptions(key)}
+                                className="h-1/3"
+                            />
+                        </div>
+                        : null
                 ))}
             </div>
         </div>

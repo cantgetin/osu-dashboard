@@ -21,7 +21,7 @@ const User = (props: UserProps) => {
                             onClick={() => {
                                 if (props.nameOnClick != undefined) props.nameOnClick!()
                             }}>
-                            {props.user.username == "TheOnlyNEET" ? "Nekit Autobot" : props.user.username}
+                            {props.user.username}
                         </h1>
                         <Button
                             onClick={() => props.externalLinkOnClick()}

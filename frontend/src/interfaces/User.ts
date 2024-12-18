@@ -17,6 +17,12 @@ interface UserMapCounts {
     loved: number;
 }
 
+interface UserStatistics {
+    [key: string]: {
+        [key: string]: number;
+    };
+}
+
 interface UserStats {
     [key: string]: UserStatsModel;
 }
