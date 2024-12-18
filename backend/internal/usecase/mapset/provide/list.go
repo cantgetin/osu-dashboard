@@ -87,7 +87,7 @@ func (uc *UseCase) ListForUser(
 	var count int
 
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-		mapsets, c, err := uc.mapset.ListForUserWithFilterSortLimitOffset(
+		mapsets, _, err := uc.mapset.ListForUserWithFilterSortLimitOffset(
 			ctx,
 			tx,
 			userID,
@@ -100,19 +100,31 @@ func (uc *UseCase) ListForUser(
 			return err
 		}
 
+		mapsetIDs := make([]int, len(mapsets))
+		for i, m := range mapsets {
+			mapsetIDs[i] = m.ID
+		}
+
+		beatmaps, err := uc.beatmap.ListForMapsets(ctx, tx, mapsetIDs...)
+		if err != nil {
+			return err
+		}
+
+		// now attach beatmaps to mapsets
 		for _, m := range mapsets {
-			bm, err := uc.beatmap.ListForMapset(ctx, tx, m.ID)
-			if err != nil {
-				return err
+			mapsetBeatmaps := make([]*model.Beatmap, 0)
+			for _, bm := range beatmaps {
+				if bm.MapsetID == m.ID {
+					mapsetBeatmaps = append(mapsetBeatmaps, bm)
+				}
 			}
 
-			dtoMapset, err := mappers.MapMapsetModelToMapsetDTO(m, bm)
+			dtoMapset, err := mappers.MapMapsetModelToMapsetDTO(m, mapsetBeatmaps)
 			if err != nil {
 				return err
 			}
 
 			dtoMapsets = append(dtoMapsets, dtoMapset)
-			count = c
 		}
 
 		return nil

@@ -33,7 +33,10 @@ func (uc *UseCase) GetForUser(
 			return err
 		}
 
-		for _, mapset := range mapsets {
+		mapsetIDs := make([]int, len(mapsets))
+
+		for i, mapset := range mapsets {
+			mapsetIDs[i] = mapset.ID
 			tagsArr := strings.Fields(mapset.Tags)
 			for _, tag := range tagsArr {
 				tags[tag]++
@@ -44,16 +47,15 @@ func (uc *UseCase) GetForUser(
 
 			bpmStr := strconv.Itoa(roundUpToNearestTen(int(mapset.BPM)))
 			BPMs[bpmStr]++
+		}
 
-			beatmaps, err := uc.beatmap.ListForMapset(ctx, tx, mapset.ID)
-			if err != nil {
-				return err
-			}
-
-			for _, beatmap := range beatmaps {
-				starrateStr := strconv.Itoa(roundUpToNearestNum(int(beatmap.DifficultyRating)))
-				starrates[starrateStr]++
-			}
+		beatmaps, err := uc.beatmap.ListForMapsets(ctx, tx, mapsetIDs...)
+		if err != nil {
+			return err
+		}
+		for _, beatmap := range beatmaps {
+			starrateStr := strconv.Itoa(roundUpToNearestNum(int(beatmap.DifficultyRating)))
+			starrates[starrateStr]++
 		}
 
 		return nil

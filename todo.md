@@ -30,7 +30,6 @@ TODO backend
 * client-server oauth2 authorization 
 * rename repo 
 * add schedule backups every day
-* finish db cleanup script
 * mapset search for mapper name
 * move search %?% to separate mapset field filter logic
 * cicd

@@ -64,6 +64,7 @@ func InitDB(cfg *config.Config) (*gorm.DB, error) {
 	return db, nil
 }
 
+// TODO: look at this later, applying existing migrations causing it to fail
 func ApplyMigrations(gdb *gorm.DB) error {
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {

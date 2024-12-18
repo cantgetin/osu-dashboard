@@ -10,6 +10,7 @@ import (
 
 type beatmapStore interface {
 	ListForMapset(ctx context.Context, tx txmanager.Tx, mapsetId int) ([]*model.Beatmap, error)
+	ListForMapsets(ctx context.Context, tx txmanager.Tx, mapsetIDs ...int) ([]*model.Beatmap, error)
 }
 
 type mapsetStore interface {

@@ -47,6 +47,16 @@ func (r *GormRepository) ListForMapset(ctx context.Context, tx txmanager.Tx, map
 	return beatmaps, nil
 }
 
+func (r *GormRepository) ListForMapsets(ctx context.Context, tx txmanager.Tx, mapsetIDs ...int) ([]*model.Beatmap, error) {
+	var beatmaps []*model.Beatmap
+	err := tx.DB().WithContext(ctx).Table(beatmapsTableName).Where("mapset_id IN (?)", mapsetIDs).Find(&beatmaps).Error
+	if err != nil {
+		return nil, fmt.Errorf("failed to list beatmaps for mapsets %v: %w", mapsetIDs, err)
+	}
+
+	return beatmaps, nil
+}
+
 func (r *GormRepository) Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error) {
 	var count int64
 	err := tx.DB().WithContext(ctx).Table(beatmapsTableName).Where("id = ?", id).Count(&count).Error
