@@ -35,10 +35,6 @@ const UserDiagrams = (props: UserDiagramsProps) => {
             .then((data: UserStatistics) => setUserStats(data))
     }, [props.userId]);
 
-    useEffect(() => {
-        console.log(userStats)
-    }, [userStats]);
-
     function makeOptions(key: string): ChartOptions<'doughnut'> {
         return {
             maintainAspectRatio: false,
@@ -92,7 +88,7 @@ const UserDiagrams = (props: UserDiagramsProps) => {
 
         return nameMap[key];
     }
-    
+
     return (
         <div className={`p-4 bg-zinc-900 rounded-lg ${props.className}`}>
             <div className="grid grid-cols-2 gap-4">
@@ -104,7 +100,7 @@ const UserDiagrams = (props: UserDiagramsProps) => {
                                 width="200px"
                                 plugins={[MakeChartHeightPlugin(80)]}
                                 data={{
-                                    labels: Object.keys(value),
+                                    labels: Object.keys(value).map(item => item === "" ? "Unspecified" : item),
                                     datasets: [{
                                         data: Object.values(value),
                                         backgroundColor: ['#003f5c', '#58508d', '#34ab9c', "#ff6361", '#983a73'],

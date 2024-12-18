@@ -9,7 +9,7 @@ networks:
 services:
   pmb-service:
     environment:
-      - GOPROXY=https://proxy.golang.org
+      - GOPROXY=https://goproxy.io,direct
     build:
       context: "./"
       dockerfile: Dockerfile.app
