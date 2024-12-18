@@ -10,7 +10,9 @@ import (
 func containsMapset(entities []*model.Mapset, id int) bool {
 	for _, entity := range entities {
 		if entity.ID == id {
-			return true
+			if entity.Genre == "" || entity.Language == "" {
+				return true
+			}
 		}
 	}
 	return false
