@@ -124,5 +124,11 @@ func top5Values(inputMap map[string]int) map[string]int {
 	topKeys := getTopNKeys(inputMap, 5)
 	result := filterMapByKey(inputMap, topKeys)
 
+	for k, _ := range result {
+		if strings.TrimSpace(k) == "" {
+			k = "Unspecified"
+		}
+	}
+
 	return result
 }
