@@ -89,11 +89,18 @@ const UserDiagrams = (props: UserDiagramsProps) => {
         return nameMap[key];
     }
 
+    function ensureValueHasData(value: UserStatisticUnit) {
+        if (Object.entries(value).length === 0) {
+            value["Unspecified"] = 100;
+        }
+    }
+
     return (
         <div className={`p-4 bg-zinc-900 rounded-lg ${props.className}`}>
             <div className="grid grid-cols-2 gap-4">
-                {userStats && Object.entries(userStats).map(([key, value]) => (
-                    getNameFromKey(key) != undefined ?
+                {userStats && Object.entries(userStats).map(([key, value]) => {
+                    ensureValueHasData(value)
+                    return getNameFromKey(key) != undefined ? (
                         <div key={key} className='h-80'>
                             <Doughnut
                                 height="200px"
@@ -113,8 +120,8 @@ const UserDiagrams = (props: UserDiagramsProps) => {
                                 className="h-1/3"
                             />
                         </div>
-                        : null
-                ))}
+                    ) : null;
+                })}
             </div>
         </div>
     );

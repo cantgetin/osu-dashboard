@@ -18,9 +18,11 @@ interface UserMapCounts {
 }
 
 interface UserStatistics {
-    [key: string]: {
-        [key: string]: number;
-    };
+    [key: string]: UserStatisticUnit;
+}
+
+interface UserStatisticUnit {
+    [key: string]: number;
 }
 
 interface UserStats {
