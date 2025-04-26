@@ -9,6 +9,9 @@ networks:
 services:
   pmb-service:
     environment:
+      - OSU_API_CLIENT_ID=${OSU_API_CLIENT_ID}
+      - OSU_API_CLIENT_SECRET=${OSU_API_CLIENT_SECRET}
+      - OSU_API_REDIRECT_URI=${OSU_API_REDIRECT_URI}
       - GOPROXY=https://goproxy.io,direct
     build:
       context: "./"
@@ -26,6 +29,7 @@ services:
     environment:
       - OSU_API_CLIENT_ID=${OSU_API_CLIENT_ID}
       - OSU_API_CLIENT_SECRET=${OSU_API_CLIENT_SECRET}
+      - OSU_API_REDIRECT_URI=${OSU_API_REDIRECT_URI}
       - GOPROXY=https://proxy.golang.org
     build:
       context: "./"
