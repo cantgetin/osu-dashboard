@@ -11,9 +11,9 @@ export default function List<T>(props: ListProps<T>) {
     return (
         <div className={props.className}>
             {props.items?.length > 0 && (
-                <div className="space-y-1">
+                <div className="space-y-1 grid 2xl:grid-cols-1 l:grid-cols-1 gap-4">
                     {props.title && (
-                        <div className="text-sm text-gray-500 px-1">
+                        <div className="text-sm text-gray-500 px-1 -mb-4">
                             {props.title}
                         </div>
                     )}
