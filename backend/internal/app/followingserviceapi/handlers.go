@@ -2,6 +2,7 @@ package followingserviceapi
 
 import (
 	"github.com/labstack/echo/v4"
+	"net/http"
 )
 
 func (s *ServiceImpl) Create(c echo.Context) error {
@@ -10,7 +11,13 @@ func (s *ServiceImpl) Create(c echo.Context) error {
 		return echo.ErrBadRequest
 	}
 
-	return s.followingCreator.Create(c.Request().Context(), code)
+	err := s.followingCreator.Create(c.Request().Context(), code)
+	if err != nil {
+		s.lg.Printf("failed to create following: %v", err)
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to create following")
+	}
+
+	return c.NoContent(http.StatusCreated)
 }
 
 func (s *ServiceImpl) List(c echo.Context) error {
