@@ -28,9 +28,10 @@ func (uc *UseCase) Create(
 	}
 
 	following := &model.Following{
-		ID:        user.ID,
-		Username:  user.Username,
-		CreatedAt: time.Now().UTC(),
+		ID:          user.ID,
+		Username:    user.Username,
+		CreatedAt:   time.Now().UTC(),
+		LastFetched: time.Now().Add(time.Hour * -25),
 	}
 	if following.ID <= 0 || following.Username == "" {
 		return fmt.Errorf("user id or username is empty: %w", err)

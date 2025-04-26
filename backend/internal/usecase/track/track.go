@@ -38,7 +38,7 @@ func (uc *UseCase) Track(
 	for i, following := range follows {
 		lg.Infof("fetching user %s with id %v, %v/%v", following.Username, following.ID, i, len(follows))
 		if err := uc.TrackSingleFollowing(ctx, following); err != nil {
-			return fmt.Errorf("failed to fetch specific user: %w", err)
+			lg.Infof("failed to fetch specific user: %s", err.Error())
 		}
 	}
 
@@ -55,22 +55,16 @@ func (uc *UseCase) Track(
 }
 
 func (uc *UseCase) TrackSingleFollowing(ctx context.Context, following *model.Following) error {
-	// check if user was tracked in the last 24 hours (just in case)
+	// check if following was not fetched in the last 24 hours (just in case)
 	if err := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-		exists, err := uc.user.Exists(ctx, tx, following.ID)
-		if !exists {
-			return nil
+		fw, _ := uc.following.Get(ctx, tx, following.ID)
+		if fw == nil {
+			return fmt.Errorf("following not found in db")
 		}
 
-		// if it exists check updated at
-		user, err := uc.user.Get(ctx, tx, following.ID)
-		if err != nil {
-			return err
-		}
-
-		// if it was updated in last 24 hours then return error
-		if time.Since(user.UpdatedAt) < 24*time.Hour {
-			return fmt.Errorf("user was tracked within the last 24 hours, no need to track")
+		// if it was not fetched in last 24 hours then return error
+		if time.Since(fw.LastFetched) > 24*time.Hour {
+			return fmt.Errorf("user was fetched within the last 24 hours, no need to track")
 		}
 
 		return nil
