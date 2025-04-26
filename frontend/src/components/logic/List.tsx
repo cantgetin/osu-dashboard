@@ -10,13 +10,16 @@ interface ListProps<T> {
 export default function List<T>(props: ListProps<T>) {
     return (
         <div className={props.className}>
-            {props.items != null || undefined ?
-                <>
-                    {props.items.length > 0 && props.title}
-                    {props.items.length > 0 ? props.items.map(props.renderItem) : null}
-                </>
-                : null}
-
+            {props.items?.length > 0 && (
+                <div className="space-y-1">
+                    {props.title && (
+                        <div className="text-sm text-gray-500 px-1">
+                            {props.title}
+                        </div>
+                    )}
+                    {props.items.map(props.renderItem)}
+                </div>
+            )}
         </div>
-    )
+    );
 }

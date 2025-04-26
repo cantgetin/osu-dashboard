@@ -24,24 +24,30 @@ const Users = () => {
 
     return (
         <Layout className="flex md:justify-center sm:justify-start">
-            {usersLoaded == LoadingState.Succeeded ?
-                <List className="w-[1152px] grid 2xl:grid-cols-1 l:grid-cols-1 gap-4" items={users}
-                      renderItem={(user: User) => (
-                          <User
-                              user={user}
-                              key={user.id}
-                              nameOnClick={() => userNameOnClick(user.id)}
-                              externalLinkOnClick={() => userExtLinkOnClick(user.id)}
-                          >
-                              <UserCharts
-                                  className="w-[400px] min-w-[400px] max-w-[400px]"
-                                  data={mapUserStatsToArray(user.user_stats)} asSlideshow={true}
-                              />
-                              <UserStatsSummary data={mapUserStatsToArray(user.user_stats)}/>
-                          </User>
-                      )}
+            {usersLoaded == LoadingState.Succeeded ? (
+                <List
+                    className="w-[1152px]"
+                    items={users}
+                    title={`Total users: ${users.length}`}
+                    renderItem={(user: User) => (
+                        <User
+                            user={user}
+                            key={user.id}
+                            nameOnClick={() => userNameOnClick(user.id)}
+                            externalLinkOnClick={() => userExtLinkOnClick(user.id)}
+                        >
+                            <UserCharts
+                                className="w-[400px] min-w-[400px] max-w-[400px]"
+                                data={mapUserStatsToArray(user.user_stats)}
+                                asSlideshow={true}
+                            />
+                            <UserStatsSummary data={mapUserStatsToArray(user.user_stats)}/>
+                        </User>
+                    )}
                 />
-                : <LoadingSpinner/>}
+            ) : (
+                <LoadingSpinner/>
+            )}
         </Layout>
     );
 };
