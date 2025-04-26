@@ -13,11 +13,16 @@ type followingStore interface {
 	Create(ctx context.Context, tx txmanager.Tx, user *model.Following) error
 }
 
+type trackUseCase interface {
+	TrackSingleFollowing(ctx context.Context, following *model.Following) error
+}
+
 type UseCase struct {
 	cfg       *config.Config
 	lg        *log.Logger
 	txm       txmanager.TxManager
 	following followingStore
+	track     trackUseCase
 }
 
 func New(
@@ -25,11 +30,13 @@ func New(
 	lg *log.Logger,
 	txm txmanager.TxManager,
 	following followingStore,
+	track trackUseCase,
 ) *UseCase {
 	return &UseCase{
 		cfg:       cfg,
 		lg:        lg,
 		txm:       txm,
 		following: following,
+		track:     track,
 	}
 }

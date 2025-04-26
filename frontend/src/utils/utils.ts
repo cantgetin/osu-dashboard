@@ -1,3 +1,6 @@
+const CLIENT_ID = process.env.CLIENT_ID;
+const REDIRECT_URI = process.env.REDIRECT_URI;
+
 export function convertDateFormat(inputDate: string): string {
     const dateObj = new Date(inputDate);
 
@@ -62,4 +65,31 @@ export function getRemainingPendingTime(expirationTimeStr: string): string {
     const result = `pending for ${days}d ${hours}h ${minutes}m`;
 
     return result;
+}
+
+function generateRandomString() {
+    return "x".repeat(5)
+        .replace(/./g, _ =>
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"[Math.floor(Math.random() * 62)]);
+}
+
+export function redirectToAuthorize() {
+    const url = new URL(
+        "https://osu.ppy.sh/oauth/authorize"
+    );
+
+    const randomString: string = generateRandomString()
+    localStorage.setItem('state', randomString)
+
+    const params: any = {
+        "client_id": CLIENT_ID,
+        "redirect_uri": REDIRECT_URI,
+        "response_type": "code",
+        "scope": "public identify",
+        "state": randomString,
+    };
+    Object.keys(params)
+        .forEach(key => url.searchParams.append(key, params[key]));
+
+    window.location.href = url.toString();
 }

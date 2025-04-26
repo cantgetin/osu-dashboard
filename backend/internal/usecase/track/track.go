@@ -37,52 +37,8 @@ func (uc *UseCase) Track(
 	// max 300 requests a minute
 	for i, following := range follows {
 		lg.Infof("fetching user %s with id %v, %v/%v", following.Username, following.ID, i, len(follows))
-
-		var dbUserMapsets []*model.Mapset
-		if err := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-			var err error
-			if dbUserMapsets, err = uc.mapset.ListForUser(ctx, tx, following.ID); err != nil {
-				return err
-			}
-			return nil
-		}); err != nil {
-			return err
-		}
-
-		// get data from api
-		user, userMapsets, err := uc.osuApi.GetUserWithMapsets(ctx, strconv.Itoa(following.ID))
-		if err != nil {
-			return fmt.Errorf("failed to get info from api, user id: %v, err: %w", following.ID, err)
-		}
-
-		// if mapset doesnt exist in db or doesnt have genre/lang data, fetch Extended info
-		for _, mapset := range userMapsets {
-			// if mapset does not exist in db, then get Extended info like genre, language
-			if !containsMapset(dbUserMapsets, mapset.Id) {
-				langGenreInfo, err := uc.osuApi.GetMapsetExtended(ctx, strconv.Itoa(mapset.Id))
-				if err != nil {
-					return fmt.Errorf("failed to get mapset extended info from api, mapset id: %v, err: %w", mapset.Id, err)
-				}
-
-				mapset.Genre = langGenreInfo.Genre.Name
-				mapset.Language = langGenreInfo.Language.Name
-			} else {
-				//if mapset exist in db but doesnt have genre/lang data, then also fetch Extended info
-				dbMapset := getMapsetByID(dbUserMapsets, mapset.Id)
-				if dbMapset.Genre == "" || dbMapset.Language == "" {
-					langGenreInfo, err := uc.osuApi.GetMapsetExtended(ctx, strconv.Itoa(mapset.Id))
-					if err != nil {
-						return fmt.Errorf("failed to get mapset extended info from api, mapset id: %v, err: %w", mapset.Id, err)
-					}
-
-					mapset.Genre = langGenreInfo.Genre.Name
-					mapset.Language = langGenreInfo.Language.Name
-				}
-			}
-		}
-
-		if err := uc.createOrUpdateData(ctx, following, user, userMapsets); err != nil {
-			return fmt.Errorf("failed to create or update data, user id: %v, err: %w", following.ID, err)
+		if err := uc.TrackSingleFollowing(ctx, following); err != nil {
+			return fmt.Errorf("failed to fetch specific user: %w", err)
 		}
 	}
 
@@ -95,6 +51,56 @@ func (uc *UseCase) Track(
 
 	uc.osuApi.ResetOutgoingRequestCount()
 
+	return nil
+}
+
+func (uc *UseCase) TrackSingleFollowing(ctx context.Context, following *model.Following) error {
+	var dbUserMapsets []*model.Mapset
+	if err := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
+		var err error
+		if dbUserMapsets, err = uc.mapset.ListForUser(ctx, tx, following.ID); err != nil {
+			return err
+		}
+		return nil
+	}); err != nil {
+		return err
+	}
+
+	// get data from api
+	user, userMapsets, err := uc.osuApi.GetUserWithMapsets(ctx, strconv.Itoa(following.ID))
+	if err != nil {
+		return fmt.Errorf("failed to get info from api, user id: %v, err: %w", following.ID, err)
+	}
+
+	// if mapset doesnt exist in db or doesnt have genre/lang data, fetch Extended info
+	for _, mapset := range userMapsets {
+		// if mapset does not exist in db, then get Extended info like genre, language
+		if !containsMapset(dbUserMapsets, mapset.Id) {
+			langGenreInfo, err := uc.osuApi.GetMapsetExtended(ctx, strconv.Itoa(mapset.Id))
+			if err != nil {
+				return fmt.Errorf("failed to get mapset extended info from api, mapset id: %v, err: %w", mapset.Id, err)
+			}
+
+			mapset.Genre = langGenreInfo.Genre.Name
+			mapset.Language = langGenreInfo.Language.Name
+		} else {
+			//if mapset exist in db but doesnt have genre/lang data, then also fetch Extended info
+			dbMapset := getMapsetByID(dbUserMapsets, mapset.Id)
+			if dbMapset.Genre == "" || dbMapset.Language == "" {
+				langGenreInfo, err := uc.osuApi.GetMapsetExtended(ctx, strconv.Itoa(mapset.Id))
+				if err != nil {
+					return fmt.Errorf("failed to get mapset extended info from api, mapset id: %v, err: %w", mapset.Id, err)
+				}
+
+				mapset.Genre = langGenreInfo.Genre.Name
+				mapset.Language = langGenreInfo.Language.Name
+			}
+		}
+	}
+
+	if err := uc.createOrUpdateData(ctx, following, user, userMapsets); err != nil {
+		return fmt.Errorf("failed to create or update data, user id: %v, err: %w", following.ID, err)
+	}
 	return nil
 }
 

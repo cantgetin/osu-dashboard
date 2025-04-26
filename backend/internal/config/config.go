@@ -27,6 +27,7 @@ type Config struct {
 
 	OsuAPIClientID     string `env:"OSU_API_CLIENT_ID" envDefault:""`
 	OsuAPIClientSecret string `env:"OSU_API_CLIENT_SECRET" envDefault:""`
+	OsuAPIRedirectURI  string `env:"OSU_API_REDIRECT_URI" envDefault:""`
 
 	OsuAPIHost   string `env:"OSU_API_HOST" envDefault:"https://osu.ppy.sh/api/v2"`
 	OsuOAuthHost string `env:"OSU_OAUTH_HOST" envDefault:"https://osu.ppy.sh/oauth/token"`

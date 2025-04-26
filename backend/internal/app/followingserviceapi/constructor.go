@@ -7,7 +7,7 @@ import (
 )
 
 type followingCreator interface {
-	Create(ctx context.Context, id int, username string) error
+	Create(ctx context.Context, code string) error
 }
 
 type followingProvider interface {
