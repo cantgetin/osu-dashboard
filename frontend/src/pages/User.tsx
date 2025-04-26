@@ -27,7 +27,7 @@ const UserPage = () => {
     const extLinkOnClick = (userId: number) => window.open(`https://osu.ppy.sh/users/${userId}`)
 
     return (
-        <Layout className="flex md:justify-center sm:justify-start">
+        <Layout className="flex md:justify-center sm:justify-start" title={user ? user.username : "Loading..."}>
             {userLoaded == LoadingState.Succeeded ?
                 <div className="w-[1152px] grid 2xl:grid-cols-1 l:grid-cols-1 gap-4">
                     <User

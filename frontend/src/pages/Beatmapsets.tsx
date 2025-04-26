@@ -3,7 +3,7 @@ import MapsetList from "../components/business/MapsetList.tsx";
 
 const Beatmapsets = () => {
     return (
-        <Layout className="flex flex-col gap-2 min-w-[800px]">
+        <Layout className="flex flex-col gap-2 min-w-[800px]" title="Beatmaps">
             <MapsetList
                 forUser={false}
                 page={1}

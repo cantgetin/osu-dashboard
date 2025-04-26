@@ -13,7 +13,7 @@ const Main = () => {
 
     // @ts-ignore
     return (
-        <Layout className="py-10 flex flex-col gap-10">
+        <Layout className="py-10 flex flex-col gap-10" title="Home">
             <div className="flex perspective-600 overflow-hidden">
                 <div className="w-3/5 h-[calc(87vh)] flex flex-col gap-10 justify-center">
                     <h1 className="text-7xl leading-tight drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]">

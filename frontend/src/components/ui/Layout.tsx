@@ -1,12 +1,20 @@
 import Header from "./Header.tsx";
 import Footer from "./Footer.tsx";
+import {useEffect} from "react";
 
 interface LayoutProps {
     children: React.ReactNode
     className?: string
+    title: string
 }
 
 const Layout = (props: LayoutProps) => {
+    useEffect(() => {
+        if (props.title) {
+            document.title = "Dashboard | " +props.title;
+        }
+    }, [props.title]);
+
     return (
         <>
             <Header/>

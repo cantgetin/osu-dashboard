@@ -6,6 +6,7 @@ import queryString from "query-string";
 import {useNavigate} from "react-router-dom";
 import Popup from "../components/ui/Popup.tsx";
 import Button from "../components/ui/Button.tsx";
+import Layout from "../components/ui/Layout.tsx";
 
 async function handleOsuSiteRedirect(state: string, code: string) {
     console.log(`redirect state: ${state} local state: ${localStorage.getItem('state')}, all good`)
@@ -49,7 +50,7 @@ const Authorize = () => {
     };
 
     return (
-        <>
+        <Layout title="Authorize">
             <LoadingSpinner/>
             <Popup isOpen={showSuccessPopup} onClose={() => handlePopupContinue()}>
                 <p>You've successfully connected your osu! account.</p>
@@ -59,7 +60,7 @@ const Authorize = () => {
                         content="OK"
                 />
             </Popup>
-        </>
+        </Layout>
     );
 };
 

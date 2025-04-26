@@ -31,7 +31,7 @@ const Beatmapset = () => {
     const externalLinkOnClick = () => window.open(`https://osu.ppy.sh/s/${beatmapset?.id}`, "_blank");
 
     return (
-        <Layout>
+        <Layout title={beatmapset ? beatmapset.title : "Loading..."}>
             {beatmapsetLoaded == LoadingState.Succeeded ?
                 <div className="pt-15 flex flex-col flex-wrap gap-2 relative w-full">
                     <img src={beatmapset.covers['cover@2x']} alt="map bg" className="h-[550px] object-cover rounded-md"/>

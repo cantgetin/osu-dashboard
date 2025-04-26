@@ -23,7 +23,7 @@ const Users = () => {
     const userExtLinkOnClick = (userId: number) => window.open(`https://osu.ppy.sh/users/${userId}`)
 
     return (
-        <Layout className="flex md:justify-center sm:justify-start">
+        <Layout className="flex md:justify-center sm:justify-start" title="Users">
             {usersLoaded == LoadingState.Succeeded ? (
                 <List
                     className="w-[1152px]"
