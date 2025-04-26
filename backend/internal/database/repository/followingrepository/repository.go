@@ -10,6 +10,16 @@ import (
 
 const followingTableName = "following"
 
+func (r *GormRepository) Get(ctx context.Context, tx txmanager.Tx, id int) (*model.Following, error) {
+	var following *model.Following
+	err := tx.DB().WithContext(ctx).Table(followingTableName).Where("id = ?", id).First(&following).Error
+	if err != nil {
+		return nil, fmt.Errorf("failed to get following with id %v: %w", id, err)
+	}
+
+	return following, nil
+}
+
 func (r *GormRepository) Create(ctx context.Context, tx txmanager.Tx, follow *model.Following) error {
 	err := tx.DB().WithContext(ctx).Table(followingTableName).Create(follow).Error
 	if err != nil {

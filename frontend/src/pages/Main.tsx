@@ -6,8 +6,11 @@ import Diagrams from "../images/diagrams.png"
 import Button from "../components/ui/Button.tsx";
 import Summarized from "../images/summarized.png"
 import Filtering from "../images/filtering.png"
+import {useNavigate} from "react-router-dom";
 
 const Main = () => {
+    const navigate = useNavigate();
+
     // @ts-ignore
     return (
         <Layout className="py-10 flex flex-col gap-10">
@@ -20,8 +23,7 @@ const Main = () => {
                         See all your map statistics in dynamic, track your daily map plays, favourites, comments
                     </h1>
                     <div className="flex gap-10">
-                        <Button onClick={() => {
-                        }}
+                        <Button onClick={() => navigate('/authorize')}
                                 className="text-xl rounded-md p-4 bg-green-800 w-1/4 hover:bg-green-900"
                                 content="Start for free"
                         />

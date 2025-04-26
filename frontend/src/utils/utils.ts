@@ -1,5 +1,5 @@
-const CLIENT_ID = process.env.CLIENT_ID;
-const REDIRECT_URI = process.env.REDIRECT_URI;
+const CLIENT_ID = import.meta.env.VITE_OSU_API_CLIENT_ID
+const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI
 
 export function convertDateFormat(inputDate: string): string {
     const dateObj = new Date(inputDate);

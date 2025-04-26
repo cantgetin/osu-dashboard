@@ -54,8 +54,8 @@ func New(
 
 	following := followingserviceapi.New(
 		lg,
-		f.MakeCreateTrackingUseCase(),
-		f.MakeProvideTrackingUseCase(),
+		f.MakeCreateFollowingUseCase(),
+		f.MakeProvideFollowingUseCase(),
 	)
 
 	mapset := mapsetserviceapi.New(

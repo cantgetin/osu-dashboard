@@ -9,6 +9,7 @@ import (
 	"playcount-monitor-backend/internal/database/repository/beatmaprepository"
 	"playcount-monitor-backend/internal/database/repository/followingrepository"
 	"playcount-monitor-backend/internal/database/repository/mapsetrepository"
+	"playcount-monitor-backend/internal/database/repository/trackrepository"
 	"playcount-monitor-backend/internal/database/repository/userrepository"
 	"playcount-monitor-backend/internal/http"
 	"playcount-monitor-backend/internal/service/osuapi"
@@ -39,6 +40,7 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 	mapsetRepo := mapsetrepository.New(cfg, lg)
 	beatmapRepo := beatmaprepository.New(cfg, lg)
 	followingRepo := followingrepository.New(cfg, lg)
+	trackRepo := trackrepository.New(cfg, lg)
 
 	// init api
 	httpClient := netHttp.Client{}
@@ -51,6 +53,7 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 		BeatmapRepo:   beatmapRepo,
 		MapsetRepo:    mapsetRepo,
 		FollowingRepo: followingRepo,
+		TrackRepo:     trackRepo,
 	})
 	if err != nil {
 		return err

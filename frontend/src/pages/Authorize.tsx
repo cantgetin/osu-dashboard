@@ -1,10 +1,11 @@
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import LoadingSpinner from "../components/ui/LoadingSpinner.tsx";
 import {redirectToAuthorize} from "../utils/utils.ts";
-import {TokenResponse} from "../interfaces/TokenResponse.ts";
 import axios from "axios";
-import * as queryString from "querystring";
+import queryString from "query-string";
 import {useNavigate} from "react-router-dom";
+import Popup from "../components/ui/Popup.tsx";
+import Button from "../components/ui/Button.tsx";
 
 async function handleOsuSiteRedirect(state: string, code: string) {
     console.log(`redirect state: ${state} local state: ${localStorage.getItem('state')}, all good`)
@@ -12,25 +13,17 @@ async function handleOsuSiteRedirect(state: string, code: string) {
         localStorage.setItem('code', code?.toString())
         console.log('set the code to local storage, now exchange code for token')
 
-        // exchange code for authorization token
-        let res = await axios.post('/api/exchange', { code: code })
-
-        let data: TokenResponse = res.data
-        localStorage.setItem('access_token', data.access_token)
-        localStorage.setItem('refresh_token', data.refresh_token)
-        console.log('set access and refresh token to localstorage', res)
+        // create following with obtained code
+        await axios.post(`/api/following/create/${code}`);
     }
 }
 
 const Authorize = () => {
     const navigate = useNavigate();
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
     const authorize = async () => {
-        if (localStorage.getItem('access_token') != null) {
-            navigate("/maps");
-        } else {
-            redirectToAuthorize();
-        }
+        redirectToAuthorize();
     };
 
     useEffect(() => {
@@ -39,16 +32,34 @@ const Authorize = () => {
 
         if (code?.toString() != undefined && state?.toString() != undefined) {
             handleOsuSiteRedirect(state.toString(), code.toString()).then(() => {
-                navigate("/users");
-            })
+                setShowSuccessPopup(true); // Show popup instead of immediate navigation
+            }).catch(error => {
+                console.error("Authorization failed:", error);
+                navigate("/"); // Redirect to home if there's an error
+            });
         }
         else {
             authorize().then(r => console.log(r));
         }
     }, []);
 
+    const handlePopupContinue = () => {
+        setShowSuccessPopup(false);
+        navigate("/users");
+    };
+
     return (
-        <LoadingSpinner/>
+        <>
+            <LoadingSpinner/>
+            <Popup isOpen={showSuccessPopup} onClose={() => handlePopupContinue()}>
+                <p>You've successfully connected your osu! account.</p>
+                <p className="mt-2">Wait for 2-5 minutes and navigate to users page.</p>
+                <Button onClick={() => handlePopupContinue()}
+                        className="text-xl rounded-md p-4 bg-green-800 mt-4 w-1/4 hover:bg-green-900"
+                        content="OK"
+                />
+            </Popup>
+        </>
     );
 };
 

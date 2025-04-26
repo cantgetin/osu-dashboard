@@ -6,14 +6,16 @@ import (
 	"playcount-monitor-backend/internal/database/repository/beatmaprepository"
 	"playcount-monitor-backend/internal/database/repository/followingrepository"
 	"playcount-monitor-backend/internal/database/repository/mapsetrepository"
+	"playcount-monitor-backend/internal/database/repository/trackrepository"
 	"playcount-monitor-backend/internal/database/repository/userrepository"
 	"playcount-monitor-backend/internal/database/txmanager"
 	"playcount-monitor-backend/internal/service/osuapi"
-	trackingcreate "playcount-monitor-backend/internal/usecase/following/create"
-	trackingprovide "playcount-monitor-backend/internal/usecase/following/provide"
+	followingcreate "playcount-monitor-backend/internal/usecase/following/create"
+	followingprovide "playcount-monitor-backend/internal/usecase/following/provide"
 	mapsetcreate "playcount-monitor-backend/internal/usecase/mapset/create"
 	mapsetprovide "playcount-monitor-backend/internal/usecase/mapset/provide"
 	statisticprovide "playcount-monitor-backend/internal/usecase/statistic/provide"
+	"playcount-monitor-backend/internal/usecase/track"
 	usercreate "playcount-monitor-backend/internal/usecase/user/create"
 	userprovide "playcount-monitor-backend/internal/usecase/user/provide"
 	userupdate "playcount-monitor-backend/internal/usecase/user/update"
@@ -35,6 +37,7 @@ type Repositories struct {
 	BeatmapRepo   beatmaprepository.Interface
 	MapsetRepo    mapsetrepository.Interface
 	FollowingRepo followingrepository.Interface
+	TrackRepo     trackrepository.Interface
 }
 
 func New(
@@ -134,17 +137,26 @@ func (f *UseCaseFactory) MakeUpdateUserCardUseCase() *usercardupdate.UseCase {
 	)
 }
 
-func (f *UseCaseFactory) MakeCreateTrackingUseCase() *trackingcreate.UseCase {
-	return trackingcreate.New(
+func (f *UseCaseFactory) MakeCreateFollowingUseCase() *followingcreate.UseCase {
+	return followingcreate.New(
 		f.cfg,
 		f.lg,
 		f.txManager,
 		f.repos.FollowingRepo,
-	)
+		track.New(
+			f.cfg,
+			f.txManager,
+			f.osuApi,
+			f.repos.UserRepo,
+			f.repos.MapsetRepo,
+			f.repos.BeatmapRepo,
+			f.repos.FollowingRepo,
+			f.repos.TrackRepo,
+		))
 }
 
-func (f *UseCaseFactory) MakeProvideTrackingUseCase() *trackingprovide.UseCase {
-	return trackingprovide.New(
+func (f *UseCaseFactory) MakeProvideFollowingUseCase() *followingprovide.UseCase {
+	return followingprovide.New(
 		f.cfg,
 		f.lg,
 		f.txManager,

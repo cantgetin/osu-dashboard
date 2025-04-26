@@ -11,6 +11,7 @@ import (
 
 type followingStore interface {
 	Create(ctx context.Context, tx txmanager.Tx, user *model.Following) error
+	Get(ctx context.Context, tx txmanager.Tx, id int) (*model.Following, error)
 }
 
 type trackUseCase interface {

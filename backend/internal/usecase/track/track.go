@@ -55,6 +55,29 @@ func (uc *UseCase) Track(
 }
 
 func (uc *UseCase) TrackSingleFollowing(ctx context.Context, following *model.Following) error {
+	// check if user was tracked in the last 24 hours (just in case)
+	if err := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
+		exists, err := uc.user.Exists(ctx, tx, following.ID)
+		if !exists {
+			return nil
+		}
+
+		// if it exists check updated at
+		user, err := uc.user.Get(ctx, tx, following.ID)
+		if err != nil {
+			return err
+		}
+
+		// if it was updated in last 24 hours then return error
+		if time.Since(user.UpdatedAt) < 24*time.Hour {
+			return fmt.Errorf("user was tracked within the last 24 hours, no need to track")
+		}
+
+		return nil
+	}); err != nil {
+		return err
+	}
+
 	var dbUserMapsets []*model.Mapset
 	if err := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		var err error

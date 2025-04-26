@@ -37,6 +37,11 @@ func (uc *UseCase) Create(
 	}
 
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
+		f, err := uc.following.Get(ctx, tx, following.ID)
+		if f != nil {
+			return nil // assume it's already added
+		}
+
 		err = uc.following.Create(ctx, tx, following)
 		if err != nil {
 			return err
@@ -48,10 +53,14 @@ func (uc *UseCase) Create(
 		return txErr
 	}
 
-	err = uc.track.TrackSingleFollowing(ctx, following)
-	if err != nil {
-		return fmt.Errorf("failed to track specific user")
-	}
+	go func() {
+		// start tracking background process
+		trackCtx := context.Background()
+		err = uc.track.TrackSingleFollowing(trackCtx, following)
+		if err != nil {
+			uc.lg.Printf("failed to track specific user %v", err)
+		}
+	}()
 
 	return nil
 }
