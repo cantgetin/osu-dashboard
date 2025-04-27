@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from "../../store/hooks.ts";
+import {useEffect} from 'react';
+import {useAppDispatch, useAppSelector} from "../../store/hooks.ts";
 import {
     fetchSystemStats,
     selectSystemStatsLoading,
     selectSystemStatsState,
     SystemStatsState
 } from "../../store/systemStats.ts";
-import { LoadingState } from "../../interfaces/LoadingState.ts";
+import {LoadingState} from "../../interfaces/LoadingState.ts";
 
 const SystemStats = () => {
     const dispatch = useAppDispatch();
@@ -20,12 +20,12 @@ const SystemStats = () => {
     return (
         <>
             {statsLoaded === LoadingState.Succeeded && (
-                <>
-                    <section id="stats">
+                <section id="stats">
+                    <div className="flex flex-col gap-10">
                         <h1 className="text-5xl leading-tight">
                             Stats
                         </h1>
-                        <div className="flex justify-between bg-zinc-900 p-8 rounded-lg">
+                        <div className="flex justify-between bg-zinc-900 py-8 px-16 rounded-lg">
                             <div className="flex flex-col items-center">
                                 <span className="text-5xl font-bold">{systemStats.stats!.users}</span>
                                 <span className="text-gray-400">Users</span>
@@ -43,8 +43,8 @@ const SystemStats = () => {
                                 <span className="text-gray-400">Tracks</span>
                             </div>
                         </div>
-                    </section>
-                </>
+                    </div>
+                </section>
             )}
         </>
     );

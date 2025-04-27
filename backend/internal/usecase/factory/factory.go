@@ -171,5 +171,7 @@ func (f *UseCaseFactory) MakeProvideStatisticUseCase() *statisticprovide.UseCase
 		f.txManager,
 		f.repos.BeatmapRepo,
 		f.repos.MapsetRepo,
+		f.repos.UserRepo,
+		f.repos.TrackRepo,
 	)
 }
