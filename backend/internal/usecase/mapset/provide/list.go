@@ -87,7 +87,7 @@ func (uc *UseCase) ListForUser(
 	var count int
 
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-		mapsets, _, err := uc.mapset.ListForUserWithFilterSortLimitOffset(
+		mapsets, c, err := uc.mapset.ListForUserWithFilterSortLimitOffset(
 			ctx,
 			tx,
 			userID,
@@ -99,6 +99,7 @@ func (uc *UseCase) ListForUser(
 		if err != nil {
 			return err
 		}
+		count = c
 
 		mapsetIDs := make([]int, len(mapsets))
 		for i, m := range mapsets {
