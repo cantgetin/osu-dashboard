@@ -13,9 +13,29 @@ const Pagination = (props: PaginationProps) => {
         return null;
     }
 
-    const buttons = Array.apply(null, Array(props.pages)).map(function (_, i) {
-        return i + 1
-    })
+    let startPage: number, endPage: number;
+    const maxPagesToShow = 10;
+
+    if (props.pages <= maxPagesToShow) {
+        startPage = 1;
+        endPage = props.pages;
+    } else {
+        if (props.currentPage <= 5) {
+            startPage = 1;
+            endPage = maxPagesToShow;
+        } else if (props.currentPage + 4 >= props.pages) {
+            startPage = props.pages - maxPagesToShow + 1;
+            endPage = props.pages;
+        } else {
+            startPage = props.currentPage - 5;
+            endPage = props.currentPage + 4;
+        }
+    }
+
+    const buttons = [];
+    for (let i = startPage; i <= endPage; i++) {
+        buttons.push(i);
+    }
 
     return (
             <List className={props.className}

@@ -26,7 +26,7 @@ const Users = () => {
         <Layout className="flex md:justify-center sm:justify-start" title="Users">
             {usersLoaded == LoadingState.Succeeded ? (
                 <List
-                    className="w-[1152px]"
+                    className="w-[1152px] grid 2xl:grid-cols-1 l:grid-cols-1 gap-4"
                     items={users}
                     title={`Total users: ${users.length}`}
                     renderItem={(user: User) => (
