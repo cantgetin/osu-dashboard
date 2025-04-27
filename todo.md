@@ -2,6 +2,7 @@
 
 TODO frontend
 
+* Main page: total users, total beatmaps, total tracks
 * update diagrams colors at main page
 * fetch jobs page - display total requests count, total time, start time
 * about page

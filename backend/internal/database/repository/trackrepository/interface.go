@@ -10,4 +10,5 @@ type Interface interface {
 	Create(ctx context.Context, tx txmanager.Tx, track *model.Track) error
 	GetLastTrack(ctx context.Context, tx txmanager.Tx) (*model.Track, error)
 	List(ctx context.Context, tx txmanager.Tx) ([]*model.Track, error)
+	TotalCount(ctx context.Context, tx txmanager.Tx) (int, error)
 }

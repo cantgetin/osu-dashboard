@@ -22,3 +22,12 @@ func (s *ServiceImpl) GetUserMapStatistics(c echo.Context) error {
 
 	return c.JSON(200, userStatistics)
 }
+
+func (s *ServiceImpl) GetSystemStatistics(c echo.Context) error {
+	systemStats, err := s.statisticProvider.GetForSystem(c.Request().Context())
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	return c.JSON(200, systemStats)
+}

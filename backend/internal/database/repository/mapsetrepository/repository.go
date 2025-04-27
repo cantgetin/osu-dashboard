@@ -70,6 +70,16 @@ func (r *GormRepository) ListForUser(ctx context.Context, tx txmanager.Tx, userI
 	return mapsets, nil
 }
 
+func (r *GormRepository) TotalCount(ctx context.Context, tx txmanager.Tx) (int, error) {
+	var count int64
+	err := tx.DB().WithContext(ctx).Table(mapsetsTableName).Count(&count).Error
+	if err != nil {
+		return 0, fmt.Errorf("failed to count mapsets: %w", err)
+	}
+
+	return int(count), nil
+}
+
 func (r *GormRepository) ListStatusesForUser(
 	ctx context.Context,
 	tx txmanager.Tx,

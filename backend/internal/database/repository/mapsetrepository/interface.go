@@ -32,4 +32,5 @@ type Interface interface {
 		limit int,
 		offset int,
 	) ([]*model.Mapset, int, error)
+	TotalCount(ctx context.Context, tx txmanager.Tx) (int, error)
 }

@@ -13,4 +13,5 @@ type Interface interface {
 	GetByName(ctx context.Context, tx txmanager.Tx, name string) (*model.User, error)
 	List(ctx context.Context, tx txmanager.Tx) ([]*model.User, error)
 	Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error)
+	TotalCount(ctx context.Context, tx txmanager.Tx) (int, error)
 }

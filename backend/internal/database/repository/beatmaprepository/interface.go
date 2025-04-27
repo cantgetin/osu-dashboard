@@ -13,4 +13,5 @@ type Interface interface {
 	ListForMapset(ctx context.Context, tx txmanager.Tx, mapsetID int) ([]*model.Beatmap, error)
 	ListForMapsets(ctx context.Context, tx txmanager.Tx, mapsetIDs ...int) ([]*model.Beatmap, error)
 	Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error)
+	TotalCount(ctx context.Context, tx txmanager.Tx) (int, error)
 }

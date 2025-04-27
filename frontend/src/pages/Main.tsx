@@ -7,6 +7,7 @@ import Button from "../components/ui/Button.tsx";
 import Summarized from "../images/summarized.png"
 import Filtering from "../images/filtering.png"
 import {useNavigate} from "react-router-dom";
+import SystemStats from "../components/business/SystemStats.tsx";
 
 const Main = () => {
     const navigate = useNavigate();
@@ -38,10 +39,10 @@ const Main = () => {
                     src={Summarized}/>
             </div>
 
-            <section id="features">
-            </section>
-            <div className="py-10 flex flex-col gap-10">
+            <SystemStats/>
 
+            <section id="features"></section>
+            <div className="flex flex-col gap-10 py-10">
                 <h1 className="text-5xl leading-tight">
                     Features
                 </h1>
@@ -49,31 +50,31 @@ const Main = () => {
                     Track your total daily map plays, favourites, comments on charts
                 </h1>
                 <div className="px-4">
-                    <img className="z-0 opacity-70 rounded-lg overflow-hidden" src={Charts}/>
+                    <img className="z-0  rounded-lg overflow-hidden" src={Charts}/>
                 </div>
                 <h1 className="text-3xl text-gray-400">
                     Track summarized user statistics for last 24 hours and 7 days
                 </h1>
                 <div className="px-4">
-                    <img className="z-0 opacity-70 rounded-lg overflow-hidden" src={User}/>
+                    <img className="z-0  rounded-lg overflow-hidden" src={User}/>
                 </div>
                 <h1 className="text-3xl text-gray-400">
                     Filter and sort your mapsets with multiple options
                 </h1>
                 <div className="px-4">
-                    <img className="z-0 opacity-70 rounded-lg overflow-hidden" src={Filtering}/>
+                    <img className="z-0  rounded-lg overflow-hidden" src={Filtering}/>
                 </div>
                 <h1 className="text-3xl text-gray-400">
                     Track specific mapset and beatmap statistics
                 </h1>
                 <div className="px-4">
-                    <img className="z-0 opacity-70 rounded-lg overflow-hidden" src={Mapset}/>
+                    <img className="z-0  rounded-lg overflow-hidden" src={Mapset}/>
                 </div>
                 <h1 className="text-3xl text-gray-400">
                     See your summarized genre, bpm, tag, starrate diagrams
                 </h1>
                 <div className="px-4">
-                    <img className="z-0 opacity-70 rounded-lg overflow-hidden" src={Diagrams}/>
+                    <img className="z-0  rounded-lg overflow-hidden" src={Diagrams}/>
                 </div>
             </div>
 

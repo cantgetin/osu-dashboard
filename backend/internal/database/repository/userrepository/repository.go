@@ -66,3 +66,13 @@ func (r *GormRepository) List(ctx context.Context, tx txmanager.Tx) ([]*model.Us
 
 	return users, nil
 }
+
+func (r *GormRepository) TotalCount(ctx context.Context, tx txmanager.Tx) (int, error) {
+	var count int64
+	err := tx.DB().WithContext(ctx).Table(usersTableName).Count(&count).Error
+	if err != nil {
+		return 0, fmt.Errorf("failed to count users: %w", err)
+	}
+
+	return int(count), nil
+}

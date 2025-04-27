@@ -3,7 +3,7 @@ package statisticserviceapi
 import (
 	"context"
 	log "github.com/sirupsen/logrus"
-	statisticprovide "playcount-monitor-backend/internal/usecase/statistic/provide"
+	"playcount-monitor-backend/internal/dto"
 )
 
 type ServiceImpl struct {
@@ -12,7 +12,8 @@ type ServiceImpl struct {
 }
 
 type statisticProvider interface {
-	GetForUser(ctx context.Context, id int) (*statisticprovide.UserMapStatistics, error)
+	GetForUser(ctx context.Context, id int) (*dto.UserMapStatistics, error)
+	GetForSystem(ctx context.Context) (*dto.SystemStatistics, error)
 }
 
 func New(

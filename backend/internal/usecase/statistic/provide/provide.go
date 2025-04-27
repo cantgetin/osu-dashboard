@@ -2,25 +2,13 @@ package statisticprovide
 
 import (
 	"context"
-	"math"
 	"playcount-monitor-backend/internal/database/txmanager"
-	"sort"
+	"playcount-monitor-backend/internal/dto"
 	"strconv"
 	"strings"
 )
 
-type UserMapStatistics struct {
-	Tags      map[string]int `json:"most_popular_tags"`
-	Languages map[string]int `json:"most_popular_languages"`
-	Genres    map[string]int `json:"most_popular_genres"`
-	BPMs      map[string]int `json:"most_popular_bpms"`
-	Starrates map[string]int `json:"most_popular_starrates"`
-}
-
-func (uc *UseCase) GetForUser(
-	ctx context.Context,
-	userID int,
-) (*UserMapStatistics, error) {
+func (uc *UseCase) GetForUser(ctx context.Context, userID int) (*dto.UserMapStatistics, error) {
 	tags := make(map[string]int)
 	languages := make(map[string]int)
 	genres := make(map[string]int)
@@ -71,7 +59,7 @@ func (uc *UseCase) GetForUser(
 	BPMs = top5Values(BPMs)
 	starrates = top5Values(starrates)
 
-	return &UserMapStatistics{
+	return &dto.UserMapStatistics{
 		Tags:      tags,
 		Languages: languages,
 		Genres:    genres,
@@ -80,55 +68,35 @@ func (uc *UseCase) GetForUser(
 	}, nil
 }
 
-func roundUpToNearestTen(num int) int {
-	rounded := int(math.Ceil(float64(num) / 10.0))
-	result := rounded * 10
-	return result
-}
-
-func roundUpToNearestNum(num int) int {
-	rounded := int(math.Ceil(float64(num) / 1.0))
-	result := rounded * 1
-	return result
-}
-
-func getTopNKeys(m map[string]int, n int) []string {
-	keys := make([]string, 0, len(m))
-
-	for k := range m {
-		keys = append(keys, k)
-	}
-
-	sort.Slice(keys, func(i, j int) bool {
-		return m[keys[i]] > m[keys[j]]
-	})
-
-	if len(keys) > n {
-		keys = keys[:n]
-	}
-
-	return keys
-}
-
-func filterMapByKey(originalMap map[string]int, keys []string) map[string]int {
-	filteredMap := make(map[string]int)
-
-	for _, key := range keys {
-		filteredMap[key] = originalMap[key]
-	}
-
-	return filteredMap
-}
-
-func top5Values(inputMap map[string]int) map[string]int {
-	topKeys := getTopNKeys(inputMap, 5)
-	result := filterMapByKey(inputMap, topKeys)
-
-	for k, _ := range result {
-		if strings.TrimSpace(k) == "" {
-			k = "Unspecified"
+func (uc *UseCase) GetForSystem(ctx context.Context) (*dto.SystemStatistics, error) {
+	res := new(dto.SystemStatistics)
+	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
+		var err error
+		res.Users, err = uc.user.TotalCount(ctx, tx)
+		if err != nil {
+			return err
 		}
+
+		res.Mapsets, err = uc.mapset.TotalCount(ctx, tx)
+		if err != nil {
+			return err
+		}
+
+		res.Beatmaps, err = uc.beatmap.TotalCount(ctx, tx)
+		if err != nil {
+			return err
+		}
+
+		res.Tracks, err = uc.track.TotalCount(ctx, tx)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+	if txErr != nil {
+		return nil, txErr
 	}
 
-	return result
+	return res, nil
 }

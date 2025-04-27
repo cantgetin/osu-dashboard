@@ -66,3 +66,13 @@ func (r *GormRepository) Exists(ctx context.Context, tx txmanager.Tx, id int) (b
 
 	return count > 0, nil
 }
+
+func (r *GormRepository) TotalCount(ctx context.Context, tx txmanager.Tx) (int, error) {
+	var count int64
+	err := tx.DB().WithContext(ctx).Table(beatmapsTableName).Count(&count).Error
+	if err != nil {
+		return 0, fmt.Errorf("failed to count beatmaps: %w", err)
+	}
+
+	return int(count), nil
+}
