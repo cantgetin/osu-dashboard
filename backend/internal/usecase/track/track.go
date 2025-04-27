@@ -62,8 +62,8 @@ func (uc *UseCase) TrackSingleFollowing(ctx context.Context, following *model.Fo
 			return fmt.Errorf("following not found in db")
 		}
 
-		// if it was not fetched in last 24 hours then return error
-		if time.Since(fw.LastFetched) > 24*time.Hour {
+		// if it was fetched in last 24 hours then return error
+		if time.Since(fw.LastFetched) < 24*time.Hour {
 			return fmt.Errorf("user was fetched within the last 24 hours, no need to track")
 		}
 
