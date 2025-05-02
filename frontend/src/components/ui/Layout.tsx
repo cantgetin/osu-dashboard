@@ -11,15 +11,15 @@ interface LayoutProps {
 const Layout = (props: LayoutProps) => {
     useEffect(() => {
         if (props.title) {
-            document.title = "Dashboard | " +props.title;
+            document.title = "Dashboard | " + props.title;
         }
     }, [props.title]);
 
     return (
         <>
             <Header/>
-            <div className="pt-14 min-h-screen w-full flex md:justify-center sm:justify-start">
-                <div className={`p-10 container w-[1152px] max-w-[1152px] min-w-[400px] ${props.className}`}>
+            <div className="pt-14 min-h-screen w-full flex justify-center">
+                <div className={`p-4 sm:p-6 md:p-10 w-full max-w-[1152px] min-w-0 ${props.className}`}>
                     {props.children}
                 </div>
             </div>
