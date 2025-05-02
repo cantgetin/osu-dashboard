@@ -24,6 +24,13 @@ TODO frontend
 
 TODO backend
 
+top priority
+* async track for each user - separate timer, fetch time
+* country flags
+* better user list
+
+middle priority
+
 * compare handler - two user ids result in page with comparison
 * tracks handler 
 * handler with starrate for user for all his beatmaps
