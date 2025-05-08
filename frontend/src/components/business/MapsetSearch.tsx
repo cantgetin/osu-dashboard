@@ -42,7 +42,7 @@ const MapsetSearch = (props: MapsetSearchProps) => {
                 className="px-4 py-2 bg-zinc-800 rounded-lg w-full md:min-w-[400px] border border-zinc-900"
                 placeholder="Search beatmapsets"
             />
-            <div className="flex flex-row gap-2 w-full md:w-auto">
+            <div className="flex flex-row gap-2 w-full md:w-auto items-center">
                 <h1 className="text-md hidden md:block">Status:</h1>
                 <select
                     className="px-2 py-2 rounded-lg bg-zinc-800 text-white border border-zinc-900 w-full md:w-auto"
@@ -59,7 +59,7 @@ const MapsetSearch = (props: MapsetSearchProps) => {
                     <option value="loved">loved</option>
                 </select>
             </div>
-            <div className="flex flex-row gap-2 w-full md:w-auto">
+            <div className="flex flex-row gap-2 w-full md:w-auto items-center">
                 <h1 className="text-md hidden md:block">Sort:</h1>
                 <select
                     className="px-2 py-2 rounded-lg bg-zinc-800 text-white border border-zinc-900 w-full md:w-auto"
