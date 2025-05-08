@@ -3,7 +3,7 @@ import {Line} from "react-chartjs-2";
 import 'chart.js/auto';
 import type {ChartOptions} from "chart.js";
 import aveta from "aveta";
-import {MakeChartHeightPlugin} from "./UserDiagrams.tsx";
+import {MakeChartHeightPlugin} from "../user/UserDiagrams.tsx";
 
 interface LineChartProps {
     data: any;

@@ -1,12 +1,12 @@
 import Mapset from "./Mapset.tsx";
-import {useAppDispatch, useAppSelector} from "../../store/hooks.ts";
-import List from "../logic/List.tsx";
-import {fetchMapsets, fetchMapsetsProps, MapsetsState, selectMapsetsState} from "../../store/mapsetsSlice.ts";
 import {useEffect} from "react";
-import {LoadingState} from "../../interfaces/LoadingState.ts";
-import LoadingSpinner from "../ui/LoadingSpinner.tsx";
-import Pagination from "./Pagination.tsx";
+import {fetchMapsets, fetchMapsetsProps, MapsetsState, selectMapsetsState} from "../../../store/mapsetsSlice.ts";
+import {useAppDispatch, useAppSelector} from "../../../store/hooks.ts";
+import {LoadingState} from "../../../interfaces/LoadingState.ts";
 import MapsetSearch from "./MapsetSearch.tsx";
+import List from "../../logic/List.tsx";
+import Pagination from "../../ui/Pagination.tsx";
+import LoadingSpinner from "../../ui/LoadingSpinner.tsx";
 
 interface MapsetListProps extends fetchMapsetsProps {
     showMapper?: boolean;

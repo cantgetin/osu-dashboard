@@ -41,7 +41,7 @@ export function mapMapsetStatsToArray(mapsetStats: MapsetStats): MapsetStatsData
 }
 
 export function extractUserMapsCountFromStats(userStats: UserStats): number {
-    let arr = mapUserStatsToArray(userStats);
+    const arr = mapUserStatsToArray(userStats);
     if (arr.length === 0) {
         return 0
     }

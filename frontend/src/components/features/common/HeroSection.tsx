@@ -1,5 +1,5 @@
-import Button from "../ui/Button.tsx";
-import Summarized from "../images/summarized.png"
+import Button from "../../ui/Button.tsx";
+import Summarized from "../../../images/summarized.png"
 import {useNavigate} from "react-router-dom";
 
 const HeroSection = () => {

@@ -1,5 +1,5 @@
-import Button from "../ui/Button.tsx";
-import Popup from "../ui/Popup.tsx";
+import Button from "../../ui/Button.tsx";
+import Popup from "../../ui/Popup.tsx";
 
 interface SuccessPopupProps {
     isOpen: boolean;

@@ -1,5 +1,5 @@
 import List from "../logic/List.tsx";
-import Button from "../ui/Button.tsx";
+import Button from "./Button.tsx";
 
 interface PaginationProps {
     className?: string;

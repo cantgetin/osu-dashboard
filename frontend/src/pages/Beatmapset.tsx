@@ -1,110 +1,56 @@
-import {useParams} from "react-router-dom";
-import {useEffect} from "react";
-import LoadingSpinner from "../components/ui/LoadingSpinner.tsx";
-import aveta from "aveta";
-import MapsetCharts from "../components/business/MapsetCharts.tsx";
-import {convertDateFormat, mapMapsetStatsToArray} from "../utils/utils.ts";
 import Layout from "../components/ui/Layout.tsx";
-import {FaExternalLinkAlt} from "react-icons/fa";
-import Button from "../components/ui/Button.tsx";
-import {useAppDispatch, useAppSelector} from "../store/hooks.ts";
+import MapsetHero from "../components/features/mapset/MapsetHero.tsx";
+import StatsComparison from "../components/features/mapset/StatsComparison.tsx";
+import MapsetCharts from "../components/features/mapset/MapsetCharts.tsx";
+import {mapMapsetStatsToArray} from "../utils/utils.ts";
+import LoadingSpinner from "../components/ui/LoadingSpinner.tsx";
 import {LoadingState} from "../interfaces/LoadingState.ts";
 import {fetchMapset, selectMapset, selectMapsetLoading} from "../store/mapsetSlice.ts";
+import {useEffect} from "react";
+import {useAppDispatch, useAppSelector} from "../store/hooks.ts";
+import {useParams} from "react-router-dom";
 
 const Beatmapset = () => {
     const {mapId} = useParams();
-
     const dispatch = useAppDispatch();
-    const beatmapset = useAppSelector<Mapset>(selectMapset);
-    const beatmapsetLoaded = useAppSelector<LoadingState>(selectMapsetLoading)
+    const beatmapset = useAppSelector(selectMapset);
+    const beatmapsetLoaded = useAppSelector(selectMapsetLoading);
 
     useEffect(() => {
-        dispatch(fetchMapset(mapId as string))
-    }, [dispatch])
+        dispatch(fetchMapset(mapId as string));
+    }, [dispatch, mapId]);
 
-    const mapsetStats = beatmapset ? mapMapsetStatsToArray(beatmapset.mapset_stats) : [];
-    const lastStats = mapsetStats[mapsetStats.length - 1]
-    const penultimateStats = mapsetStats[mapsetStats.length - 2] != undefined
-        ? mapsetStats[mapsetStats.length - 2]
-        : mapsetStats[mapsetStats.length - 1]
+    if (beatmapsetLoaded !== LoadingState.Succeeded || !beatmapset) {
+        return <LoadingSpinner/>;
+    }
 
-    const externalLinkOnClick = () => window.open(`https://osu.ppy.sh/s/${beatmapset?.id}`, "_blank");
+    const mapsetStats = mapMapsetStatsToArray(beatmapset.mapset_stats);
+    const lastStats = mapsetStats[mapsetStats.length - 1];
+    const penultimateStats = mapsetStats[mapsetStats.length - 2] || lastStats;
 
     return (
-        <Layout title={beatmapset ? beatmapset.title : "Loading..."}>
-            {beatmapsetLoaded == LoadingState.Succeeded ?
-                <div className="pt-15 flex flex-col flex-wrap gap-2 relative w-full">
-                    <img src={beatmapset.covers['cover@2x']} alt="map bg" className="h-[550px] object-cover rounded-md"/>
-                    <div className="p-5 absolute inset-0 flex justify-center h-[550px]">
-                        <div className="w-1/2 justify-end flex flex-col gap-6">
-                            <div>
-                                <div className="flex gap-4 items-center">
-                                    <h1 className="text-5xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]">{beatmapset.title}</h1>
-                                    <Button
-                                        onClick={() => externalLinkOnClick()}
-                                        className="bg-zinc-800 rounded-md p-1 h-6"
-                                        content={<FaExternalLinkAlt className="h-3"/>}
-                                    />
-                                </div>
-                                <h1 className="text-4xl text-zinc-400 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]">by {beatmapset.artist}</h1>
-                            </div>
-                            <div className="flex gap-1 flex-wrap max-w-[600px]">
-                                {
-                                    beatmapset.tags != '' &&
-                                    beatmapset.tags.split(' ').map((tag, index) =>
-                                        <div
-                                            key={index}
-                                            className="bg-zinc-800 px-2 py-1 rounded-lg text-sm cursor-pointer h-7">
-                                            {tag}
-                                        </div>
-                                    )
-                                }
-                            </div>
-                            <div className="text-xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]">
-                                last updated {convertDateFormat(beatmapset.last_updated)}
-                            </div>
-                            <div className="flex gap-2 text-4xl">
-                                <p className="text-2xl text-red-200 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]">{beatmapset.status}</p>
-                                <h1 className="text-2xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]">mapped by</h1>
-                                <a
-                                    href={`/user/${beatmapset.user_id}`}
-                                    className="text-2xl text-blue-300 hover:text-yellow-200 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]"
-                                >
-                                    {beatmapset.creator}
-                                </a>
-                            </div>
-                        </div>
-                        <div className="w-1/2 justify-end flex flex-col ml-auto whitespace-nowrap">
-                            <div className="flex flex-col justify-center items-center">
-                                <div
-                                    className='text-4xl flex gap-2 items-center w-full justify-end drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)] text-pink-300'>
-                                    <h1>{aveta(lastStats.favourite_count)} Favorites</h1>
-                                    <h1 className="text-xl">▲</h1>
-                                    <h1>{aveta(lastStats.favourite_count - penultimateStats.favourite_count)}</h1>
-                                </div>
-                                <div
-                                    className='text-4xl flex gap-2 items-center w-full justify-end drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)] text-green-300'>
-                                    <h1>{aveta(lastStats.play_count)} Plays</h1>
-                                    <h1 className="text-xl">▲</h1>
-                                    <h1>{aveta(lastStats.play_count - penultimateStats.play_count)}</h1>
-                                </div>
-                                <div
-                                    className='text-4xl flex gap-2 items-center w-full justify-end drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)] text-red-300'>
-                                    <h1>{aveta(lastStats.comments_count)} Comments</h1>
-                                    <h1 className="text-xl">▲</h1>
-                                    <h1>{aveta(lastStats.comments_count - penultimateStats.comments_count)}</h1>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="justify-center flex w-full">
-                        <MapsetCharts
-                            data={mapMapsetStatsToArray(beatmapset.mapset_stats)}
-                            className="p-4 rounded-md"
+        <Layout title={beatmapset.title}>
+            <div className="pt-15 flex flex-col flex-wrap gap-2 relative w-full">
+                <img
+                    src={beatmapset.covers['cover@2x']}
+                    alt="map bg"
+                    className="h-[550px] object-cover rounded-md"
+                />
+                <MapsetHero beatmapset={beatmapset}>
+                    <div className="w-1/2 justify-end flex flex-col ml-auto whitespace-nowrap">
+                        <StatsComparison
+                            lastStats={lastStats}
+                            penultimateStats={penultimateStats}
                         />
                     </div>
+                </MapsetHero>
+                <div className="justify-center flex w-full">
+                    <MapsetCharts
+                        data={mapsetStats}
+                        className="p-4 rounded-md"
+                    />
                 </div>
-                : <LoadingSpinner/>}
+            </div>
         </Layout>
     );
 };

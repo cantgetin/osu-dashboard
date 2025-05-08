@@ -1,5 +1,5 @@
 import Layout from "../components/ui/Layout.tsx";
-import MapsetList from "../components/business/MapsetList.tsx";
+import MapsetList from "../components/features/mapset/MapsetList.tsx";
 
 const Beatmapsets = () => {
     return (

@@ -1,6 +1,6 @@
 import LoadingSpinner from "../components/ui/LoadingSpinner.tsx";
 import Layout from "../components/ui/Layout.tsx";
-import AuthSuccessPopup from "../components/business/AuthSuccessPopup.tsx";
+import AuthSuccessPopup from "../components/features/common/AuthSuccessPopup.tsx";
 import useOsuAuth from "../hooks/useOsuAuth.ts";
 
 const Authorize = () => {

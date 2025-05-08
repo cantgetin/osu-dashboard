@@ -1,17 +1,17 @@
 import {useParams} from "react-router-dom";
 import {useEffect} from "react";
-import User from "../components/business/User.tsx";
-import UserStatsSummary from "../components/business/UserStatsSummary.tsx";
-import UserCharts from "../components/business/UserCharts.tsx";
-import MapsetList from "../components/business/MapsetList.tsx";
-import MapStatsSummary from "../components/business/MapStatsSummary.tsx";
 import {mapUserStatsToArray} from "../utils/utils.ts";
 import LoadingSpinner from "../components/ui/LoadingSpinner.tsx";
 import {useAppDispatch, useAppSelector} from "../store/hooks.ts";
 import {LoadingState} from "../interfaces/LoadingState.ts";
 import Layout from "../components/ui/Layout.tsx";
 import {fetchUser, selectUser, selectUserLoadingState} from "../store/userSlice.ts";
-import UserDiagrams from "../components/business/UserDiagrams.tsx";
+import User from "../components/features/user/User.tsx";
+import MapStatsSummary from "../components/features/stats/MapStatsSummary.tsx";
+import UserStatsSummary from "../components/features/user/UserStatsSummary.tsx";
+import UserCharts from "../components/features/user/UserCharts.tsx";
+import UserDiagrams from "../components/features/user/UserDiagrams.tsx";
+import MapsetList from "../components/features/mapset/MapsetList.tsx";
 
 const UserPage = () => {
     const {userId} = useParams();

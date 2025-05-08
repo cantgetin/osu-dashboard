@@ -1,7 +1,7 @@
 import React from 'react';
-import {convertDateFormat} from "../../utils/utils.ts";
-import Button from "../ui/Button.tsx";
 import {FaExternalLinkAlt} from "react-icons/fa";
+import Button from "../../ui/Button.tsx";
+import {convertDateFormat} from "../../../utils/utils.ts";
 
 interface UserProps {
     user: User

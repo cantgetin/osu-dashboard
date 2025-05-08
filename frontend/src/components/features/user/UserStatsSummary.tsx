@@ -1,6 +1,6 @@
 import aveta from "aveta";
-import StatsDifference from "./StatsDifference.tsx";
 import {useEffect, useState} from "react";
+import StatsDifference from "../stats/StatsDifference.tsx";
 
 interface UserStatsSummaryProps {
     data: UserStatsDataset[];

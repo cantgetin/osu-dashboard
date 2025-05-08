@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from "react";
 import debounce from "lodash.debounce";
-import {fetchMapsetsProps} from "../../store/mapsetsSlice.ts";
+import {fetchMapsetsProps} from "../../../store/mapsetsSlice.ts";
 
 interface MapsetSearchProps {
     update: (props: fetchMapsetsProps) => void

@@ -1,14 +1,14 @@
 import {useEffect} from "react";
-import User from "../components/business/User.tsx";
 import {mapUserStatsToArray} from "../utils/utils.ts";
-import UserStatsSummary from "../components/business/UserStatsSummary.tsx";
-import UserCharts from "../components/business/UserCharts.tsx";
 import LoadingSpinner from "../components/ui/LoadingSpinner.tsx";
-import List from "../components/logic/List.tsx";
 import Layout from "../components/ui/Layout.tsx";
 import {useAppDispatch, useAppSelector} from "../store/hooks.ts";
 import {LoadingState} from "../interfaces/LoadingState.ts";
 import {fetchUsers, selectUsers, selectUsersLoadingState} from "../store/usersSlice.ts";
+import UserCharts from "../components/features/user/UserCharts.tsx";
+import UserStatsSummary from "../components/features/user/UserStatsSummary.tsx";
+import User from "../components/features/user/User.tsx";
+import List from "../components/logic/List.tsx";
 
 const Users = () => {
     const dispatch = useAppDispatch();

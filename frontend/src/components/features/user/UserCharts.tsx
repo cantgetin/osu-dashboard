@@ -1,6 +1,7 @@
-import LineChart, {generateOptions} from "./LineChart.tsx";
-import {convertDataToDayMonth} from "../../utils/utils.ts";
+
 import {useEffect, useState} from "react";
+import {convertDataToDayMonth} from "../../../utils/utils.ts";
+import LineChart, {generateOptions} from "../stats/LineChart.tsx";
 
 interface LineChartProps {
     data: UserStatsDataset[];

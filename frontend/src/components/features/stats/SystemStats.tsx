@@ -1,12 +1,12 @@
 import {useEffect} from 'react';
-import {useAppDispatch, useAppSelector} from "../../store/hooks.ts";
+import {useAppDispatch, useAppSelector} from "../../../store/hooks.ts";
+import {LoadingState} from "../../../interfaces/LoadingState.ts";
 import {
     fetchSystemStats,
     selectSystemStatsLoading,
     selectSystemStatsState,
     SystemStatsState
-} from "../../store/systemStats.ts";
-import {LoadingState} from "../../interfaces/LoadingState.ts";
+} from "../../../store/systemStats.ts";
 
 const SystemStats = () => {
     const dispatch = useAppDispatch();

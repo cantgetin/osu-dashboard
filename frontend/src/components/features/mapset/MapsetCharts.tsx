@@ -1,5 +1,6 @@
-import {convertDataToDayMonth} from "../../utils/utils.ts";
-import LineChart, {generateOptions} from "./LineChart.tsx";
+import {convertDataToDayMonth} from "../../../utils/utils.ts";
+import LineChart, {generateOptions} from "../stats/LineChart.tsx";
+
 
 interface MapsetChartsProps {
     data: MapsetStatsDataset[]

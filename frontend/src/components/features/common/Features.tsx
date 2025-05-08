@@ -1,8 +1,8 @@
-import Charts from "../../images/charts.png";
-import User from "../../images/user.png";
-import Filtering from "../../images/filtering.png";
-import Mapset from "../../images/mapset.png";
-import Diagrams from "../../images/diagrams.png";
+import Charts from "../../../images/charts.png";
+import User from "../../../images/user.png";
+import Filtering from "../../../images/filtering.png";
+import Mapset from "../../../images/mapset.png";
+import Diagrams from "../../../images/diagrams.png";
 
 const Features = () => {
     return (
