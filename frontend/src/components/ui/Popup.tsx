@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import {ReactNode} from 'react';
 
 interface PopupProps {
     isOpen: boolean;
@@ -7,7 +7,8 @@ interface PopupProps {
     title?: string;
 }
 
-const Popup = ({ isOpen, onClose, children, title = "Authorization Successful" }: PopupProps) => {
+// TODO: look into that, idfk how it works
+const Popup = ({isOpen, onClose, children, title = "Authorization Successful"}: PopupProps) => {
     if (!isOpen) return null;
 
     return (
@@ -18,8 +19,9 @@ const Popup = ({ isOpen, onClose, children, title = "Authorization Successful" }
             <div className="bg-zinc-900 rounded-lg w-full max-w-[600px] min-w-[200px] max-h-[50vh] overflow-y-auto">
                 <div className="flex justify-between items-center p-6">
                     <div className="flex items-center">
-                        <svg className="w-8 h-8 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        <svg className="w-8 h-8 text-green-500 mr-3" fill="none" stroke="currentColor"
+                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7"/>
                         </svg>
                         <h2 className="text-xl font-medium">{title}</h2>
                     </div>

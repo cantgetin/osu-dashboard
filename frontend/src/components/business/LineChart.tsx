@@ -1,5 +1,5 @@
 import React from 'react';
-import { Line } from "react-chartjs-2";
+import {Line} from "react-chartjs-2";
 import 'chart.js/auto';
 import type {ChartOptions} from "chart.js";
 import aveta from "aveta";
@@ -68,8 +68,8 @@ export function generateOptions(titleText: string): ChartOptions<'line'> {
 }
 
 
-const LineChart: React.FC<LineChartProps> = ({ data, options }) => {
-    return <Line  plugins={[MakeChartHeightPlugin(10)]} data={data} options={options} />;
+const LineChart: React.FC<LineChartProps> = ({data, options}) => {
+    return <Line plugins={[MakeChartHeightPlugin(10)]} data={data} options={options}/>;
 };
 
 export default LineChart;

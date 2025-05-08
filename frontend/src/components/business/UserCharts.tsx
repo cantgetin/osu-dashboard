@@ -20,7 +20,9 @@ const generateUserChartData = (
     name: string,
     color: string
 ) => {
-    const updatedData = userData.map((obj) => ({...obj, timestamp: convertDataToDayMonth(obj.timestamp)}));
+    const updatedData = userData.map((obj) => (
+        {...obj, timestamp: convertDataToDayMonth(obj.timestamp)}
+    ));
     const slicedData = updatedData.length >= 7 ? updatedData.slice(-7) : updatedData;
     return {
         labels: slicedData.map((data) => data.timestamp),

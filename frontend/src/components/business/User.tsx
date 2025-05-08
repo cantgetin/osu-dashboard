@@ -6,9 +6,7 @@ import {FaExternalLinkAlt} from "react-icons/fa";
 interface UserProps {
     user: User
     children: React.ReactNode[]
-    // eslint-disable-next-line @typescript-eslint/ban-types
     nameOnClick?: Function
-    // eslint-disable-next-line @typescript-eslint/ban-types
     externalLinkOnClick: Function
 }
 
@@ -23,7 +21,8 @@ const User = (props: UserProps) => {
             <div className="p-4 flex flex-col h-full md:max-w-[400px] justify-between whitespace-nowrap">
                 <div>
                     <div className="flex gap-2 items-center">
-                        <h1 className={`text-xl md:text-3xl ${props.nameOnClick != undefined ? "hover:text-amber-200 cursor-pointer" : null}`}
+                        <h1 className={`text-xl md:text-3xl ${props.nameOnClick != undefined ?
+                            "hover:text-amber-200 cursor-pointer" : null}`}
                             onClick={() => {
                                 if (props.nameOnClick != undefined) props.nameOnClick!()
                             }}>

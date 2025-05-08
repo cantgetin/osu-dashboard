@@ -18,7 +18,8 @@ const generateMapChartData = (
     name: string,
     color: string
 ) => {
-    const updatedData = mapsetData.map((obj) => ({...obj, timestamp: convertDataToDayMonth(obj.timestamp)}));
+    const updatedData =
+        mapsetData.map((obj) => ({...obj, timestamp: convertDataToDayMonth(obj.timestamp)}));
     const slicedData = updatedData.length >= 7 ? updatedData.slice(-7) : updatedData;
     return {
         labels: slicedData.map((data) => data.timestamp),

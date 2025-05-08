@@ -37,11 +37,6 @@ const Beatmapset = () => {
                     <img src={beatmapset.covers['cover@2x']} alt="map bg" className="h-[550px] object-cover rounded-md"/>
                     <div className="p-5 absolute inset-0 flex justify-center h-[550px]">
                         <div className="w-1/2 justify-end flex flex-col gap-6">
-                            {/*<div className="flex gap-2">*/}
-                            {/*    {beatmapset.beatmaps.map((_, index) =>*/}
-                            {/*    <div key={index} className="bg-zinc-900 h-6 w-6 rounded-lg text-center">{index}</div>*/}
-                            {/*        )}*/}
-                            {/*</div>*/}
                             <div>
                                 <div className="flex gap-4 items-center">
                                     <h1 className="text-5xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]">{beatmapset.title}</h1>
@@ -102,10 +97,6 @@ const Beatmapset = () => {
                             </div>
                         </div>
                     </div>
-                    {/*<div className="flex bg-zinc-900 box-border w-full rounded-lg p-4">*/}
-                    {/*    <h1>Description</h1>*/}
-                    {/*    <p className="text-zinc-400">lol?</p>*/}
-                    {/*</div>*/}
                     <div className="justify-center flex w-full">
                         <MapsetCharts
                             data={mapMapsetStatsToArray(beatmapset.mapset_stats)}

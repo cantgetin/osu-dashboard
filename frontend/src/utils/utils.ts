@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const CLIENT_ID = import.meta.env.VITE_OSU_API_CLIENT_ID
 const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI
 
@@ -92,4 +94,14 @@ export function redirectToAuthorize() {
         .forEach(key => url.searchParams.append(key, params[key]));
 
     window.location.href = url.toString();
+}
+
+export async function handleOsuSiteRedirect(state: string, code: string) {
+    console.log(`redirect state: ${state} local state: ${localStorage.getItem('state')}, all good`)
+    if (state == localStorage.getItem('state')) {
+        localStorage.setItem('code', code?.toString())
+        console.log('set the code to local storage, now exchange code for token')
+
+        await axios.post(`/api/following/create/${code}`);
+    }
 }

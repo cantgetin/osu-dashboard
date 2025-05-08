@@ -10,7 +10,6 @@ import MapsetSearch from "./MapsetSearch.tsx";
 
 interface MapsetListProps extends fetchMapsetsProps {
     showMapper?: boolean;
-    // Define any additional props here
 }
 
 const MapsetList = ({showMapper, ...mapsetProps}: MapsetListProps) => {

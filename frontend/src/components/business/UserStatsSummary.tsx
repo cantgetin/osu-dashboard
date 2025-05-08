@@ -8,13 +8,13 @@ interface UserStatsSummaryProps {
 
 const UserStatsSummary = (props: UserStatsSummaryProps) => {
     const [forLastNDays, setForLastNDays] = useState(1);
-    const [favoritesDifference, setFavoritesDifference] = useState(0);
-    const [commentsDifference, setCommentsDifference] = useState(0);
-    const [playCountDifference, setPlayCountDifference] = useState(0);
+    const [favoritesDiff, setFavoritesDiff] = useState(0);
+    const [commentsDiff, setCommentsDiff] = useState(0);
+    const [playCountDiff, setPlayCountDiff] = useState(0);
     const lastIndex = props.data.length - 1;
     const lastData = props.data[lastIndex];
 
-    const calculateDifference = (current: number, previous: number) => {
+    const calculateDiff = (current: number, previous: number) => {
         return current - previous;
     };
 
@@ -22,14 +22,14 @@ const UserStatsSummary = (props: UserStatsSummaryProps) => {
         const previousIndex = lastIndex - forLastNDays;
 
         if (props.data.length > 1 && previousIndex >= 0) {
-            setFavoritesDifference(calculateDifference(lastData.favourite_count, props.data[previousIndex].favourite_count));
-            setCommentsDifference(calculateDifference(lastData.comments_count, props.data[previousIndex].comments_count));
-            setPlayCountDifference(calculateDifference(lastData.play_count, props.data[previousIndex].play_count));
+            setFavoritesDiff(calculateDiff(lastData.favourite_count, props.data[previousIndex].favourite_count));
+            setCommentsDiff(calculateDiff(lastData.comments_count, props.data[previousIndex].comments_count));
+            setPlayCountDiff(calculateDiff(lastData.play_count, props.data[previousIndex].play_count));
         } else {
-            // Reset differences when there's no previous data to compare with
-            setFavoritesDifference(0);
-            setCommentsDifference(0);
-            setPlayCountDifference(0);
+            // Reset Diffs when there's no previous data to compare with
+            setFavoritesDiff(0);
+            setCommentsDiff(0);
+            setPlayCountDiff(0);
         }
     }, [forLastNDays, lastIndex, props.data]);
 
@@ -57,9 +57,9 @@ const UserStatsSummary = (props: UserStatsSummaryProps) => {
                 </select>
             </div>
             <div className="flex flex-col mt-auto ml-auto">
-                {renderStatsDifference(lastData.favourite_count, favoritesDifference, "Favorites", "pink")}
-                {renderStatsDifference(lastData.play_count, playCountDifference, "Plays", "green")}
-                {renderStatsDifference(lastData.comments_count, commentsDifference, "Comments", "red")}
+                {renderStatsDifference(lastData.favourite_count, favoritesDiff, "Favorites", "pink")}
+                {renderStatsDifference(lastData.play_count, playCountDiff, "Plays", "green")}
+                {renderStatsDifference(lastData.comments_count, commentsDiff, "Comments", "red")}
             </div>
         </>
     );

@@ -79,7 +79,7 @@ const UserDiagrams = (props: UserDiagramsProps) => {
     }
 
     function getNameFromKey(key: string): string {
-        let nameMap: NameMap = {
+        const nameMap: NameMap = {
             "most_popular_tags": "Tags",
             "most_popular_genres": "Genres",
             "most_popular_bpms": "BPM",

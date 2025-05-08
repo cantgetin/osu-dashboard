@@ -36,12 +36,13 @@ const Mapset = (props: MapCardProps) => {
         }
 
     }, [props.map.mapset_stats]);
-    
+
     return (
         <>
             {lastStats != null ?
                 <div
-                    className={`flex flex-col sm:flex-row bg-zinc-800 bg-opacity-30 text-white w-full overflow-hidden rounded-lg ${props.className}`}>
+                    className={`flex flex-col sm:flex-row bg-zinc-800 bg-opacity-30 text-white w-full 
+                    overflow-hidden rounded-lg ${props.className}`}>
                     <div className="sm:w-64 sm:min-w-64">
                         <img
                             src={props.map.covers.card}
@@ -56,9 +57,15 @@ const Mapset = (props: MapCardProps) => {
                         </a>
                         <div className="mt-2">
                             <div className="flex flex-wrap gap-x-2 gap-y-1 items-baseline">
-                                <h1 className="text-sm sm:text-md text-green-200">{aveta(lastStats.play_count)} plays</h1>
-                                <h1 className="text-xs sm:text-sm text-pink-200">{aveta(lastStats.favourite_count)} favorites</h1>
-                                <h1 className="text-xs sm:text-sm text-red-400">{aveta(lastStats.comments_count)} comments</h1>
+                                <h1 className="text-sm sm:text-md text-green-200">
+                                    {aveta(lastStats.play_count)} plays
+                                </h1>
+                                <h1 className="text-xs sm:text-sm text-pink-200">
+                                    {aveta(lastStats.favourite_count)} favorites
+                                </h1>
+                                <h1 className="text-xs sm:text-sm text-red-400">
+                                    {aveta(lastStats.comments_count)} comments
+                                </h1>
                             </div>
                             <div className="flex flex-wrap gap-x-2 gap-y-1 items-center mt-1">
                                 <h1 className="text-xs sm:text-sm text-zinc-400">
@@ -82,7 +89,8 @@ const Mapset = (props: MapCardProps) => {
                     </div>
                     {penultimateStats &&
                         <div
-                            className="px-4 py-2 sm:py-0 flex flex-row sm:flex-col justify-center items-center gap-2 sm:gap-1 border-t sm:border-t-0 border-zinc-700">
+                            className="px-4 py-2 sm:py-0 flex flex-row sm:flex-col
+                            justify-center items-center gap-2 sm:gap-1 border-t sm:border-t-0 border-zinc-700">
                             <StatsDifference difference={favouriteCountDifference} className="text-pink-300"/>
                             <StatsDifference difference={playCountDifference} className="text-green-300"/>
                             <StatsDifference difference={commentsCountDifference} className="text-red-300"/>
