@@ -62,9 +62,9 @@ const UserCharts = ({data, asSlideshow, className}: LineChartProps) => {
             {data.length > 0 && (
                 <div className={`flex bg-zinc-900 rounded-lg box-border ${className}`}>
                     {asSlideshow ? renderChart(currentIndex) : (
-                        <div className="grid gap-4 grid-cols-1 w-full">
+                        <div className="grid gap-2 md:gap-4 grid-cols-1 w-full">
                             {charts.map((_, index) => (
-                                <div key={index}>{renderChart(index)}</div>
+                                <div key={index} className="h-48 md:h-64">{renderChart(index)}</div>
                             ))}
                         </div>
                     )}

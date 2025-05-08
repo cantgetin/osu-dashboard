@@ -36,59 +36,58 @@ const Mapset = (props: MapCardProps) => {
         }
 
     }, [props.map.mapset_stats]);
-
+    
     return (
         <>
             {lastStats != null ?
-                <div className={`flex bg-zinc-800 bg-opacity-30 text-white w-full overflow-hidden rounded-lg ${props.className}`}>
-                    <div>
-                        <img src={props.map.covers.card} className='h-full w-64 min-w-64' alt="map bg"
-                             style={{objectFit: 'cover'}}/>
+                <div
+                    className={`flex flex-col sm:flex-row bg-zinc-800 bg-opacity-30 text-white w-full overflow-hidden rounded-lg ${props.className}`}>
+                    <div className="sm:w-64 sm:min-w-64">
+                        <img
+                            src={props.map.covers.card}
+                            className='h-48 sm:h-full w-full sm:w-64 object-cover'
+                            alt="map bg"
+                        />
                     </div>
                     <div className="flex flex-col p-4 w-full gap-1">
-                        <a className="h-12 hover:text-amber-200" href={`/beatmapset/${props.map.id}`}>
-                            <div className="h-6 text-lg">{props.map.title}</div>
-                            <div className="h-6 text-md text-zinc-400">by {props.map.artist}</div>
+                        <a className="hover:text-amber-200" href={`/beatmapset/${props.map.id}`}>
+                            <div className="text-lg line-clamp-1">{props.map.title}</div>
+                            <div className="text-md text-zinc-400 line-clamp-1">by {props.map.artist}</div>
                         </a>
-                        <div>
-                            <div className="flex gap-2 justify-left items-baseline">
-                                <h1 className="text-md text-green-200">{aveta(lastStats.play_count)} plays</h1>
-                                <h1 className="text-sm h-full text-pink-200">{aveta(lastStats.favourite_count)} favorites</h1>
-                                <h1 className="text-sm h-full text-red-400">{aveta(lastStats.comments_count)} comments</h1>
+                        <div className="mt-2">
+                            <div className="flex flex-wrap gap-x-2 gap-y-1 items-baseline">
+                                <h1 className="text-sm sm:text-md text-green-200">{aveta(lastStats.play_count)} plays</h1>
+                                <h1 className="text-xs sm:text-sm text-pink-200">{aveta(lastStats.favourite_count)} favorites</h1>
+                                <h1 className="text-xs sm:text-sm text-red-400">{aveta(lastStats.comments_count)} comments</h1>
                             </div>
-                            <div className="flex gap-2 items-center">
-                                <h1 className="text-sm text-zinc-400">
+                            <div className="flex flex-wrap gap-x-2 gap-y-1 items-center mt-1">
+                                <h1 className="text-xs sm:text-sm text-zinc-400">
                                     {props.map.status == "wip" || props.map.status == "pending" ?
                                         getRemainingPendingTime(props.map.last_updated)
                                         : props.map.status}
                                 </h1>
-                                <div className="text-sm flex gap-1">
-                                    {props.showMapper ?
-                                        <>
-                                            <h1>mapped by</h1>
-                                            <a
-                                                href={`/user/${props.map.user_id}`}
-                                                className="text-blue-300 hover:text-yellow-200"
-                                            >
-                                                {props.map.creator}
-                                            </a>
-                                        </>
-
-                                        : null}
-                                </div>
+                                {props.showMapper &&
+                                    <div className="text-xs sm:text-sm flex gap-1">
+                                        <span>mapped by</span>
+                                        <a
+                                            href={`/user/${props.map.user_id}`}
+                                            className="text-blue-300 hover:text-yellow-200"
+                                        >
+                                            {props.map.creator}
+                                        </a>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
-                    <div className="px-4 flex flex-col justify-center items-center">
-                        {penultimateStats ?
-                            <>
-                                <StatsDifference difference={favouriteCountDifference} className="text-pink-300"/>
-                                <StatsDifference difference={playCountDifference} className="text-green-300"/>
-                                <StatsDifference difference={commentsCountDifference} className="text-red-300"/>
-                            </>
-                            : null
-                        }
-                    </div>
+                    {penultimateStats &&
+                        <div
+                            className="px-4 py-2 sm:py-0 flex flex-row sm:flex-col justify-center items-center gap-2 sm:gap-1 border-t sm:border-t-0 border-zinc-700">
+                            <StatsDifference difference={favouriteCountDifference} className="text-pink-300"/>
+                            <StatsDifference difference={playCountDifference} className="text-green-300"/>
+                            <StatsDifference difference={commentsCountDifference} className="text-red-300"/>
+                        </div>
+                    }
                 </div>
                 : null}
         </>

@@ -15,7 +15,6 @@ import UserDiagrams from "../components/business/UserDiagrams.tsx";
 
 const UserPage = () => {
     const {userId} = useParams();
-
     const dispatch = useAppDispatch();
     const user = useAppSelector<User>(selectUser)
     const userLoaded = useAppSelector<LoadingState>(selectUserLoadingState)
@@ -27,9 +26,9 @@ const UserPage = () => {
     const extLinkOnClick = (userId: number) => window.open(`https://osu.ppy.sh/users/${userId}`)
 
     return (
-        <Layout className="flex md:justify-center sm:justify-start" title={user ? user.username : "Loading..."}>
+        <Layout className="flex justify-center" title={user ? user.username : "Loading..."}>
             {userLoaded == LoadingState.Succeeded ?
-                <div className="w-[1152px] grid 2xl:grid-cols-1 l:grid-cols-1 gap-4">
+                <div className="w-full max-w-[1152px] grid gap-4 px-2 md:px-0">
                     <User
                         user={user}
                         externalLinkOnClick={() => extLinkOnClick(user.id)}
@@ -37,13 +36,13 @@ const UserPage = () => {
                         <MapStatsSummary user={user}/>
                         <UserStatsSummary data={mapUserStatsToArray(user.user_stats)}/>
                     </User>
-                    <div className="flex gap-4">
+                    <div className="flex flex-col md:flex-row gap-4">
                         <UserCharts
-                            className="p-4 w-1/2"
+                            className="p-2 md:p-4 w-full md:w-1/2"
                             data={mapUserStatsToArray(user.user_stats)}
                         />
                         <UserDiagrams
-                            className="p-4 w-1/2"
+                            className="p-2 md:p-4 w-full md:w-1/2"
                             userId={user.id}
                         />
                     </div>

@@ -27,7 +27,7 @@ const MapsetSearch = (props: MapsetSearchProps) => {
             isFirstRun.current = false;
             return;
         }
-        
+
         debouncedUpdate();
 
         return () => {
@@ -36,39 +36,43 @@ const MapsetSearch = (props: MapsetSearchProps) => {
     }, [search, status, sort]);
 
     return (
-        <div className="flex gap-2 items-center text-lg rounded-lg min-w-[800px] z-10">
+        <div className="flex flex-col md:flex-row gap-2 items-center text-lg rounded-lg w-full z-10">
             <input
                 onChange={(e) => setSearch(e.target.value)}
-                className="px-4 py-2 bg-zinc-800 rounded-lg min-w-[400px] w-full border border-zinc-900"
+                className="px-4 py-2 bg-zinc-800 rounded-lg w-full md:min-w-[400px] border border-zinc-900"
                 placeholder="Search beatmapsets"
             />
-            <h1 className="text-md">Status:</h1>
-            <select
-                className="px-2 py-2  rounded-lg bg-zinc-800 text-white border border-zinc-900"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-            >
-                <option value="">any</option>
-                <option value="graveyard">graveyard</option>
-                <option value="wip">wip</option>
-                <option value="pending">pending</option>
-                <option value="ranked">ranked</option>
-                <option value="approved">approved</option>
-                <option value="qualified">qualified</option>
-                <option value="loved">loved</option>
-            </select>
-            <h1 className="text-md">Sort:</h1>
-            <select
-                className="px-2 py-2 rounded-lg bg-zinc-800 text-white border border-zinc-900"
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
-            >
-                <option value="">default</option>
-                <option value="last_playcount desc">more playcount</option>
-                <option value="last_playcount asc">less playcount </option>
-                <option value="created_at asc">oldest</option>
-                <option value="created_at desc">newest</option>
-            </select>
+            <div className="flex flex-row gap-2 w-full md:w-auto">
+                <h1 className="text-md hidden md:block">Status:</h1>
+                <select
+                    className="px-2 py-2 rounded-lg bg-zinc-800 text-white border border-zinc-900 w-full md:w-auto"
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                >
+                    <option value="">any</option>
+                    <option value="graveyard">graveyard</option>
+                    <option value="wip">wip</option>
+                    <option value="pending">pending</option>
+                    <option value="ranked">ranked</option>
+                    <option value="approved">approved</option>
+                    <option value="qualified">qualified</option>
+                    <option value="loved">loved</option>
+                </select>
+            </div>
+            <div className="flex flex-row gap-2 w-full md:w-auto">
+                <h1 className="text-md hidden md:block">Sort:</h1>
+                <select
+                    className="px-2 py-2 rounded-lg bg-zinc-800 text-white border border-zinc-900 w-full md:w-auto"
+                    value={sort}
+                    onChange={(e) => setSort(e.target.value)}
+                >
+                    <option value="">default</option>
+                    <option value="last_playcount desc">more playcount</option>
+                    <option value="last_playcount asc">less playcount</option>
+                    <option value="created_at asc">oldest</option>
+                    <option value="created_at desc">newest</option>
+                </select>
+            </div>
         </div>
     );
 };

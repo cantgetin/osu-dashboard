@@ -23,10 +23,10 @@ const Users = () => {
     const userExtLinkOnClick = (userId: number) => window.open(`https://osu.ppy.sh/users/${userId}`)
 
     return (
-        <Layout className="flex md:justify-center sm:justify-start" title="Users">
+        <Layout className="flex justify-center" title="Users">
             {usersLoaded == LoadingState.Succeeded ? (
                 <List
-                    className="w-[1152px] grid 2xl:grid-cols-1 l:grid-cols-1 gap-4"
+                    className="w-full px-2 sm:px-0 sm:w-[1152px] grid grid-cols-1 gap-4"
                     items={users}
                     title={`Total users: ${users.length}`}
                     renderItem={(user: User) => (
@@ -37,7 +37,7 @@ const Users = () => {
                             externalLinkOnClick={() => userExtLinkOnClick(user.id)}
                         >
                             <UserCharts
-                                className="w-[400px] min-w-[400px] max-w-[400px]"
+                                className="w-full sm:w-[400px] sm:min-w-[400px] sm:max-w-[400px]"
                                 data={mapUserStatsToArray(user.user_stats)}
                                 asSlideshow={true}
                             />

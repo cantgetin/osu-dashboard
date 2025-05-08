@@ -13,7 +13,7 @@ interface MapsetListProps extends fetchMapsetsProps {
     // Define any additional props here
 }
 
-const MapsetList = ({ showMapper, ...mapsetProps } : MapsetListProps ) => {
+const MapsetList = ({showMapper, ...mapsetProps}: MapsetListProps) => {
     const dispatch = useAppDispatch();
     const mapsetsState = useAppSelector<MapsetsState>(selectMapsetsState);
 
@@ -36,33 +36,31 @@ const MapsetList = ({ showMapper, ...mapsetProps } : MapsetListProps ) => {
     }
 
     return (
-        <>
-            <div className="flex flex-col gap-5 bg-zinc-900 p-4 rounded-lg">
-                <MapsetSearch update={onSearch}/>
-                {
-                    mapsetsState.loading == LoadingState.Succeeded ?
-                        <>
-                            <List className="flex flex-col gap-4 rounded-lg"
-                                  items={mapsetsState.mapsets!}
-                                  renderItem={(mapset: Mapset) =>
-                                      <Mapset
-                                          key={mapset.id}
-                                          map={mapset}
-                                          showMapper={showMapper}
-                                      />
-                                  }
-                            />
-                            <Pagination
-                                pages={mapsetsState.pages}
-                                currentPage={mapsetsState.currentPage}
-                                onPageChange={onPageChange}
-                                className="flex gap-2 justify-end text-md"
-                            />
-                        </>
-                        : <LoadingSpinner/>
-                }
-            </div>
-        </>
+        <div className="flex flex-col gap-3 md:gap-5 bg-zinc-900 p-2 md:p-4 rounded-lg w-full">
+            <MapsetSearch update={onSearch}/>
+            {
+                mapsetsState.loading == LoadingState.Succeeded ?
+                    <>
+                        <List className="flex flex-col gap-2 md:gap-4 rounded-lg w-full"
+                              items={mapsetsState.mapsets!}
+                              renderItem={(mapset: Mapset) =>
+                                  <Mapset
+                                      key={mapset.id}
+                                      map={mapset}
+                                      showMapper={showMapper}
+                                  />
+                              }
+                        />
+                        <Pagination
+                            pages={mapsetsState.pages}
+                            currentPage={mapsetsState.currentPage}
+                            onPageChange={onPageChange}
+                            className="flex gap-1 md:gap-2 justify-end text-sm md:text-md"
+                        />
+                    </>
+                    : <LoadingSpinner/>
+            }
+        </div>
     );
 };
 

@@ -8,7 +8,6 @@ import Features from "../components/business/Features.tsx";
 const Main = () => {
     const navigate = useNavigate();
 
-    // @ts-ignore
     return (
         <Layout className="py-5 md:py-10 flex flex-col gap-5 md:gap-10" title="Home">
             <div className="flex flex-col md:flex-row perspective-600 overflow-hidden">
@@ -31,7 +30,7 @@ const Main = () => {
                     </div>
                 </div>
                 <img
-                    className="relative md:absolute -z-10 opacity-15 rounded-lg overflow-hidden rotate transform rotate-x-12 mt-5 md:-mt-10 w-full md:w-auto"
+                    className="absolute -z-10 opacity-15 rounded-lg overflow-hidden rotate transform rotate-x-12 mt-5 md:-mt-10 w-full md:w-auto"
                     src={Summarized}/>
             </div>
             <SystemStats/>
