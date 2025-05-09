@@ -12,6 +12,7 @@ import UserStatsSummary from "../components/features/user/UserStatsSummary.tsx";
 import UserCharts from "../components/features/user/UserCharts.tsx";
 import UserDiagrams from "../components/features/user/UserDiagrams.tsx";
 import MapsetList from "../components/features/mapset/MapsetList.tsx";
+import UserTags from "../components/features/user/UserTags.tsx";
 
 const UserPage = () => {
     const {userId} = useParams();
@@ -33,7 +34,10 @@ const UserPage = () => {
                         user={user}
                         externalLinkOnClick={() => extLinkOnClick(user.id)}
                     >
-                        <MapStatsSummary user={user}/>
+                        <div className="flex flex-col gap-2">
+                            <MapStatsSummary user={user}/>
+                            <UserTags userID={userId}/>
+                        </div>
                         <UserStatsSummary data={mapUserStatsToArray(user.user_stats)}/>
                     </User>
                     <div className="flex flex-col md:flex-row gap-4">

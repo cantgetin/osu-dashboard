@@ -1,6 +1,14 @@
 import {Doughnut} from "react-chartjs-2";
 import {ChartOptions} from "chart.js";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
+import {useAppDispatch, useAppSelector} from "../../../store/hooks.ts";
+import {LoadingState} from "../../../interfaces/LoadingState.ts";
+import {
+    fetchUserStats,
+    selectUserStats,
+    selectUserStatsLoading,
+} from "../../../store/userStatsSlice.ts";
+import LoadingSpinner from "../../ui/LoadingSpinner.tsx";
 
 type UserDiagramsProps = {
     userId: number
@@ -27,13 +35,13 @@ export const MakeChartHeightPlugin = (height: number) => {
 }
 
 const UserDiagrams = (props: UserDiagramsProps) => {
-    const [userStats, setUserStats] = useState<UserStatistics | null>(null);
+    const dispatch = useAppDispatch();
+    const userStats = useAppSelector<UserStatistics>(selectUserStats)
+    const userStatsLoaded = useAppSelector<LoadingState>(selectUserStatsLoading)
 
     useEffect(() => {
-        fetch(`/api/user/statistic/${props.userId}`)
-            .then(response => response.json())
-            .then((data: UserStatistics) => setUserStats(data))
-    }, [props.userId]);
+        dispatch(fetchUserStats(props.userId))
+    }, [dispatch])
 
     function makeOptions(key: string): ChartOptions<'doughnut'> {
         return {
@@ -96,33 +104,39 @@ const UserDiagrams = (props: UserDiagramsProps) => {
     }
 
     return (
-        <div className={`p-2 md:p-4 bg-zinc-900 rounded-lg ${props.className}`}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4">
-                {userStats && Object.entries(userStats).map(([key, value]) => {
-                    ensureValueHasData(value)
-                    return getNameFromKey(key) != undefined ? (
-                        <div key={key} className='h-48 md:h-80'>
-                            <Doughnut
-                                height="100%"
-                                width="100%"
-                                plugins={[MakeChartHeightPlugin(80)]}
-                                data={{
-                                    labels: Object.keys(value).map(item => item === "" ? "Unspecified" : item),
-                                    datasets: [{
-                                        data: Object.values(value),
-                                        backgroundColor: ['#003f5c', '#58508d', '#34ab9c', "#ff6361", '#983a73'],
-                                        borderRadius: 0,
-                                        borderWidth: 0,
-                                        label: getNameFromKey(key),
-                                    }],
-                                }}
-                                options={makeOptions(key)}
-                            />
-                        </div>
-                    ) : null;
-                })}
-            </div>
-        </div>
+        <>
+        {
+            userStatsLoaded == LoadingState.Succeeded ?
+                <div className={`p-2 md:p-4 bg-zinc-900 rounded-lg ${props.className}`}>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4">
+                        {userStats && Object.entries(userStats).map(([key, value]) => {
+                            ensureValueHasData(value)
+                            return getNameFromKey(key) != undefined ? (
+                                <div key={key} className='h-48 md:h-80'>
+                                    <Doughnut
+                                        height="100%"
+                                        width="100%"
+                                        plugins={[MakeChartHeightPlugin(80)]}
+                                        data={{
+                                            labels: Object.keys(value).map(item => item === "" ? "Unspecified" : item),
+                                            datasets: [{
+                                                data: Object.values(value),
+                                                backgroundColor: ['#003f5c', '#58508d', '#34ab9c', "#ff6361", '#983a73'],
+                                                borderRadius: 0,
+                                                borderWidth: 0,
+                                                label: getNameFromKey(key),
+                                            }],
+                                        }}
+                                        options={makeOptions(key)}
+                                    />
+                                </div>
+                            ) : null;
+                        })}
+                    </div>
+                </div>
+                : <LoadingSpinner/>
+        }
+        </>
     );
 };
 

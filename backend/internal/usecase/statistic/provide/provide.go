@@ -8,12 +8,17 @@ import (
 	"strings"
 )
 
+const ItemsCount = 5
+
 func (uc *UseCase) GetForUser(ctx context.Context, userID int) (*dto.UserMapStatistics, error) {
-	tags := make(map[string]int)
-	languages := make(map[string]int)
-	genres := make(map[string]int)
-	BPMs := make(map[string]int)
-	starrates := make(map[string]int)
+	res := &dto.UserMapStatistics{
+		Tags:      make(map[string]int),
+		Languages: make(map[string]int),
+		Genres:    make(map[string]int),
+		BPMs:      make(map[string]int),
+		Starrates: make(map[string]int),
+		Combined:  make([]string, 0),
+	}
 
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		mapsets, err := uc.mapset.ListForUser(ctx, tx, userID)
@@ -27,14 +32,14 @@ func (uc *UseCase) GetForUser(ctx context.Context, userID int) (*dto.UserMapStat
 			mapsetIDs[i] = mapset.ID
 			tagsArr := strings.Fields(mapset.Tags)
 			for _, tag := range tagsArr {
-				tags[tag]++
+				res.Tags[tag]++
 			}
 
-			languages[mapset.Language]++
-			genres[mapset.Genre]++
+			res.Languages[mapset.Language]++
+			res.Genres[mapset.Genre]++
 
 			bpmStr := strconv.Itoa(roundUpToNearestTen(int(mapset.BPM)))
-			BPMs[bpmStr]++
+			res.BPMs[bpmStr]++
 		}
 
 		beatmaps, err := uc.beatmap.ListForMapsets(ctx, tx, mapsetIDs...)
@@ -42,8 +47,8 @@ func (uc *UseCase) GetForUser(ctx context.Context, userID int) (*dto.UserMapStat
 			return err
 		}
 		for _, beatmap := range beatmaps {
-			starrateStr := strconv.Itoa(roundUpToNearestNum(int(beatmap.DifficultyRating)))
-			starrates[starrateStr]++
+			starrateStr := strconv.Itoa(int(beatmap.DifficultyRating))
+			res.Starrates[starrateStr]++
 		}
 
 		return nil
@@ -52,20 +57,21 @@ func (uc *UseCase) GetForUser(ctx context.Context, userID int) (*dto.UserMapStat
 		return nil, txErr
 	}
 
-	// keep only highest 10 values for each map
-	tags = top5Values(tags)
-	languages = top5Values(languages)
-	genres = top5Values(genres)
-	BPMs = top5Values(BPMs)
-	starrates = top5Values(starrates)
+	// format user statistic
+	res.Tags = getTopNValues(res.Tags, ItemsCount)
+	res.Languages = getTopNValues(res.Languages, ItemsCount)
+	res.Genres = getTopNValues(res.Genres, ItemsCount)
 
-	return &dto.UserMapStatistics{
-		Tags:      tags,
-		Languages: languages,
-		Genres:    genres,
-		BPMs:      BPMs,
-		Starrates: starrates,
-	}, nil
+	res.BPMs = getTopNValues(res.BPMs, ItemsCount)
+	res.BPMs = appendToAllKeys(res.BPMs, " bpm")
+
+	res.Starrates = getTopNValues(res.Starrates, ItemsCount)
+	res.Starrates = appendToAllKeys(res.Starrates, " star")
+
+	res.Combined = combineMapKeys(res.Tags, res.Languages, res.Genres)
+	res.Combined = append(res.Combined, getTopKey(res.Starrates), getTopKey(res.BPMs))
+
+	return res, nil
 }
 
 func (uc *UseCase) GetForSystem(ctx context.Context) (*dto.SystemStatistics, error) {

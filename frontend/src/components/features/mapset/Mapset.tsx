@@ -1,7 +1,8 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import aveta from "aveta";
 import StatsDifference from "../stats/StatsDifference.tsx";
 import {getRemainingPendingTime} from "../../../utils/utils.ts";
+import {FaFileExcel} from "react-icons/fa";
 
 interface MapCardProps {
     map: Mapset
@@ -42,13 +43,28 @@ const Mapset = (props: MapCardProps) => {
             {lastStats != null ?
                 <div
                     className={`flex flex-col sm:flex-row bg-zinc-800 bg-opacity-30 text-white w-full 
-                    overflow-hidden rounded-lg ${props.className}`}>
-                    <div className="sm:w-64 sm:min-w-64">
-                        <img
-                            src={props.map.covers.card}
-                            className='h-36 sm:h-full w-full sm:w-64 object-cover'
-                            alt="map bg"
-                        />
+                overflow-hidden rounded-lg ${props.className}`}>
+                    <div className="sm:w-64 sm:min-w-64 bg-zinc-700 flex items-center justify-center">
+                        {props.map.covers.card ? (
+                            <img
+                                src={props.map.covers.card}
+                                className='h-36 sm:h-full w-full sm:w-64 object-cover'
+                                alt={`${props.map.title} cover`}
+                                onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                                    const imgElement = e.currentTarget;  // This is properly typed as HTMLImageElement
+                                    imgElement.style.display = 'none';
+
+                                    const fallbackElement = imgElement.nextElementSibling as HTMLElement | null;
+                                    if (fallbackElement) {
+                                        fallbackElement.style.display = 'flex';
+                                    }
+                                }}
+                            />
+                        ) : null}
+                        <div className="hidden flex-col items-center justify-center text-zinc-400 h-36 sm:h-full w-full sm:w-64">
+                            <FaFileExcel className="text-4xl" />
+                            <span className="mt-2 text-sm">No cover image</span>
+                        </div>
                     </div>
                     <div className="flex flex-col p-4 w-full gap-1">
                         <a className="hover:text-amber-200" href={`/beatmapset/${props.map.id}`}>
@@ -90,7 +106,7 @@ const Mapset = (props: MapCardProps) => {
                     {penultimateStats &&
                         <div
                             className="px-4 py-2 sm:py-0 flex flex-row sm:flex-col
-                            justify-center items-center gap-2 sm:gap-1 border-t sm:border-t-0 border-zinc-700">
+                        justify-center items-center gap-2 sm:gap-1 border-t sm:border-t-0 border-zinc-700">
                             <StatsDifference difference={favouriteCountDifference} className="text-pink-300"/>
                             <StatsDifference difference={playCountDifference} className="text-green-300"/>
                             <StatsDifference difference={commentsCountDifference} className="text-red-300"/>

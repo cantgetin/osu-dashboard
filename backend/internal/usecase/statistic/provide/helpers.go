@@ -1,60 +1,90 @@
 package statisticprovide
 
 import (
-	"math"
 	"sort"
 	"strings"
 )
 
+const Unspecified = "Unspecified"
+const unspecified = "unspecified"
+
 func roundUpToNearestTen(num int) int {
-	rounded := int(math.Ceil(float64(num) / 10.0))
-	result := rounded * 10
-	return result
+	return ((num + 9) / 10) * 10
 }
 
-func roundUpToNearestNum(num int) int {
-	rounded := int(math.Ceil(float64(num) / 1.0))
-	result := rounded * 1
-	return result
-}
-
-func getTopNKeys(m map[string]int, n int) []string {
-	keys := make([]string, 0, len(m))
-
-	for k := range m {
-		keys = append(keys, k)
+func getTopNValues(m map[string]int, n int) map[string]int {
+	if n <= 0 || len(m) == 0 {
+		return make(map[string]int)
 	}
 
-	sort.Slice(keys, func(i, j int) bool {
-		return m[keys[i]] > m[keys[j]]
-	})
+	if n > len(m) {
+		n = len(m)
+	}
 
-	if len(keys) > n {
-		keys = keys[:n]
+	type kv struct {
+		key string
+		val int
+	}
+	kvs := make([]kv, 0, len(m))
+	for k, v := range m {
+		key := strings.TrimSpace(k)
+		if key == "" {
+			key = Unspecified
+		}
+		kvs = append(kvs, kv{strings.ToLower(key), v})
+	}
+
+	sort.Slice(kvs, func(i, j int) bool { return kvs[i].val > kvs[j].val })
+
+	result := make(map[string]int, n)
+	for i := 0; i < n; i++ {
+		result[kvs[i].key] = kvs[i].val
+	}
+
+	return result
+}
+
+func combineMapKeys(maps ...map[string]int) []string {
+	unique := make(map[string]struct{}, 32)
+	keys := make([]string, 0, 32)
+
+	unique[Unspecified] = struct{}{}
+	unique[unspecified] = struct{}{}
+
+	for _, m := range maps {
+		for k := range m {
+			if _, exists := unique[k]; !exists {
+				unique[k] = struct{}{}
+				keys = append(keys, k)
+			}
+		}
 	}
 
 	return keys
 }
 
-func filterMapByKey(originalMap map[string]int, keys []string) map[string]int {
-	filteredMap := make(map[string]int)
-
-	for _, key := range keys {
-		filteredMap[key] = originalMap[key]
+func appendToAllKeys(m map[string]int, s string) map[string]int {
+	result := make(map[string]int, len(m))
+	for k, v := range m {
+		result[k+s] = v
 	}
-
-	return filteredMap
+	return result
 }
 
-func top5Values(inputMap map[string]int) map[string]int {
-	topKeys := getTopNKeys(inputMap, 5)
-	result := filterMapByKey(inputMap, topKeys)
+func getTopKey(m map[string]int) string {
+	if len(m) == 0 {
+		return ""
+	}
 
-	for k, _ := range result {
-		if strings.TrimSpace(k) == "" {
-			k = "Unspecified"
+	var topKey string
+	maxValue := -1 << 31
+
+	for k, v := range m {
+		if v > maxValue {
+			maxValue = v
+			topKey = k
 		}
 	}
 
-	return result
+	return topKey
 }

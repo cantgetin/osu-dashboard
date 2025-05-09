@@ -6,6 +6,7 @@ type UserMapStatistics struct {
 	Genres    map[string]int `json:"most_popular_genres"`
 	BPMs      map[string]int `json:"most_popular_bpms"`
 	Starrates map[string]int `json:"most_popular_starrates"`
+	Combined  []string       `json:"combined"`
 }
 
 type SystemStatistics struct {

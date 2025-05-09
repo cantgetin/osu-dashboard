@@ -17,9 +17,7 @@ export const fetchSystemStats = createAsyncThunk(
     async (): Promise<{ stats: SystemStats }> => {
         const response = await fetch(`api/system/statistic`);
         const data = await response.json();
-        return {
-            stats: data,
-        };
+        return {stats: data};
     }
 );
 

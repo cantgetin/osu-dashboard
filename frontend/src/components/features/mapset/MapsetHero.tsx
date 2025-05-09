@@ -1,5 +1,5 @@
 import MapsetHeader from "./MapsetHeader.tsx";
-import MapsetTags from "./MapsetTags.tsx";
+import Tags from "../common/Tags.tsx";
 import MapsetMeta from "./MapsetMeta.tsx";
 
 
@@ -24,7 +24,7 @@ const MapsetHero = ({beatmapset, children, background}: MapsetHeroProps) => (
                 artist={beatmapset.artist}
                 id={beatmapset.id}
             />
-            <MapsetTags tags={beatmapset.tags}/>
+            <Tags tags={beatmapset.tags}/>
             <MapsetMeta
                 status={beatmapset.status}
                 creator={beatmapset.creator}

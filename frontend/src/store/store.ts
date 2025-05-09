@@ -4,7 +4,8 @@ import userSlice from "./userSlice.ts";
 import mapsetsSlice from "./mapsetsSlice.ts";
 import usersSlice from "./usersSlice.ts";
 import mapsetSlice from "./mapsetSlice.ts";
-import systemStats from "./systemStats.ts";
+import systemStatsSlice from "./systemStats.ts";
+import userStatsSlice from "./userStatsSlice.ts"
 
 export const store = configureStore({
     reducer: {
@@ -13,7 +14,8 @@ export const store = configureStore({
         usersSlice: usersSlice,
         mapsetsSlice: mapsetsSlice,
         mapsetSlice: mapsetSlice,
-        systemStatsSlice: systemStats,
+        systemStatsSlice: systemStatsSlice,
+        userStatsSlice: userStatsSlice,
     },
 });
 
