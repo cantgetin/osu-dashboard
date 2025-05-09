@@ -34,7 +34,7 @@ const User = (props: UserProps) => {
                             content={<FaExternalLinkAlt className="h-3"/>}
                         />
                     </div>
-                    <span className="text-xs hidden text-zinc-400 px-1">
+                    <span className="text-sm hidden md:block text-zinc-400 px-1">
                         tracking since {convertDateFormat(props.user.tracking_since)}
                     </span>
                 </div>
