@@ -30,21 +30,21 @@ const Beatmapset = () => {
 
     return (
         <Layout title={beatmapset.title}>
-            <div className="pt-15 flex flex-col flex-wrap gap-2 relative w-full">
-                <img
-                    src={beatmapset.covers['cover@2x']}
-                    alt="map bg"
-                    className="h-[550px] object-cover rounded-md"
-                />
-                <MapsetHero beatmapset={beatmapset}>
-                    <div className="w-1/2 justify-end flex flex-col ml-auto whitespace-nowrap">
+            <div className="pt-15 flex flex-col flex-wrap gap-2 w-full">
+                <div className="relative h-[550px] rounded-md overflow-hidden">
+                    <MapsetHero
+                        beatmapset={beatmapset}
+                        background={beatmapset.covers['cover@2x']}
+                    >
                         <StatsComparison
                             lastStats={lastStats}
                             penultimateStats={penultimateStats}
                         />
-                    </div>
-                </MapsetHero>
-                <div className="justify-center flex w-full">
+                    </MapsetHero>
+                </div>
+
+                {/* Charts Section */}
+                <div className="justify-center flex w-full mt-4">
                     <MapsetCharts
                         data={mapsetStats}
                         className="p-4 rounded-md"

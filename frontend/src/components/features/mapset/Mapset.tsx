@@ -46,7 +46,7 @@ const Mapset = (props: MapCardProps) => {
                     <div className="sm:w-64 sm:min-w-64">
                         <img
                             src={props.map.covers.card}
-                            className='h-48 sm:h-full w-full sm:w-64 object-cover'
+                            className='h-36 sm:h-full w-full sm:w-64 object-cover'
                             alt="map bg"
                         />
                     </div>

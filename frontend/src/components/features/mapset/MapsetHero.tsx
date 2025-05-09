@@ -6,11 +6,19 @@ import MapsetMeta from "./MapsetMeta.tsx";
 interface MapsetHeroProps {
     beatmapset: Mapset;
     children: React.ReactNode;
+    background?: string; // Add background prop
 }
 
-const MapsetHero = ({beatmapset, children}: MapsetHeroProps) => (
-    <div className="p-5 absolute inset-0 flex h-[550px]">
-        <div className="w-1/2 justify-end flex flex-col gap-6">
+const MapsetHero = ({beatmapset, children, background}: MapsetHeroProps) => (
+    <div className="p-5 absolute inset-0 md:flex h-[550px]">
+        {background && (
+            <img
+                src={background}
+                alt="map bg"
+                className="absolute inset-0 h-full w-full object-cover rounded-md opacity-60 -z-10"
+            />
+        )}
+        <div className="md:w-1/2 justify-end flex flex-col gap-6">
             <MapsetHeader
                 title={beatmapset.title}
                 artist={beatmapset.artist}
@@ -24,7 +32,9 @@ const MapsetHero = ({beatmapset, children}: MapsetHeroProps) => (
                 lastUpdated={beatmapset.last_updated}
             />
         </div>
-        {children}
+        <div className="md:w-1/2 md:justify-end mt-6 flex flex-col ml-auto whitespace-nowrap">
+            {children}
+        </div>
     </div>
 );
 

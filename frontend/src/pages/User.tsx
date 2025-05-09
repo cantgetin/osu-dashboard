@@ -38,11 +38,11 @@ const UserPage = () => {
                     </User>
                     <div className="flex flex-col md:flex-row gap-4">
                         <UserCharts
-                            className="p-2 md:p-4 w-full md:w-1/2"
+                            className="p-4 w-full md:w-1/2"
                             data={mapUserStatsToArray(user.user_stats)}
                         />
                         <UserDiagrams
-                            className="p-2 md:p-4 w-full md:w-1/2"
+                            className="p-4 w-full md:w-1/2"
                             userId={user.id}
                         />
                     </div>

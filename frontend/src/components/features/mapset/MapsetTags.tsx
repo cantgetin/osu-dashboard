@@ -7,7 +7,7 @@ const MapsetTags = ({ tags }: MapsetTagsProps) => (
         {tags && tags.split(' ').map((tag, index) => (
             <div
                 key={index}
-                className="bg-zinc-800 px-2 py-1 rounded-lg text-sm cursor-pointer h-7"
+                className="text:xs px-1 bg-zinc-800 md:px-2 md:py-1 rounded-lg md:text-sm cursor-pointer h-7"
             >
                 {tag}
             </div>

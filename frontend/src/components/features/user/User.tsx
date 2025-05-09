@@ -12,17 +12,17 @@ interface UserProps {
 
 const User = (props: UserProps) => {
     return (
-        <div className="w-full flex bg-zinc-900 rounded-lg overflow-hidden max-h-64">
+        <div className="md:w-full flex bg-zinc-900 rounded-lg overflow-hidden max-h-64">
             <img
                 src={props.user.avatar_url}
                 className="w-16 h-16 md:w-64 md:h-64"
                 alt="user avatar"
             />
-            <div className="p-4 flex flex-col h-full md:max-w-[400px] justify-between whitespace-nowrap">
+            <div className="py-4 pl-4 sm:px-4 md:flex flex-col h-full md:max-w-[400px] justify-between whitespace-nowrap">
                 <div>
                     <div className="flex gap-2 items-center">
                         <h1 className={`text-xl md:text-3xl ${props.nameOnClick != undefined ?
-                            "hover:text-amber-200 cursor-pointer" : null}`}
+                            "hover:text-amber-200 cursor-pointer text-wrap" : null}`}
                             onClick={() => {
                                 if (props.nameOnClick != undefined) props.nameOnClick!()
                             }}>
@@ -30,11 +30,11 @@ const User = (props: UserProps) => {
                         </h1>
                         <Button
                             onClick={() => props.externalLinkOnClick()}
-                            className="bg-zinc-800 rounded-md p-1 h-6"
+                            className="bg-zinc-800 rounded-md p-1 h-6 hidden md:block"
                             content={<FaExternalLinkAlt className="h-3"/>}
                         />
                     </div>
-                    <span className="text-xs text-zinc-400 px-1 hidden md:block">
+                    <span className="text-xs hidden text-zinc-400 px-1">
                         tracking since {convertDateFormat(props.user.tracking_since)}
                     </span>
                 </div>
@@ -42,7 +42,7 @@ const User = (props: UserProps) => {
                     {props.children[0]}
                 </div>
             </div>
-            <div className="ml-auto p-4 flex flex-col gap-2 text-right whitespace-nowrap hidden md:flex">
+            <div className="py-4 pr-4 sm:px-4 ml-auto flex flex-col gap-2 text-right whitespace-nowrap md:flex">
                 {props.children[1]}
             </div>
         </div>

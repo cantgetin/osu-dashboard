@@ -16,7 +16,7 @@ const StatsDifference = (props: StatsDifferenceProps) => {
                         :
                         <h1 className="text-xs">▼</h1>
                     }
-                    <h1 className="text-2xl">{aveta(props.difference)}</h1>
+                    <h1 className="text:sm md:text-2xl">{aveta(props.difference)}</h1>
                 </div>
                 : null}
         </>

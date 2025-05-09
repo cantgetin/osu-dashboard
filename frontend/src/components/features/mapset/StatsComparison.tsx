@@ -11,7 +11,7 @@ const StatCard = ({ value, previousValue, label, color }: StatCardProps) => {
     const difference = value - previousValue;
 
     return (
-        <div className={`text-4xl flex gap-2 items-center w-full justify-end drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)] ${color}`}>
+        <div className={`text-lg md:text-4xl flex gap-2 items-center w-full justify-end drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)] ${color}`}>
             <h1>{aveta(value)} {label}</h1>
             <h1 className="text-xl">▲</h1>
             <h1>{aveta(difference)}</h1>
@@ -26,6 +26,7 @@ interface StatsComparisonProps {
 
 const StatsComparison = ({ lastStats, penultimateStats }: StatsComparisonProps) => (
     <div className="flex flex-col justify-center items-center">
+        <h1 className="text-lg md:text-4xl flex gap-2 items-center w-full justify-end drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]">Stats for last 24 hours:</h1>
         <StatCard
             value={lastStats.favourite_count}
             previousValue={penultimateStats.favourite_count}
