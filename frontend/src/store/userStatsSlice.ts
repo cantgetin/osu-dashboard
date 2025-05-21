@@ -14,7 +14,7 @@ const initialState: UserStatisticState = {
 
 export const fetchUserStats = createAsyncThunk(
     'UserStats/fetch',
-    async (userID: number): Promise<{ stats: UserStatistics}> => {
+    async (userID: string): Promise<{ stats: UserStatistics}> => {
 
         const response = await fetch(`/api/user/statistic/${userID}`);
         const data = await response.json();

@@ -15,17 +15,17 @@ interface UserTagsProps {
 
 const UserTags = (props: UserTagsProps) => {
     const dispatch = useAppDispatch();
-    const userStats = useAppSelector<UserStatistic>(selectUserStats)
+    const userStats = useAppSelector<UserStatistics | null>(selectUserStats)
     const userStatsLoaded = useAppSelector<LoadingState>(selectUserStatsLoading)
 
     useEffect(() => {
-        dispatch(fetchUserStats(props.userID))
+        dispatch(fetchUserStats(props.userID.toString()))
     }, [dispatch])
 
     return (
         <>
             {userStatsLoaded == LoadingState.Succeeded ?
-                <Tags tags={userStats.combined!} colorized={true}/>
+                <Tags tags={userStats!.combined} colorized={true}/>
                 : <LoadingSpinner/>
             }
         </>

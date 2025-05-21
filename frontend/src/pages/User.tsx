@@ -36,7 +36,7 @@ const UserPage = () => {
                     >
                         <div className="flex flex-col gap-2">
                             <MapStatsSummary user={user}/>
-                            <UserTags userID={userId}/>
+                            <UserTags userID={userId!}/>
                         </div>
                         <UserStatsSummary data={mapUserStatsToArray(user.user_stats)}/>
                     </User>

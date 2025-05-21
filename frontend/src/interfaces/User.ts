@@ -18,7 +18,12 @@ interface UserMapCounts {
 }
 
 interface UserStatistics {
-    [key: string]: UserStatisticUnit;
+    most_popular_tags: UserStatisticUnit;
+    most_popular_languages: UserStatisticUnit;
+    most_popular_genres: UserStatisticUnit;
+    most_popular_bpms: UserStatisticUnit;
+    most_popular_starrates: UserStatisticUnit;
+    combined: string[];
 }
 
 interface UserStatisticUnit {
@@ -28,6 +33,8 @@ interface UserStatisticUnit {
 interface UserStats {
     [key: string]: UserStatsModel;
 }
+
+// idk what is this below
 
 interface UserStatsModel {
     play_count: number;

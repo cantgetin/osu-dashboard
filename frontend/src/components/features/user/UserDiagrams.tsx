@@ -36,11 +36,11 @@ export const MakeChartHeightPlugin = (height: number) => {
 
 const UserDiagrams = (props: UserDiagramsProps) => {
     const dispatch = useAppDispatch();
-    const userStats = useAppSelector<UserStatistics>(selectUserStats)
+    const userStats = useAppSelector<UserStatistics | null>(selectUserStats)
     const userStatsLoaded = useAppSelector<LoadingState>(selectUserStatsLoading)
 
     useEffect(() => {
-        dispatch(fetchUserStats(props.userId))
+        dispatch(fetchUserStats(props.userId.toString()))
     }, [dispatch])
 
     function makeOptions(key: string): ChartOptions<'doughnut'> {
