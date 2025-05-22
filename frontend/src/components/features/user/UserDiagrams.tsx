@@ -1,14 +1,10 @@
 import {Doughnut} from "react-chartjs-2";
 import {ChartOptions} from "chart.js";
-import {useEffect} from "react";
-import {useAppDispatch, useAppSelector} from "../../../store/hooks.ts";
+import {useAppSelector} from "../../../store/hooks.ts";
 import {LoadingState} from "../../../interfaces/LoadingState.ts";
-import {
-    fetchUserStats,
-    selectUserStats,
-    selectUserStatsLoading,
-} from "../../../store/userStatsSlice.ts";
+import {selectUserStats, selectUserStatsLoading,} from "../../../store/userStatsSlice.ts";
 import LoadingSpinner from "../../ui/LoadingSpinner.tsx";
+import {useFetchUserStatsOnce} from "../../../hooks/useFetchUserStats.ts";
 
 type UserDiagramsProps = {
     userId: number
@@ -35,13 +31,10 @@ export const MakeChartHeightPlugin = (height: number) => {
 }
 
 const UserDiagrams = (props: UserDiagramsProps) => {
-    const dispatch = useAppDispatch();
     const userStats = useAppSelector<UserStatistics | null>(selectUserStats)
     const userStatsLoaded = useAppSelector<LoadingState>(selectUserStatsLoading)
 
-    useEffect(() => {
-        dispatch(fetchUserStats(props.userId.toString()))
-    }, [dispatch])
+    useFetchUserStatsOnce(props.userId.toString())
 
     function makeOptions(key: string): ChartOptions<'doughnut'> {
         return {
@@ -100,7 +93,7 @@ const UserDiagrams = (props: UserDiagramsProps) => {
     function ensureValueHasData(value: UserStatisticUnit): UserStatisticUnit {
         if (value && typeof value === 'object' && !Array.isArray(value)) {
             if (Object.keys(value).length === 0) {
-                return { Unspecified: 100 };
+                return {Unspecified: 100};
             }
         }
         return value;
@@ -108,37 +101,37 @@ const UserDiagrams = (props: UserDiagramsProps) => {
 
     return (
         <>
-        {
-            userStatsLoaded == LoadingState.Succeeded ?
-                <div className={`p-2 md:p-4 bg-zinc-900 rounded-lg ${props.className}`}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4">
-                        {userStats && Object.entries(userStats).map(([key, value]) => {
-                            const modifiedValue = ensureValueHasData(value);
-                            return getNameFromKey(key) != undefined ? (
-                                <div key={key} className='h-48 md:h-80'>
-                                    <Doughnut
-                                        height="100%"
-                                        width="100%"
-                                        plugins={[MakeChartHeightPlugin(80)]}
-                                        data={{
-                                            labels: Object.keys(modifiedValue).map(item => item === "" ? "Unspecified" : item),
-                                            datasets: [{
-                                                data: Object.values(modifiedValue),
-                                                backgroundColor: ['#003f5c', '#58508d', '#34ab9c', "#ff6361", '#983a73'],
-                                                borderRadius: 0,
-                                                borderWidth: 0,
-                                                label: getNameFromKey(key),
-                                            }],
-                                        }}
-                                        options={makeOptions(key)}
-                                    />
-                                </div>
-                            ) : null;
-                        })}
+            {
+                userStatsLoaded == LoadingState.Succeeded ?
+                    <div className={`p-2 md:p-4 bg-zinc-900 rounded-lg ${props.className}`}>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4">
+                            {userStats && Object.entries(userStats).map(([key, value]) => {
+                                const modifiedValue = ensureValueHasData(value);
+                                return getNameFromKey(key) != undefined ? (
+                                    <div key={key} className='h-48 md:h-80'>
+                                        <Doughnut
+                                            height="100%"
+                                            width="100%"
+                                            plugins={[MakeChartHeightPlugin(80)]}
+                                            data={{
+                                                labels: Object.keys(modifiedValue).map(item => item === "" ? "Unspecified" : item),
+                                                datasets: [{
+                                                    data: Object.values(modifiedValue),
+                                                    backgroundColor: ['#003f5c', '#58508d', '#34ab9c', "#ff6361", '#983a73'],
+                                                    borderRadius: 0,
+                                                    borderWidth: 0,
+                                                    label: getNameFromKey(key),
+                                                }],
+                                            }}
+                                            options={makeOptions(key)}
+                                        />
+                                    </div>
+                                ) : null;
+                            })}
+                        </div>
                     </div>
-                </div>
-                : <LoadingSpinner/>
-        }
+                    : <LoadingSpinner/>
+            }
         </>
     );
 };

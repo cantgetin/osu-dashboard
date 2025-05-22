@@ -1,26 +1,19 @@
 import Tags from "../common/Tags.tsx";
-import {useAppDispatch, useAppSelector} from "../../../store/hooks.ts";
-import {
-    fetchUserStats,
-    selectUserStats,
-    selectUserStatsLoading,
-} from "../../../store/userStatsSlice.ts";
+import {useAppSelector} from "../../../store/hooks.ts";
+import {selectUserStats, selectUserStatsLoading,} from "../../../store/userStatsSlice.ts";
 import {LoadingState} from "../../../interfaces/LoadingState.ts";
-import {useEffect} from "react";
 import LoadingSpinner from "../../ui/LoadingSpinner.tsx";
+import {useFetchUserStatsOnce} from "../../../hooks/useFetchUserStats.ts";
 
 interface UserTagsProps {
     userID: string;
 }
 
 const UserTags = (props: UserTagsProps) => {
-    const dispatch = useAppDispatch();
     const userStats = useAppSelector<UserStatistics | null>(selectUserStats)
     const userStatsLoaded = useAppSelector<LoadingState>(selectUserStatsLoading)
 
-    useEffect(() => {
-        dispatch(fetchUserStats(props.userID.toString()))
-    }, [dispatch])
+    useFetchUserStatsOnce(props.userID.toString())
 
     return (
         <>
