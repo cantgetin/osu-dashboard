@@ -7,8 +7,8 @@ export default defineConfig({
     server: {
         proxy: {
             '/api': {
-                //target: 'https://osudashboard.ru/api',
-                target: 'http://localhost:8080/api',
+                target: 'https://osudashboard.ru/api',
+                //target: 'http://localhost:8080/api',
                 secure: false,
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/api/, ''),

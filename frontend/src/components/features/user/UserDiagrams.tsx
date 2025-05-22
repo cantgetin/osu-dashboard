@@ -97,10 +97,13 @@ const UserDiagrams = (props: UserDiagramsProps) => {
         return nameMap[key];
     }
 
-    function ensureValueHasData(value: UserStatisticUnit) {
-        if (Object.entries(value).length === 0) {
-            value["Unspecified"] = 100;
+    function ensureValueHasData(value: UserStatisticUnit): UserStatisticUnit {
+        if (value && typeof value === 'object' && !Array.isArray(value)) {
+            if (Object.keys(value).length === 0) {
+                return { Unspecified: 100 };
+            }
         }
+        return value;
     }
 
     return (
@@ -110,7 +113,7 @@ const UserDiagrams = (props: UserDiagramsProps) => {
                 <div className={`p-2 md:p-4 bg-zinc-900 rounded-lg ${props.className}`}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4">
                         {userStats && Object.entries(userStats).map(([key, value]) => {
-                            ensureValueHasData(value)
+                            const modifiedValue = ensureValueHasData(value);
                             return getNameFromKey(key) != undefined ? (
                                 <div key={key} className='h-48 md:h-80'>
                                     <Doughnut
@@ -118,9 +121,9 @@ const UserDiagrams = (props: UserDiagramsProps) => {
                                         width="100%"
                                         plugins={[MakeChartHeightPlugin(80)]}
                                         data={{
-                                            labels: Object.keys(value).map(item => item === "" ? "Unspecified" : item),
+                                            labels: Object.keys(modifiedValue).map(item => item === "" ? "Unspecified" : item),
                                             datasets: [{
-                                                data: Object.values(value),
+                                                data: Object.values(modifiedValue),
                                                 backgroundColor: ['#003f5c', '#58508d', '#34ab9c', "#ff6361", '#983a73'],
                                                 borderRadius: 0,
                                                 borderWidth: 0,

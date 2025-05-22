@@ -25,7 +25,7 @@ const UserTags = (props: UserTagsProps) => {
     return (
         <>
             {userStatsLoaded == LoadingState.Succeeded ?
-                <Tags tags={userStats!.combined} colorized={true}/>
+                <Tags tags={userStats!.combined.filter(item => item !== "")} colorized={true}/>
                 : <LoadingSpinner/>
             }
         </>
