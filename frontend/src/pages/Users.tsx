@@ -28,7 +28,6 @@ const Users = () => {
                 <List
                     className="w-full px-2 sm:px-0 sm:w-[1152px] grid grid-cols-1 gap-4"
                     items={users}
-                    title={`Total users: ${users.length}`}
                     renderItem={(user: User) => (
                         <User
                             user={user}
