@@ -25,13 +25,6 @@ const (
 	MapsetComms     MapsetSortField = "last_comments"
 )
 
-type SortDirection string
-
-const (
-	ASC  SortDirection = "ASC"
-	DESC SortDirection = "DESC"
-)
-
 type MapsetSort struct {
 	Field     MapsetSortField
 	Direction SortDirection

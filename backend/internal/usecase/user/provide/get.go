@@ -6,11 +6,8 @@ import (
 	"playcount-monitor-backend/internal/database/txmanager"
 	"playcount-monitor-backend/internal/dto"
 	"playcount-monitor-backend/internal/usecase/mappers"
-	"sort"
 	"strconv"
 )
-
-const statsMaxElements = 7
 
 func (uc *UseCase) Get(
 	ctx context.Context,
@@ -89,46 +86,4 @@ func (uc *UseCase) GetByName(
 
 	mappers.KeepLastNKeyValuesFromStats(userDto.UserStats, statsMaxElements)
 	return userDto, nil
-}
-
-func (uc *UseCase) List(
-	ctx context.Context,
-) ([]*dto.User, error) {
-	var users []*model.User
-	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-		var err error
-		users, err = uc.user.List(ctx, tx)
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
-	if txErr != nil {
-		return nil, txErr
-	}
-
-	outUsers, err := mappers.MapUserModelsToUserDTOs(users)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, user := range outUsers {
-		mappers.KeepLastNKeyValuesFromStats(user.UserStats, statsMaxElements)
-	}
-
-	sort.Slice(outUsers, func(i, j int) bool {
-		var pc1, pc2 int
-		for _, v := range outUsers[i].UserStats {
-			pc1 = v.PlayCount
-			break
-		}
-		for _, v := range outUsers[j].UserStats {
-			pc2 = v.PlayCount
-			break
-		}
-		return pc1 > pc2
-	})
-
-	return outUsers, nil
 }

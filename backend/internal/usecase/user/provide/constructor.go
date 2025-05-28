@@ -15,6 +15,14 @@ type userStore interface {
 	GetByName(ctx context.Context, tx txmanager.Tx, name string) (*model.User, error)
 	List(ctx context.Context, tx txmanager.Tx) ([]*model.User, error)
 	Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error)
+	ListUsersWithFilterSortLimitOffset(
+		ctx context.Context,
+		tx txmanager.Tx,
+		filter model.UserFilter,
+		sort model.UserSort,
+		limit int,
+		offset int,
+	) ([]*model.User, int, error)
 }
 
 type UseCase struct {

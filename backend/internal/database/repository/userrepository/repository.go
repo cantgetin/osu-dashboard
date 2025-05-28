@@ -3,8 +3,10 @@ package userrepository
 import (
 	"context"
 	"fmt"
+	"gorm.io/gorm"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
+	"strings"
 )
 
 const usersTableName = "users"
@@ -67,6 +69,43 @@ func (r *GormRepository) List(ctx context.Context, tx txmanager.Tx) ([]*model.Us
 	return users, nil
 }
 
+func (r *GormRepository) ListUsersWithFilterSortLimitOffset(
+	ctx context.Context,
+	tx txmanager.Tx,
+	filter model.UserFilter,
+	sort model.UserSort,
+	limit int,
+	offset int,
+) ([]*model.User, int, error) {
+	var users []*model.User
+	var count int64
+
+	query, values := buildListByFilterQuery(filter)
+	filterGormExpr := gorm.Expr(query, values...)
+	if query == "" {
+		filterGormExpr = gorm.Expr("1 = 1")
+	}
+
+	order := buildOrderBySortQuery(sort)
+	if len(strings.TrimSpace(order)) == 0 {
+		order = "created_at DESC"
+	}
+
+	err := tx.DB().WithContext(ctx).
+		Table(usersTableName).
+		Order(order).
+		Where(filterGormExpr).
+		Limit(limit).
+		Offset(offset).
+		Find(&users).Error
+
+	if err != nil {
+		return nil, 0, fmt.Errorf("failed to list users: %w", err)
+	}
+
+	return users, int(count), nil
+}
+
 func (r *GormRepository) TotalCount(ctx context.Context, tx txmanager.Tx) (int, error) {
 	var count int64
 	err := tx.DB().WithContext(ctx).Table(usersTableName).Count(&count).Error
@@ -75,4 +114,27 @@ func (r *GormRepository) TotalCount(ctx context.Context, tx txmanager.Tx) (int, 
 	}
 
 	return int(count), nil
+}
+
+func buildListByFilterQuery(filter model.UserFilter) (string, []interface{}) {
+	if len(filter) == 0 {
+		return "", nil
+	}
+
+	for field, value := range filter {
+		switch field {
+		case model.UserNameField:
+			username, ok := value.(string)
+			if !ok {
+				return "", nil
+			}
+			return "username = ?", []interface{}{username}
+		}
+	}
+
+	return "", nil
+}
+
+func buildOrderBySortQuery(sort model.UserSort) string {
+	return fmt.Sprintf("%s %s", string(sort.Field), string(sort.Direction))
 }

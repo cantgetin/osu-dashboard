@@ -3,6 +3,7 @@ package userserviceapi
 import (
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/dto"
+	userprovide "playcount-monitor-backend/internal/usecase/user/provide"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
@@ -56,10 +57,44 @@ func (s *ServiceImpl) GetByName(c echo.Context) error {
 }
 
 func (s *ServiceImpl) List(c echo.Context) error {
-	users, err := s.userProvider.List(c.Request().Context())
+	pageInt, err := getPageQueryParam(c)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	userSort := mapSortQueryParamsToUserSort(
+		c.QueryParam("sort"),
+		c.QueryParam("direction"),
+	)
+
+	userFilter := mapSearchAndFilterQueryParamsToMapsetFilter(
+		c.QueryParam("search"),
+	)
+
+	users, err := s.userProvider.List(c.Request().Context(), &userprovide.ListIn{
+		Page:   pageInt,
+		Sort:   userSort,
+		Filter: userFilter,
+	})
 	if err != nil {
 		return err
 	}
 
 	return c.JSON(200, users)
+}
+
+func getPageQueryParam(c echo.Context) (int, error) {
+	page := c.QueryParam("page")
+	var pageInt int
+	if page == "" {
+		pageInt = 1
+	} else {
+		var err error
+		pageInt, err = strconv.Atoi(page)
+		if err != nil || pageInt <= 0 {
+			return 0, err
+		}
+	}
+
+	return pageInt, nil
 }

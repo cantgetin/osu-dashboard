@@ -13,6 +13,9 @@ run-tracker:
 migrate:
 	sql-migrate up -env="local"
 
+deps:
+	go mod tidy; go mod vendor
+
 build:
 	go build -o bin/main cmd/playcount-monitor/main.go
 
