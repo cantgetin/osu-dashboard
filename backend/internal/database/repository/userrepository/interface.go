@@ -14,4 +14,12 @@ type Interface interface {
 	List(ctx context.Context, tx txmanager.Tx) ([]*model.User, error)
 	Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error)
 	TotalCount(ctx context.Context, tx txmanager.Tx) (int, error)
+	ListUsersWithFilterSortLimitOffset(
+		ctx context.Context,
+		tx txmanager.Tx,
+		filter model.UserFilter,
+		sort model.UserSort,
+		limit int,
+		offset int,
+	) ([]*model.User, int, error)
 }
