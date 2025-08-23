@@ -33,6 +33,7 @@ const UserPage = () => {
                     <User
                         user={user}
                         externalLinkOnClick={() => extLinkOnClick(user.id)}
+                        className="bg-zinc-900"
                     >
                         <div className="flex flex-col gap-2">
                             <MapStatsSummary user={user}/>
@@ -42,7 +43,7 @@ const UserPage = () => {
                     </User>
                     <div className="flex flex-col md:flex-row gap-4">
                         <UserCharts
-                            className="p-4 w-full md:w-1/2"
+                            className="p-4 w-full md:w-1/2 bg-zinc-900"
                             data={mapUserStatsToArray(user.user_stats)}
                         />
                         <UserDiagrams

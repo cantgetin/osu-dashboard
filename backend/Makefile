@@ -17,10 +17,18 @@ deps:
 	go mod tidy; go mod vendor
 
 build:
-	go build -o bin/main cmd/playcount-monitor/main.go
+	go build -o bin/bff cmd/playcount-monitor/main.go
 
 build-tracker:
-	go build -o bin/main cmd/playcount-tracker/main.go
+	go build -o bin/tracker cmd/playcount-tracker/main.go
+
+build-cleaner:
+	go build -o bin/cleaner cmd/db-cleaner/main.go
+
+build-all:
+	go build -o bin/bff cmd/playcount-monitor/main.go
+	go build -o bin/tracker cmd/playcount-tracker/main.go
+	go build -o bin/cleaner cmd/db-cleaner/main.go
 
 test:
 	go test ./... -v -cover

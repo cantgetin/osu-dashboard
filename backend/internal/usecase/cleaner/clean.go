@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"playcount-monitor-backend/internal/database/repository"
+	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
 	"sort"
 	"time"
@@ -74,6 +75,23 @@ func (uc *UseCase) Clean(ctx context.Context) error {
 	})
 	if txErr != nil {
 		return txErr
+	}
+
+	if err := uc.log.Create(ctx, &model.Log{
+		Name:               "Daily data clean for all users",
+		Message:            model.LogMessageDailyClean,
+		Service:            "db-cleaner",
+		AppVersion:         "v1.0",
+		Platform:           "Backend",
+		Type:               model.TrackTypeRegular,
+		APIRequests:        0,
+		SuccessRatePercent: 100,
+		TrackedAt:          time.Now().UTC(),
+		AvgResponseTime:    0,
+		ElapsedTime:        0,
+		TimeSinceLastTrack: 0,
+	}); err != nil {
+		return fmt.Errorf("failed to create log: %v", err)
 	}
 
 	return nil

@@ -4,30 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
-	"playcount-monitor-backend/internal/bootstrap"
+	"net/url"
 	"strconv"
+	"strings"
 )
-
-type MapsetStatusAPIOption string
-
-const (
-	Graveyard MapsetStatusAPIOption = "graveyard"
-	Loved     MapsetStatusAPIOption = "loved"
-	Pending   MapsetStatusAPIOption = "pending"
-	Ranked    MapsetStatusAPIOption = "ranked"
-
-	// Nominated we don't use this cause it shows maps that user nominated (from others) which breaks mapset FK
-	Nominated MapsetStatusAPIOption = "nominated"
-)
-
-func (s *Service) GetOutgoingRequestCount() int {
-	return s.httpClient.Transport.(*bootstrap.CounterTransport).RequestCount()
-}
-
-func (s *Service) ResetOutgoingRequestCount() {
-	s.httpClient.Transport.(*bootstrap.CounterTransport).ResetCount()
-}
 
 func (s *Service) GetUserWithMapsets(ctx context.Context, userID string) (*User, []*MapsetExtended, error) {
 	user, err := s.GetUser(ctx, userID)
@@ -99,9 +81,10 @@ func (s *Service) GetMapsetCommentsCount(ctx context.Context, mapsetID string) (
 		return 0, err
 	}
 
+	fetchURL := s.cfg.OsuAPIHost + "/comments?commentable_type=beatmapset&commentable_id=" + mapsetID + "&sort=new"
+
 	// https://osu.ppy.sh/api/v2/comments
-	req, err := http.NewRequest("GET",
-		s.cfg.OsuAPIHost+"/comments?commentable_type=beatmapset&commentable_id="+mapsetID+"&sort=new", nil)
+	req, err := http.NewRequest("GET", fetchURL, nil)
 	if err != nil {
 		return 0, fmt.Errorf("failed to create http request: %w", err)
 	}
@@ -202,7 +185,8 @@ func (s *Service) fetchBeatmapsets(
 	headers map[string]string,
 	beatmapsets []*Mapset,
 ) ([]*Mapset, error) {
-	req, err := http.NewRequest("GET", s.cfg.OsuAPIHost+"/users/"+userID+"/beatmapsets/"+mapsetType+"?limit=100&offset="+strconv.Itoa(offset), nil)
+	fetchURL := s.cfg.OsuAPIHost + "/users/" + userID + "/beatmapsets/" + mapsetType + "?limit=100&offset=" + strconv.Itoa(offset)
+	req, err := http.NewRequest("GET", fetchURL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create http request for user %s and beatmap type %s: %w", userID, mapsetType, err)
 	}
@@ -232,4 +216,68 @@ func (s *Service) fetchBeatmapsets(
 	}
 
 	return beatmapsets, nil
+}
+
+// ExchangeCodeForToken using this method instead of tokenprovider cause it exchanges user code for token
+func (s *Service) ExchangeCodeForToken(code string) (*TokenResponse, error) {
+	data := url.Values{}
+	data.Set("client_id", s.cfg.OsuAPIClientID)
+	data.Set("client_secret", s.cfg.OsuAPIClientSecret)
+	data.Set("code", code)
+	data.Set("grant_type", "authorization_code")
+	data.Set("redirect_uri", s.cfg.OsuAPIRedirectURI)
+
+	req, err := http.NewRequest("POST", "https://osu.ppy.sh/oauth/token", strings.NewReader(data.Encode()))
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Accept", "application/json")
+
+	resp, err := s.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to make http request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		return nil, fmt.Errorf("oauth server returned %d: %s", resp.StatusCode, body)
+	}
+
+	var token TokenResponse
+	if err = json.NewDecoder(resp.Body).Decode(&token); err != nil {
+		return nil, err
+	}
+
+	return &token, nil
+}
+
+func (s *Service) GetUserInfoByHisToken(accessToken string) (*UserResponse, error) {
+	req, err := http.NewRequest("GET", "https://osu.ppy.sh/api/v2/me", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+	req.Header.Set("Accept", "application/json")
+
+	resp, err := s.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to make http request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		return nil, fmt.Errorf("api server returned %d: %s", resp.StatusCode, body)
+	}
+
+	var user UserResponse
+	if err = json.NewDecoder(resp.Body).Decode(&user); err != nil {
+		return nil, err
+	}
+
+	return &user, nil
 }

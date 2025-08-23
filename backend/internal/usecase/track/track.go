@@ -11,9 +11,10 @@ import (
 	"time"
 )
 
-func (uc *UseCase) Track(
+func (uc *UseCase) TrackAllFollowings(
 	ctx context.Context,
 	lg *log.Logger,
+	timeSinceLast time.Duration,
 ) error {
 	startTime := time.Now()
 
@@ -42,14 +43,39 @@ func (uc *UseCase) Track(
 		}
 	}
 
-	elapsed := time.Since(startTime)
-	reqs := uc.osuApi.GetOutgoingRequestCount()
-	avgReqsPerMin := float64(reqs) / elapsed.Minutes()
+	defer uc.osuApi.ResetStats()
+
+	var (
+		elapsed       = time.Since(startTime)
+		reqs          = uc.osuApi.GetOutgoingRequestCount()
+		respTime      = uc.osuApi.AverageResponseTime()
+		avgReqsPerMin = float64(reqs) / elapsed.Minutes()
+		successRate   = uc.osuApi.SuccessRate()
+	)
 
 	lg.Infof("Sent %v requests to api in %v minutes", reqs, elapsed.Minutes())
 	lg.Infof("Average requests per minute: %f", avgReqsPerMin)
 
-	uc.osuApi.ResetOutgoingRequestCount()
+	if err := uc.CreateTrackRecord(ctx); err != nil {
+		return fmt.Errorf("failed to create track record: %v", err)
+	}
+
+	if err := uc.log.Create(ctx, &model.Log{
+		Name:               "Daily tracking for all users",
+		Message:            model.LogMessageDailyTrack,
+		Service:            "playcount-tracker",
+		AppVersion:         "v1.0",
+		Platform:           "Backend",
+		Type:               model.TrackTypeRegular,
+		APIRequests:        reqs,
+		SuccessRatePercent: successRate,
+		TrackedAt:          time.Now().UTC(),
+		AvgResponseTime:    respTime,
+		ElapsedTime:        elapsed,
+		TimeSinceLastTrack: timeSinceLast,
+	}); err != nil {
+		return fmt.Errorf("failed to create log: %v", err)
+	}
 
 	return nil
 }
@@ -136,13 +162,13 @@ func (uc *UseCase) createOrUpdateData(
 
 		if userExists {
 			// update
-			err := uc.updateUserCard(ctx, tx, user, userMapsets)
+			err = uc.updateUserCard(ctx, tx, user, userMapsets)
 			if err != nil {
 				return fmt.Errorf("failed to update user card, user id: %v, err: %w", user.ID, err)
 			}
 		} else {
 			// create
-			err := uc.createUserCard(ctx, tx, user, userMapsets)
+			err = uc.createUserCard(ctx, tx, user, userMapsets)
 			if err != nil {
 				return fmt.Errorf("failed to create user card, user id: %v, err: %w", user.ID, err)
 			}

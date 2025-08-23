@@ -8,36 +8,6 @@ import (
 	"playcount-monitor-backend/internal/database/txmanager"
 )
 
-func New(
-	cfg *config.Config,
-	lg *log.Logger,
-	txm txmanager.TxManager,
-	user userStore,
-	mapset mapsetStore,
-	beatmap beatmapStore,
-	clean cleanStore,
-) *UseCase {
-	return &UseCase{
-		cfg:     cfg,
-		lg:      lg,
-		txm:     txm,
-		user:    user,
-		mapset:  mapset,
-		beatmap: beatmap,
-		clean:   clean,
-	}
-}
-
-type UseCase struct {
-	cfg     *config.Config
-	lg      *log.Logger
-	txm     txmanager.TxManager
-	user    userStore
-	mapset  mapsetStore
-	beatmap beatmapStore
-	clean   cleanStore
-}
-
 type userStore interface {
 	List(ctx context.Context, tx txmanager.Tx) ([]*model.User, error)
 	Update(ctx context.Context, tx txmanager.Tx, user *model.User) error
@@ -54,4 +24,41 @@ type beatmapStore interface {
 type cleanStore interface {
 	Create(ctx context.Context, tx txmanager.Tx, clean *model.Clean) error
 	GetLastClean(ctx context.Context, tx txmanager.Tx) (*model.Clean, error)
+}
+
+type logSource interface {
+	Create(ctx context.Context, log *model.Log) error
+}
+
+func New(
+	cfg *config.Config,
+	lg *log.Logger,
+	txm txmanager.TxManager,
+	user userStore,
+	mapset mapsetStore,
+	beatmap beatmapStore,
+	log logSource,
+	clean cleanStore,
+) *UseCase {
+	return &UseCase{
+		cfg:     cfg,
+		lg:      lg,
+		txm:     txm,
+		log:     log,
+		user:    user,
+		mapset:  mapset,
+		beatmap: beatmap,
+		clean:   clean,
+	}
+}
+
+type UseCase struct {
+	cfg     *config.Config
+	lg      *log.Logger
+	txm     txmanager.TxManager
+	user    userStore
+	mapset  mapsetStore
+	beatmap beatmapStore
+	clean   cleanStore
+	log     logSource
 }

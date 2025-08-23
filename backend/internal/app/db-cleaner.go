@@ -9,9 +9,11 @@ import (
 	"playcount-monitor-backend/internal/config"
 	"playcount-monitor-backend/internal/database/repository/beatmaprepository"
 	"playcount-monitor-backend/internal/database/repository/cleanrepository"
+	"playcount-monitor-backend/internal/database/repository/logrepository"
 	"playcount-monitor-backend/internal/database/repository/mapsetrepository"
 	"playcount-monitor-backend/internal/database/repository/userrepository"
 	"playcount-monitor-backend/internal/usecase/cleaner"
+	logcreate "playcount-monitor-backend/internal/usecase/log/create"
 	"time"
 )
 
@@ -41,9 +43,11 @@ func RunDBCleaner(
 	mapsetRepo := mapsetrepository.New(cfg, lg)
 	beatmapRepo := beatmaprepository.New(cfg, lg)
 	cleanerRepo := cleanrepository.New(cfg, lg)
+	logRepo := logrepository.New(cfg, lg)
+	logUC := logcreate.New(txm, logRepo)
 
 	// init usecase
-	cleanerUc := cleaner.New(cfg, lg, txm, userRepo, mapsetRepo, beatmapRepo, cleanerRepo)
+	cleanerUc := cleaner.New(cfg, lg, txm, userRepo, mapsetRepo, beatmapRepo, logUC, cleanerRepo)
 
 	c := dbcleaner.New(cfg, lg, cleanerUc)
 

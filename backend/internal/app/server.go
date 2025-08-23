@@ -8,6 +8,7 @@ import (
 	"playcount-monitor-backend/internal/config"
 	"playcount-monitor-backend/internal/database/repository/beatmaprepository"
 	"playcount-monitor-backend/internal/database/repository/followingrepository"
+	"playcount-monitor-backend/internal/database/repository/logrepository"
 	"playcount-monitor-backend/internal/database/repository/mapsetrepository"
 	"playcount-monitor-backend/internal/database/repository/trackrepository"
 	"playcount-monitor-backend/internal/database/repository/userrepository"
@@ -41,6 +42,7 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 	beatmapRepo := beatmaprepository.New(cfg, lg)
 	followingRepo := followingrepository.New(cfg, lg)
 	trackRepo := trackrepository.New(cfg, lg)
+	logRepo := logrepository.New(cfg, lg)
 
 	// init api
 	httpClient := netHttp.Client{}
@@ -54,6 +56,7 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 		MapsetRepo:    mapsetRepo,
 		FollowingRepo: followingRepo,
 		TrackRepo:     trackRepo,
+		LogRepo:       logRepo,
 	})
 	if err != nil {
 		return err

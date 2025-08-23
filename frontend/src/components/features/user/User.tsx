@@ -8,11 +8,12 @@ interface UserProps {
     children: React.ReactNode[]
     nameOnClick?: Function
     externalLinkOnClick: Function
+    className?: string
 }
 
 const User = (props: UserProps) => {
     return (
-        <div className="md:w-full flex bg-zinc-900 rounded-lg overflow-hidden max-h-64">
+        <div className={`md:w-full flex rounded-lg overflow-hidden max-h-64 ${props.className}`}>
             <img
                 src={props.user.avatar_url}
                 className="w-16 h-16 md:w-64 md:h-64"

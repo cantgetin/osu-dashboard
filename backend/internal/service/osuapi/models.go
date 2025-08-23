@@ -2,6 +2,18 @@ package osuapi
 
 import "time"
 
+type MapsetStatusAPIOption string
+
+const (
+	Graveyard MapsetStatusAPIOption = "graveyard"
+	Loved     MapsetStatusAPIOption = "loved"
+	Pending   MapsetStatusAPIOption = "pending"
+	Ranked    MapsetStatusAPIOption = "ranked"
+
+	// Nominated we don't use this cause it shows maps that user nominated (from others) which breaks mapset FK
+	Nominated MapsetStatusAPIOption = "nominated"
+)
+
 type Comments struct {
 	Total int `json:"total"`
 }
@@ -64,4 +76,16 @@ type MapsetExtended struct {
 	Genre         string `json:"genre"`
 	Language      string `json:"language"`
 	*Mapset
+}
+
+type UserResponse struct {
+	ID       int    `json:"id"`
+	Username string `json:"username"`
+}
+
+type TokenResponse struct {
+	AccessToken  string `json:"access_token"`
+	TokenType    string `json:"token_type"`
+	ExpiresIn    int    `json:"expires_in"`
+	RefreshToken string `json:"refresh_token"`
 }

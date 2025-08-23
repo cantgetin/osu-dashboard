@@ -27,9 +27,7 @@ func getMapsetByID(entities []*model.Mapset, id int) *model.Mapset {
 	return nil
 }
 
-func (uc *UseCase) GetLastTimeTracked(
-	ctx context.Context,
-) (*time.Time, error) {
+func (uc *UseCase) GetLastTimeTracked(ctx context.Context) (*time.Time, error) {
 	t := time.Time{}
 	if err := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		track, err := uc.track.GetLastTrack(ctx, tx)
@@ -47,9 +45,7 @@ func (uc *UseCase) GetLastTimeTracked(
 	return &t, nil
 }
 
-func (uc *UseCase) CreateTrackRecord(
-	ctx context.Context,
-) error {
+func (uc *UseCase) CreateTrackRecord(ctx context.Context) error {
 	track := &model.Track{
 		TrackedAt: time.Now().UTC(),
 	}

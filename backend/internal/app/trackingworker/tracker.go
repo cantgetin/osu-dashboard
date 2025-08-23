@@ -17,9 +17,9 @@ func (w *Worker) Start(ctx context.Context) func() error {
 		}
 	}
 
-	hoursSinceLastFetch := time.Since(*lastTimeTracked).Hours()
-	if hoursSinceLastFetch <= 24 {
-		waitDuration := time.Duration(24-hoursSinceLastFetch) * time.Hour
+	timeSinceLastFetch := time.Since(*lastTimeTracked)
+	if timeSinceLastFetch.Hours() <= 24 {
+		waitDuration := time.Duration(24-timeSinceLastFetch.Hours()) * time.Hour
 		w.lg.Errorf("persisted last time tracked:, waiting %v until next fetch", waitDuration)
 		time.Sleep(waitDuration)
 	} else {
@@ -34,14 +34,9 @@ func (w *Worker) Start(ctx context.Context) func() error {
 				loopCtx, cancel := context.WithTimeout(ctx, w.cfg.TrackingTimeout)
 				defer cancel()
 
-				if err := w.tracker.Track(loopCtx, w.lg); err != nil {
+				if err = w.tracker.TrackAllFollowings(loopCtx, w.lg, timeSinceLastFetch); err != nil {
 					w.lg.Errorf("encountered error while tracking: %v", err)
 					return
-				}
-
-				err = w.tracker.CreateTrackRecord(ctx)
-				if err != nil {
-					w.lg.Errorf("failed to create track record: %v", err)
 				}
 
 				w.lg.Infof("tracked successfully")

@@ -43,26 +43,32 @@ type trackStore interface {
 	List(ctx context.Context, tx txmanager.Tx) ([]*model.Track, error)
 }
 
+type LogSource interface {
+	Create(ctx context.Context, log *model.Log) error
+}
+
 type UseCase struct {
 	cfg       *config.Config
 	txm       txmanager.TxManager
-	osuApi    osuapi.Interface
+	osuApi    *osuapi.Service
 	user      userStore
 	mapset    mapsetStore
 	beatmap   beatmapStore
 	following followingStore
 	track     trackStore
+	log       LogSource
 }
 
 func New(
 	cfg *config.Config,
 	txManager txmanager.TxManager,
-	osuAPI osuapi.Interface,
+	osuAPI *osuapi.Service,
 	user userStore,
 	mapset mapsetStore,
 	beatmap beatmapStore,
 	following followingStore,
 	track trackStore,
+	log LogSource,
 ) *UseCase {
 	return &UseCase{
 		cfg:       cfg,
@@ -73,5 +79,6 @@ func New(
 		beatmap:   beatmap,
 		following: following,
 		track:     track,
+		log:       log,
 	}
 }

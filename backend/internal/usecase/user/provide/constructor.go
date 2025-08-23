@@ -30,7 +30,7 @@ type UseCase struct {
 	lg     *log.Logger
 	txm    txmanager.TxManager
 	user   userStore
-	osuApi osuapi.Interface
+	osuApi *osuapi.Service
 }
 
 func New(
@@ -38,7 +38,7 @@ func New(
 	lg *log.Logger,
 	txm txmanager.TxManager,
 	user userStore,
-	osuApi osuapi.Interface,
+	osuApi *osuapi.Service,
 ) *UseCase {
 	return &UseCase{
 		cfg:    cfg,

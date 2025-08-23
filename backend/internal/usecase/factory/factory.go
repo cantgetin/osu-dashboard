@@ -5,6 +5,7 @@ import (
 	"playcount-monitor-backend/internal/config"
 	"playcount-monitor-backend/internal/database/repository/beatmaprepository"
 	"playcount-monitor-backend/internal/database/repository/followingrepository"
+	"playcount-monitor-backend/internal/database/repository/logrepository"
 	"playcount-monitor-backend/internal/database/repository/mapsetrepository"
 	"playcount-monitor-backend/internal/database/repository/trackrepository"
 	"playcount-monitor-backend/internal/database/repository/userrepository"
@@ -12,6 +13,7 @@ import (
 	"playcount-monitor-backend/internal/service/osuapi"
 	followingcreate "playcount-monitor-backend/internal/usecase/following/create"
 	followingprovide "playcount-monitor-backend/internal/usecase/following/provide"
+	logcreate "playcount-monitor-backend/internal/usecase/log/create"
 	mapsetcreate "playcount-monitor-backend/internal/usecase/mapset/create"
 	mapsetprovide "playcount-monitor-backend/internal/usecase/mapset/provide"
 	statisticprovide "playcount-monitor-backend/internal/usecase/statistic/provide"
@@ -28,7 +30,7 @@ type UseCaseFactory struct {
 	lg        *log.Logger
 	cfg       *config.Config
 	txManager txmanager.TxManager
-	osuApi    osuapi.Interface
+	osuApi    *osuapi.Service
 	repos     *Repositories
 }
 
@@ -38,13 +40,14 @@ type Repositories struct {
 	MapsetRepo    mapsetrepository.Interface
 	FollowingRepo followingrepository.Interface
 	TrackRepo     trackrepository.Interface
+	LogRepo       logrepository.Interface
 }
 
 func New(
 	cfg *config.Config,
 	lg *log.Logger,
 	txManager txmanager.TxManager,
-	osuApi osuapi.Interface,
+	osuApi *osuapi.Service,
 	repos *Repositories,
 ) (*UseCaseFactory, error) {
 	return &UseCaseFactory{
@@ -137,22 +140,34 @@ func (f *UseCaseFactory) MakeUpdateUserCardUseCase() *usercardupdate.UseCase {
 	)
 }
 
+func (f *UseCaseFactory) MakeCreateLogUseCase() *logcreate.UseCase {
+	return logcreate.New(f.txManager, f.repos.LogRepo)
+}
+
+func (f *UseCaseFactory) MakeTrackUseCase() *track.UseCase {
+	return track.New(
+		f.cfg,
+		f.txManager,
+		f.osuApi,
+		f.repos.UserRepo,
+		f.repos.MapsetRepo,
+		f.repos.BeatmapRepo,
+		f.repos.FollowingRepo,
+		f.repos.TrackRepo,
+		f.MakeCreateLogUseCase(),
+	)
+}
+
 func (f *UseCaseFactory) MakeCreateFollowingUseCase() *followingcreate.UseCase {
 	return followingcreate.New(
 		f.cfg,
 		f.lg,
 		f.txManager,
 		f.repos.FollowingRepo,
-		track.New(
-			f.cfg,
-			f.txManager,
-			f.osuApi,
-			f.repos.UserRepo,
-			f.repos.MapsetRepo,
-			f.repos.BeatmapRepo,
-			f.repos.FollowingRepo,
-			f.repos.TrackRepo,
-		))
+		f.MakeTrackUseCase(),
+		f.MakeCreateLogUseCase(),
+		f.osuApi,
+	)
 }
 
 func (f *UseCaseFactory) MakeProvideFollowingUseCase() *followingprovide.UseCase {
