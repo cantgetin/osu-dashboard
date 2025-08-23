@@ -1,4 +1,4 @@
-import { convertDateFormat } from "../../../utils/utils";
+import { convertDateFormat } from "../../../utils/time.ts";
 
 interface MapsetMetadataProps {
     status: string;

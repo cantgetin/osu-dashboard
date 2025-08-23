@@ -62,16 +62,7 @@ type ListIn struct {
 	Filter model.UserFilter
 }
 
-type ListOut struct {
-	Users       []*dto.User
-	CurrentPage int
-	Pages       int
-}
-
-func (uc *UseCase) List(
-	ctx context.Context,
-	cmd *ListIn,
-) (*ListOut, error) {
+func (uc *UseCase) List(ctx context.Context, cmd *ListIn) (*dto.UsersPaged, error) {
 	var users []*model.User
 	var count int
 
@@ -104,9 +95,9 @@ func (uc *UseCase) List(
 		mappers.KeepLastNKeyValuesFromStats(user.UserStats, statsMaxElements)
 	}
 
-	return &ListOut{
+	return &dto.UsersPaged{
 		Users:       outUsers,
 		CurrentPage: cmd.Page,
-		Pages:       (count / usersPerPage) + 1,
+		Pages:       (count + usersPerPage - 1) / usersPerPage,
 	}, nil
 }

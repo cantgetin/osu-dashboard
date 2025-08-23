@@ -1,6 +1,7 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import {RootState} from './store';
 import {LoadingState} from '../interfaces/LoadingState';
+import {buildQueryParams} from "../utils/utils.ts";
 
 export interface MapsetsState {
     mapsets: Mapset[] | null
@@ -29,26 +30,7 @@ export interface fetchMapsetsProps {
 export const fetchMapsets = createAsyncThunk(
     'Mapsets/fetch',
     async (cmd: fetchMapsetsProps): Promise<{ mapsets: Mapset[], pages: number, currentPage: number }> => {
-        let queryParams = '?';
-
-        if (cmd.search != null) {
-            queryParams += `&search=${cmd.search}`;
-        }
-        if (cmd.status != null) {
-            queryParams += `&status=${cmd.status}`;
-        }
-        if (cmd.sort != null) {
-            queryParams += `&sort=${cmd.sort}`;
-        }
-        if (cmd.direction != null) {
-            queryParams += `&direction=${cmd.direction}`;
-        }
-        if (cmd.page != null) {
-            queryParams += `&page=${cmd.page}`;
-        }
-        if (queryParams === '?') {
-            queryParams = '';
-        }
+        const queryParams = buildQueryParams(cmd)
 
         if (cmd.forUser) {
             const response = await fetch(`/api/beatmapset/list_for_user/${cmd.userId}${queryParams}`);
@@ -89,6 +71,7 @@ const mapsetsSlice = createSlice({
     },
 })
 
+// eslint-disable-next-line no-empty-pattern
 export const {} = mapsetsSlice.actions
 
 export const selectMapsetsState = (state: RootState) => state.mapsetsSlice

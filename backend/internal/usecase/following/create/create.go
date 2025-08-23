@@ -81,7 +81,7 @@ func (uc *UseCase) trackAndCreateRecord(ctx context.Context, following *model.Fo
 		SuccessRatePercent: stats.SuccessRate,
 		AvgResponseTime:    stats.AvgResponseTime,
 	}); err != nil {
-		return fmt.Errorf("failed to create extended track record %v", err)
+		return fmt.Errorf("failed to create log: %v", err)
 	}
 
 	return nil

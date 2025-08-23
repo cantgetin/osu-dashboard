@@ -6,7 +6,7 @@ func mapSortQueryParamsToUserSort(fieldParam string, directionParam string) mode
 	var res model.UserSort
 
 	if fieldParam != "" && directionParam != "" {
-		var field model.UserSortField
+		var field model.UserMapStatsSortFields
 		var direction model.SortDirection
 
 		switch fieldParam {

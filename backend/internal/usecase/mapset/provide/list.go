@@ -74,7 +74,7 @@ func (uc *UseCase) List(
 	return &ListResponse{
 		Mapsets:     dtoMapsets,
 		CurrentPage: cmd.Page,
-		Pages:       (count / mapsetsPerPage) + 1,
+		Pages:       (count + mapsetsPerPage - 1) / mapsetsPerPage,
 	}, nil
 }
 
@@ -144,6 +144,6 @@ func (uc *UseCase) ListForUser(
 	return &ListResponse{
 		Mapsets:     dtoMapsets,
 		CurrentPage: cmd.Page,
-		Pages:       (count / mapsetsPerPage) + 1,
+		Pages:       (count + mapsetsPerPage - 1) / mapsetsPerPage,
 	}, nil
 }

@@ -1,6 +1,6 @@
 
 import {useEffect, useState} from "react";
-import {convertDataToDayMonth} from "../../../utils/utils.ts";
+import {convertDataToDayMonth} from "../../../utils/time.ts";
 import LineChart, {generateOptions} from "../stats/LineChart.tsx";
 
 interface LineChartProps {

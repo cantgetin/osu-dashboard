@@ -39,6 +39,7 @@ const userSlice = createSlice({
     },
 })
 
+// eslint-disable-next-line no-empty-pattern
 export const {} = userSlice.actions
 
 export const selectUser = (state: RootState) => state.userSlice.user as User

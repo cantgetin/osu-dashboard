@@ -31,12 +31,10 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 				name: "1 user, 2 mapsets with 1 beatmap each",
 				create: &models{
 					User: &model.User{
-						ID:                       1,
-						AvatarURL:                "avatarurl.com",
-						Username:                 "username",
-						UnrankedBeatmapsetCount:  1,
-						GraveyardBeatmapsetCount: 1,
-						UserStats:                repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favourite_count":2, "map_count":1}}`),
+						ID:        1,
+						AvatarURL: "avatarurl.com",
+						Username:  "username",
+						UserStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favourite_count":2, "map_count":1}}`),
 					},
 					Mapsets: []*model.Mapset{
 						{

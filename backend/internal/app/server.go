@@ -21,7 +21,6 @@ import (
 
 	"github.com/ds248a/closer"
 	log "github.com/sirupsen/logrus"
-	netHttp "net/http"
 )
 
 func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
@@ -45,7 +44,7 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 	logRepo := logrepository.New(cfg, lg)
 
 	// init api
-	httpClient := netHttp.Client{}
+	httpClient := bootstrap.NewHTTPClient()
 	osuTokenProvider := osuapitokenprovider.New(cfg, &httpClient)
 	osuAPI := osuapi.New(cfg, osuTokenProvider, &httpClient)
 

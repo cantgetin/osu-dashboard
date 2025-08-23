@@ -28,11 +28,9 @@ func (s *IntegrationSuite) Test_CreateUseCard() {
 				name: "valid request, should properly create",
 				in: &command.CreateUserCardCommand{
 					User: &command.CreateUserCommand{
-						ID:                       1,
-						AvatarURL:                "avatarurl.com",
-						Username:                 "username",
-						UnrankedBeatmapsetCount:  1,
-						GraveyardBeatmapsetCount: 1,
+						ID:        1,
+						AvatarURL: "avatarurl.com",
+						Username:  "username",
 					},
 					Mapsets: []*command.CreateMapsetCommand{
 						{
@@ -141,14 +139,12 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 				name: "valid request, should properly update",
 				create: &models{
 					User: &model.User{
-						ID:                       123,
-						Username:                 "username1",
-						AvatarURL:                "avararurl.com",
-						GraveyardBeatmapsetCount: 1,
-						UnrankedBeatmapsetCount:  1,
-						UserStats:                repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":52,"favourite_count":2, "map_count":3}}`),
-						CreatedAt:                time.Now().UTC(),
-						UpdatedAt:                time.Now().UTC(),
+						ID:        123,
+						Username:  "username1",
+						AvatarURL: "avararurl.com",
+						UserStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":52,"favourite_count":2, "map_count":3}}`),
+						CreatedAt: time.Now().UTC(),
+						UpdatedAt: time.Now().UTC(),
 					},
 					Mapsets: []*model.Mapset{
 						{
@@ -209,11 +205,9 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 				},
 				in: &command.UpdateUserCardCommand{
 					User: &command.UpdateUserCommand{
-						ID:                       123,
-						AvatarURL:                "avatarurlchanged.com",
-						Username:                 "username1changed",
-						UnrankedBeatmapsetCount:  2, // assume user now have 2 mapsets
-						GraveyardBeatmapsetCount: 2,
+						ID:        123,
+						AvatarURL: "avatarurlchanged.com",
+						Username:  "username1changed",
 					},
 					Mapsets: []*command.UpdateMapsetCommand{
 						{
@@ -329,11 +323,9 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 				outCode: 200,
 				result: &models{
 					User: &model.User{
-						ID:                       123,
-						Username:                 "username1changed",
-						AvatarURL:                "avatarurlchanged.com",
-						GraveyardBeatmapsetCount: 2,
-						UnrankedBeatmapsetCount:  2,
+						ID:        123,
+						Username:  "username1changed",
+						AvatarURL: "avatarurlchanged.com",
 					},
 					Mapsets: []*model.Mapset{
 						{
@@ -467,8 +459,6 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 				s.Assert().Equal(expectedUser.ID, actualUser.ID)
 				s.Assert().Equal(expectedUser.AvatarURL, actualUser.AvatarURL)
 				s.Assert().Equal(expectedUser.Username, actualUser.Username)
-				s.Assert().Equal(expectedUser.UnrankedBeatmapsetCount, actualUser.UnrankedBeatmapsetCount)
-				s.Assert().Equal(expectedUser.GraveyardBeatmapsetCount, actualUser.GraveyardBeatmapsetCount)
 				s.Assert().Positive(actualUser.CreatedAt.Unix()) // todo
 				s.Assert().Positive(actualUser.UpdatedAt.Unix()) // todo
 
@@ -587,12 +577,10 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 				name: "valid request, should properly provide",
 				create: &models{
 					User: &model.User{
-						ID:                       1,
-						AvatarURL:                "avatarurl.com",
-						Username:                 "username",
-						UnrankedBeatmapsetCount:  1,
-						GraveyardBeatmapsetCount: 1,
-						UserStats:                repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favourite_count":2, "map_count":1}}`),
+						ID:        1,
+						AvatarURL: "avatarurl.com",
+						Username:  "username",
+						UserStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favourite_count":2, "map_count":1}}`),
 					},
 					Mapsets: []*model.Mapset{
 						{

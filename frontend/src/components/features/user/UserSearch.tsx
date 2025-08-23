@@ -48,11 +48,15 @@ const UserSearch = (props: UserSearchProps) => {
                     value={sort}
                     onChange={(e) => setSort(e.target.value)}
                 >
-                    <option value="">default</option>
-                    <option value="last_playcount desc">more playcount</option>
-                    <option value="last_playcount asc">less playcount</option>
-                    <option value="created_at asc">oldest</option>
-                    <option value="created_at desc">newest</option>
+                    <option value="playcount desc">more plays</option>
+                    <option value="playcount asc">less plays</option>
+                    <option value="map_count desc">more maps</option>
+                    <option value="map_count asc">less maps</option>
+                    {/*uncomment when it works*/}
+                    {/*<option value="favourites desc">more favourites</option>*/}
+                    {/*<option value="favourites asdc">less favourites</option>*/}
+                    {/*<option value="comments desc">more comments</option>*/}
+                    {/*<option value="comments asc">less comments</option>*/}
                 </select>
             </div>
         </div>

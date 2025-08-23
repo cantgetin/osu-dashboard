@@ -8,7 +8,6 @@ import (
 
 type LogSource interface {
 	Create(ctx context.Context, tx txmanager.Tx, track *model.Log) error
-	List(ctx context.Context, tx txmanager.Tx) ([]*model.Log, error)
 }
 
 type UseCase struct {

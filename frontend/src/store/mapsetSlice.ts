@@ -39,6 +39,7 @@ const mapsetSlice = createSlice({
     },
 })
 
+// eslint-disable-next-line no-empty-pattern
 export const {} = mapsetSlice.actions
 
 export const selectMapsetState = (state: RootState) => state.mapsetSlice

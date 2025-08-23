@@ -39,6 +39,7 @@ const userStatsSlice = createSlice({
     },
 })
 
+// eslint-disable-next-line no-empty-pattern
 export const {} = userStatsSlice.actions
 
 export const selectUserStats = (state: RootState) => state.userStatsSlice.stats

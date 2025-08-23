@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	log "github.com/sirupsen/logrus"
 	"playcount-monitor-backend/internal/app/followingserviceapi"
+	"playcount-monitor-backend/internal/app/logserviceapi"
 	"playcount-monitor-backend/internal/app/mapsetserviceapi"
 	"playcount-monitor-backend/internal/app/pingserviceapi"
 	"playcount-monitor-backend/internal/app/statisticserviceapi"
@@ -26,6 +27,7 @@ type Server struct {
 	following *followingserviceapi.ServiceImpl
 	mapset    *mapsetserviceapi.ServiceImpl
 	statistic *statisticserviceapi.ServiceImpl
+	logs      *logserviceapi.ServiceImpl
 }
 
 func New(
@@ -69,6 +71,11 @@ func New(
 		f.MakeProvideStatisticUseCase(),
 	)
 
+	logs := logserviceapi.New(
+		lg,
+		f.MakeProvideLogsUseCase(),
+	)
+
 	return &Server{
 		cfg:       cfg,
 		server:    server,
@@ -79,6 +86,7 @@ func New(
 		following: following,
 		mapset:    mapset,
 		statistic: statistic,
+		logs:      logs,
 	}, nil
 }
 

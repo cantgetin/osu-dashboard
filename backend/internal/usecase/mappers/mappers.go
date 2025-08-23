@@ -44,15 +44,13 @@ func MapCreateUserCardCommandToUserModel(cmd *command.CreateUserCardCommand) (*m
 	}
 
 	return &model.User{
-		ID:                       cmd.User.ID,
-		Username:                 cmd.User.Username,
-		AvatarURL:                cmd.User.AvatarURL,
-		GraveyardBeatmapsetCount: cmd.User.GraveyardBeatmapsetCount,
-		UnrankedBeatmapsetCount:  cmd.User.UnrankedBeatmapsetCount,
-		UserStats:                stats,
-		MapCounts:                counts,
-		UpdatedAt:                time.Now().UTC(),
-		CreatedAt:                time.Now().UTC(),
+		ID:        cmd.User.ID,
+		Username:  cmd.User.Username,
+		AvatarURL: cmd.User.AvatarURL,
+		UserStats: stats,
+		MapCounts: counts,
+		UpdatedAt: time.Now().UTC(),
+		CreatedAt: time.Now().UTC(),
 	}, nil
 }
 
@@ -86,15 +84,13 @@ func MapUpdateUserCardCommandToUserModel(cmd *command.UpdateUserCardCommand) (*m
 	}
 
 	return &model.User{
-		ID:                       cmd.User.ID,
-		Username:                 cmd.User.Username,
-		AvatarURL:                cmd.User.AvatarURL,
-		GraveyardBeatmapsetCount: cmd.User.GraveyardBeatmapsetCount,
-		UnrankedBeatmapsetCount:  cmd.User.UnrankedBeatmapsetCount,
-		UserStats:                stats,
-		MapCounts:                counts,
-		CreatedAt:                time.Time{},
-		UpdatedAt:                time.Now().UTC(),
+		ID:        cmd.User.ID,
+		Username:  cmd.User.Username,
+		AvatarURL: cmd.User.AvatarURL,
+		UserStats: stats,
+		MapCounts: counts,
+		CreatedAt: time.Time{},
+		UpdatedAt: time.Now().UTC(),
 	}, nil
 }
 

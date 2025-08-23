@@ -39,11 +39,9 @@ func addSampleData(ctx context.Context, cfg *config.Config) error {
 	}
 
 	user := &model.User{
-		ID:                       7192129,
-		Username:                 "Gasha",
-		AvatarURL:                "https://a.ppy.sh/7192129?1602378137.jpeg",
-		GraveyardBeatmapsetCount: 1,
-		UnrankedBeatmapsetCount:  1,
+		ID:        7192129,
+		Username:  "Gasha",
+		AvatarURL: "https://a.ppy.sh/7192129?1602378137.jpeg",
 		UserStats: repository.JSON(`
 {"2023-12-24T12:00:00Z":{"play_count":11000,"favourite_count":2, "map_count":3}, 
 "2023-12-25T12:00:00Z":{"play_count":11090,"favourite_count":3, "map_count":4},

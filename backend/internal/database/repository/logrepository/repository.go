@@ -3,46 +3,54 @@ package logrepository
 import (
 	"context"
 	"fmt"
-	log "github.com/sirupsen/logrus"
-	"playcount-monitor-backend/internal/config"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
 )
 
-type GormRepository struct {
-	lg  *log.Logger
-	cfg *config.Config
-}
+const logTableName = "log"
 
-func New(cfg *config.Config, lg *log.Logger) *GormRepository {
-	return &GormRepository{
-		lg:  lg,
-		cfg: cfg,
-	}
-}
-
-type Interface interface {
-	Create(ctx context.Context, tx txmanager.Tx, track *model.Log) error
-	List(ctx context.Context, tx txmanager.Tx) ([]*model.Log, error)
-}
-
-const trackExtendedTableName = "track_extended"
-
-func (r *GormRepository) Create(ctx context.Context, tx txmanager.Tx, track *model.Log) error {
-	track.ID = 0
-	err := tx.DB().WithContext(ctx).Table(trackExtendedTableName).Create(track).Error
+func (r *GormRepository) Create(ctx context.Context, tx txmanager.Tx, log *model.Log) error {
+	log.ID = 0
+	err := tx.DB().WithContext(ctx).Table(logTableName).Create(log).Error
 	if err != nil {
-		return fmt.Errorf("failed to create extended track: %w", err)
+		return fmt.Errorf("failed to create log: %w", err)
 	}
 	return nil
 }
 
 func (r *GormRepository) List(ctx context.Context, tx txmanager.Tx) ([]*model.Log, error) {
-	var tracks []*model.Log
-	err := tx.DB().WithContext(ctx).Table(trackExtendedTableName).Find(&tracks).Error
+	var logs []*model.Log
+	err := tx.DB().WithContext(ctx).Table(logTableName).Find(&logs).Error
 	if err != nil {
-		return nil, fmt.Errorf("failed to list extended tracks: %w", err)
+		return nil, fmt.Errorf("failed to list logs: %w", err)
 	}
 
-	return tracks, nil
+	return logs, nil
+}
+
+func (r *GormRepository) ListLogsWithLimitOffset(
+	ctx context.Context,
+	tx txmanager.Tx,
+	limit,
+	offset int,
+) (logs []*model.Log, count int, err error) {
+	var cnt int64
+
+	err = tx.DB().WithContext(ctx).
+		Table(logTableName).
+		Count(&cnt).Error
+	if err != nil {
+		return nil, 0, fmt.Errorf("failed to count logs: %w", err)
+	}
+
+	err = tx.DB().WithContext(ctx).
+		Table(logTableName).
+		Limit(limit).
+		Offset(offset).
+		Find(&logs).Error
+	if err != nil {
+		return nil, 0, fmt.Errorf("failed to list logs: %w", err)
+	}
+
+	return logs, int(cnt), nil
 }

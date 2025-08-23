@@ -14,6 +14,7 @@ import (
 	followingcreate "playcount-monitor-backend/internal/usecase/following/create"
 	followingprovide "playcount-monitor-backend/internal/usecase/following/provide"
 	logcreate "playcount-monitor-backend/internal/usecase/log/create"
+	logprovide "playcount-monitor-backend/internal/usecase/log/provide"
 	mapsetcreate "playcount-monitor-backend/internal/usecase/mapset/create"
 	mapsetprovide "playcount-monitor-backend/internal/usecase/mapset/provide"
 	statisticprovide "playcount-monitor-backend/internal/usecase/statistic/provide"
@@ -188,5 +189,12 @@ func (f *UseCaseFactory) MakeProvideStatisticUseCase() *statisticprovide.UseCase
 		f.repos.MapsetRepo,
 		f.repos.UserRepo,
 		f.repos.TrackRepo,
+	)
+}
+
+func (f *UseCaseFactory) MakeProvideLogsUseCase() *logprovide.UseCase {
+	return logprovide.New(
+		f.txManager,
+		f.repos.LogRepo,
 	)
 }

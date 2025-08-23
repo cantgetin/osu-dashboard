@@ -3,29 +3,6 @@ import axios from "axios";
 const CLIENT_ID = import.meta.env.VITE_OSU_API_CLIENT_ID
 const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI
 
-export function convertDateFormat(inputDate: string): string {
-    const dateObj = new Date(inputDate);
-
-    // Extracting date components
-    const day = String(dateObj.getUTCDate()).padStart(2, '0');
-    const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0');
-    const year = String(dateObj.getUTCFullYear());
-
-    // Creating the formatted date string
-    return `${day}.${month}.${year}`;
-}
-
-export function convertDataToDayMonth(inputDate: string): string {
-    const dateObj = new Date(inputDate);
-
-    // Extracting date components
-    const day = String(dateObj.getUTCDate()).padStart(2, '0');
-    const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0');
-
-    // Creating the formatted date string
-    return `${day}.${month}`;
-}
-
 export function mapUserStatsToArray(userStats: UserStats): UserStatsDataset[] {
     return Object.keys(userStats).map((timestamp) => ({
         timestamp: timestamp,
@@ -38,35 +15,6 @@ export function mapMapsetStatsToArray(mapsetStats: MapsetStats): MapsetStatsData
         timestamp: timestamp,
         ...mapsetStats[timestamp],
     }));
-}
-
-export function extractUserMapsCountFromStats(userStats: UserStats): number {
-    const arr = mapUserStatsToArray(userStats);
-    if (arr.length === 0) {
-        return 0
-    }
-
-    const lastElement = arr[arr.length - 1];
-    return lastElement.map_count;
-}
-
-export function getRemainingPendingTime(expirationTimeStr: string): string {
-    const expirationTime = new Date(expirationTimeStr);
-    const expirationTime28DaysLater = new Date(expirationTime.getTime() + (28 * 24 * 60 * 60 * 1000));
-    const currentTime = new Date();
-    const timeDifference = expirationTime28DaysLater.getTime() - currentTime.getTime();
-
-    if (timeDifference <= 0) {
-        return "pending";
-    }
-
-    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-
-    const result = `pending for ${days}d ${hours}h ${minutes}m`;
-
-    return result;
 }
 
 function generateRandomString() {
@@ -96,6 +44,21 @@ export function redirectToAuthorize() {
     window.location.href = url.toString();
 }
 
+export function buildQueryParams(cmd: any): string {
+    const params = new URLSearchParams();
+
+    const validParams = ['search', 'status', 'sort', 'direction', 'page'];
+
+    validParams.forEach(param => {
+        if (cmd[param] != null && cmd[param] !== '') {
+            params.append(param, cmd[param]);
+        }
+    });
+
+    const queryString = params.toString();
+    return queryString ? `?${queryString}` : '';
+}
+
 export async function handleOsuSiteRedirect(state: string, code: string) {
     console.log(`redirect state: ${state} local state: ${localStorage.getItem('state')}, all good`)
     if (state == localStorage.getItem('state')) {
@@ -105,3 +68,8 @@ export async function handleOsuSiteRedirect(state: string, code: string) {
         await axios.post(`/api/following/create/${code}`);
     }
 }
+
+export const formatNanosToMilliseconds = (nanoseconds: number): string => {
+    const milliseconds = nanoseconds / 1e6;
+    return `${milliseconds.toFixed(2)}ms`;
+};

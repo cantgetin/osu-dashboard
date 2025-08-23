@@ -1,8 +1,8 @@
 up:
 	docker-compose up -d --no-deps --build
 
-up-no-tracker:
-	docker-compose up --scale pmb-worker=0 -d --no-deps --build
+up-bff:
+	docker compose up --build pmb-service pmb-db pmb-adminer -d
 
 run:
 	go run cmd/playcount-monitor/main.go || exit 1

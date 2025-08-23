@@ -39,6 +39,7 @@ const systemStatsSlice = createSlice({
     },
 })
 
+// eslint-disable-next-line no-empty-pattern
 export const {} = systemStatsSlice.actions
 
 export const selectSystemStatsState = (state: RootState) => state.systemStatsSlice

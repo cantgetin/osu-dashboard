@@ -6,7 +6,7 @@ import Users from "./pages/Users.tsx";
 import Beatmapsets from "./pages/Beatmapsets.tsx";
 import Authorize from "./pages/Authorize.tsx";
 import NotFound from "./pages/NotFound.tsx";
-import Tracks from "./pages/Tracks.tsx";
+import Logs from "./pages/Logs.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -42,8 +42,8 @@ export const router = createBrowserRouter([
                 element: <Authorize/>,
             },
             {
-                path: "/tracks",
-                element: <Tracks/>,
+                path: "/logs",
+                element: <Logs/>,
             },
             {
                 path: "*",

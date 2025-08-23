@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { RootState } from './store';
-import { LoadingState } from '../interfaces/LoadingState';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
+import {RootState} from './store';
+import {LoadingState} from '../interfaces/LoadingState';
 
 interface UserCardState {
     userCard: UserCard | null
@@ -21,7 +21,7 @@ interface fetchUserCardCmd {
 
 export const fetchUserCard = createAsyncThunk(
     'userCard/fetch',
-    async (cmd : fetchUserCardCmd): Promise<{userCard: UserCard, page: number}> => {
+    async (cmd: fetchUserCardCmd): Promise<{ userCard: UserCard, page: number }> => {
         const response = await fetch(`/api/user_card/${cmd.userId}?page=${cmd.page}`);
         const userData = await response.json();
         return {userCard: userData, page: cmd.page}
@@ -31,9 +31,7 @@ export const fetchUserCard = createAsyncThunk(
 const userCardSlice = createSlice({
     name: 'UserCard',
     initialState,
-    reducers: {
-
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder.addCase(fetchUserCard.fulfilled, (state, action) => {
             state.userCard = action.payload.userCard
@@ -49,7 +47,8 @@ const userCardSlice = createSlice({
     },
 })
 
-export const { } = userCardSlice.actions
+// eslint-disable-next-line no-empty-pattern
+export const {} = userCardSlice.actions
 
 export const selectUserCard = (state: RootState) => state.userCardSlice.userCard as UserCard
 export const selectUserCardLoadingState = (state: RootState) => state.userCardSlice.loading as LoadingState

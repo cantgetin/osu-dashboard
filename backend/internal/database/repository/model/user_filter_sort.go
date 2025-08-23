@@ -12,16 +12,16 @@ type UserFilter map[UserFilterField]interface{}
 
 // sort
 
-type UserSortField string
+type UserMapStatsSortFields string
 
 const (
-	UserPlaycount UserSortField = "playcount"
-	UserMapCount  UserSortField = "map_count"
-	UserFavs      UserSortField = "favourites"
-	UserComms     UserSortField = "comments"
+	UserPlaycount UserMapStatsSortFields = "play_count"
+	UserMapCount  UserMapStatsSortFields = "map_count"
+	UserFavs      UserMapStatsSortFields = "comments_count"
+	UserComms     UserMapStatsSortFields = "favourite_count"
 )
 
 type UserSort struct {
-	Field     UserSortField
+	Field     UserMapStatsSortFields
 	Direction SortDirection
 }

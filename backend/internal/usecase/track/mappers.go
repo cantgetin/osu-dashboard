@@ -9,11 +9,9 @@ import (
 
 func mapOsuApiUserToCreateUserCommand(user *osuapi.User) *command.CreateUserCommand {
 	return &command.CreateUserCommand{
-		ID:                       user.ID,
-		Username:                 user.Username,
-		AvatarURL:                user.AvatarURL,
-		UnrankedBeatmapsetCount:  user.UnrankedBeatmapsetCount,
-		GraveyardBeatmapsetCount: user.GraveyardBeatmapsetCount,
+		ID:        user.ID,
+		Username:  user.Username,
+		AvatarURL: user.AvatarURL,
 	}
 }
 
@@ -71,11 +69,9 @@ func mapOsuApiBeatmapsToCreateBeatmapCommands(beatmaps []*osuapi.Beatmap) []*com
 
 func mapOsuApiUserToUpdateUserCommand(user *osuapi.User) *command.UpdateUserCommand {
 	return &command.UpdateUserCommand{
-		ID:                       user.ID,
-		Username:                 user.Username,
-		AvatarURL:                user.AvatarURL,
-		UnrankedBeatmapsetCount:  user.UnrankedBeatmapsetCount,
-		GraveyardBeatmapsetCount: user.GraveyardBeatmapsetCount,
+		ID:        user.ID,
+		Username:  user.Username,
+		AvatarURL: user.AvatarURL,
 	}
 }
 

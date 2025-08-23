@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import aveta from "aveta";
 import StatsDifference from "../stats/StatsDifference.tsx";
-import {getRemainingPendingTime} from "../../../utils/utils.ts";
+import {getRemainingPendingTime} from "../../../utils/time.ts";
 import {FaFileExcel} from "react-icons/fa";
 
 interface MapCardProps {

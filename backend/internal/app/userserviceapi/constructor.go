@@ -15,7 +15,7 @@ type userCreator interface {
 type userProvider interface {
 	Get(ctx context.Context, id int) (*dto.User, error)
 	GetByName(ctx context.Context, name string) (*dto.User, error)
-	List(ctx context.Context, cmd *userprovide.ListIn) (*userprovide.ListOut, error)
+	List(ctx context.Context, cmd *userprovide.ListIn) (*dto.UsersPaged, error)
 }
 
 type userUpdater interface {

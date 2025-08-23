@@ -10,6 +10,7 @@ const Header = () => {
                     <HeaderLink to="/">Home</HeaderLink>
                     <HeaderLink to="/users">Users</HeaderLink>
                     <HeaderLink to="/beatmapsets">Beatmaps</HeaderLink>
+                    <HeaderLink to="/logs">Logs</HeaderLink>
                 </div>
                 {/* TODO: Uncomment when search is ready */}
                 {/*<SearchBar className="my-2 rounded-md w-24 sm:w-40 md:w-64 px-3 sm:px-5 h-8"*/}

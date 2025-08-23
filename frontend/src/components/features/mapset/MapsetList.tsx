@@ -7,6 +7,7 @@ import MapsetSearch from "./MapsetSearch.tsx";
 import List from "../../logic/List.tsx";
 import Pagination from "../../ui/Pagination.tsx";
 import LoadingSpinner from "../../ui/LoadingSpinner.tsx";
+import Container from "../../ui/Container.tsx";
 
 interface MapsetListProps extends fetchMapsetsProps {
     showMapper?: boolean;
@@ -35,7 +36,7 @@ const MapsetList = ({showMapper, ...mapsetProps}: MapsetListProps) => {
     }
 
     return (
-        <div className="flex flex-col gap-3 md:gap-5 bg-zinc-900 p-2 md:p-4 rounded-lg w-full">
+        <Container>
             <MapsetSearch update={onSearch}/>
             {
                 mapsetsState.loading == LoadingState.Succeeded ?
@@ -59,7 +60,7 @@ const MapsetList = ({showMapper, ...mapsetProps}: MapsetListProps) => {
                     </>
                     : <LoadingSpinner/>
             }
-        </div>
+        </Container>
     );
 };
 

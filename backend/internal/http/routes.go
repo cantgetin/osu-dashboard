@@ -7,6 +7,8 @@ func (s *Server) setupRoutes() {
 	s.server.GET("api/user/list", s.user.List)
 	s.server.GET("api/user/statistic/:id", s.statistic.GetUserMapStatistics)
 
+	s.server.GET("api/log/list", s.logs.List)
+
 	s.server.GET("api/following/list", s.following.List)
 	s.server.POST("api/following/create/:code", s.following.Create)
 

@@ -86,19 +86,26 @@ func (r *GormRepository) ListUsersWithFilterSortLimitOffset(
 		filterGormExpr = gorm.Expr("1 = 1")
 	}
 
+	err := tx.DB().WithContext(ctx).
+		Table(usersTableName).
+		Where(filterGormExpr).
+		Count(&count).Error
+	if err != nil {
+		return nil, 0, fmt.Errorf("failed to count users: %w", err)
+	}
+
 	order := buildOrderBySortQuery(sort)
 	if len(strings.TrimSpace(order)) == 0 {
 		order = "created_at DESC"
 	}
 
-	err := tx.DB().WithContext(ctx).
+	err = tx.DB().WithContext(ctx).
 		Table(usersTableName).
 		Order(order).
 		Where(filterGormExpr).
 		Limit(limit).
 		Offset(offset).
 		Find(&users).Error
-
 	if err != nil {
 		return nil, 0, fmt.Errorf("failed to list users: %w", err)
 	}
@@ -128,7 +135,10 @@ func buildListByFilterQuery(filter model.UserFilter) (string, []interface{}) {
 			if !ok {
 				return "", nil
 			}
-			return "username = ?", []interface{}{username}
+			return "username ILIKE ?", []interface{}{"%" + username + "%"}
+
+		default:
+			return "", nil
 		}
 	}
 
@@ -136,5 +146,10 @@ func buildListByFilterQuery(filter model.UserFilter) (string, []interface{}) {
 }
 
 func buildOrderBySortQuery(sort model.UserSort) string {
-	return fmt.Sprintf("%s %s", string(sort.Field), string(sort.Direction))
+	// thats evil stuff but idc since users table is tiny, wont affect query performance much
+	return fmt.Sprintf(
+		"(user_stats->(SELECT MAX(k) FROM jsonb_object_keys(user_stats) AS k)->>'%s')::INT %s",
+		string(sort.Field),
+		string(sort.Direction),
+	)
 }
