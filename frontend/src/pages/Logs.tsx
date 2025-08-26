@@ -57,22 +57,34 @@ const Logs = ({...props}: fetchLogsProps) => {
                                                 </div>
                                             )}
 
+
                                             <div className="flex flex-wrap gap-4 text-sm">
-                                                <div className="flex items-center gap-1">
-                                                    <ClockIcon className="w-4 h-4 text-blue-400"/>
-                                                    <span className="text-zinc-300">Duration:</span>
-                                                    <span className="font-medium text-white">
+                                                {log.elapsed_time != undefined ?
+                                                    (
+                                                        <div className="flex items-center gap-1">
+                                                            <ClockIcon className="w-4 h-4 text-blue-400"/>
+                                                            <span className="text-zinc-300">Duration:</span>
+                                                            <span className="font-medium text-white">
                                                         {formatDuration(log.elapsed_time!)}
                                                     </span>
-                                                </div>
+                                                        </div>
+                                                    )
+                                                    : <></>
+                                                }
 
-                                                <div className="flex items-center gap-1">
-                                                    <ServerIcon className="w-4 h-4 text-purple-400"/>
-                                                    <span className="text-zinc-300">API Requests:</span>
-                                                    <span className="font-medium text-white">
-                                                        {log.api_requests!.toLocaleString()}
-                                                    </span>
-                                                </div>
+                                                {log.api_requests != undefined ?
+                                                    (
+                                                        <div className="flex items-center gap-1">
+                                                            <ServerIcon className="w-4 h-4 text-purple-400"/>
+                                                            <span className="text-zinc-300">API Requests:</span>
+                                                            <span className="font-medium text-white">
+                                                            {log.api_requests?.toLocaleString()}
+                                                                </span>
+                                                        </div>
+                                                    )
+                                                    : <></>
+                                                }
+
 
                                                 <div className="flex items-center gap-1">
                                                     <CalendarIcon className="w-4 h-4 text-green-400"/>
@@ -104,24 +116,29 @@ const Logs = ({...props}: fetchLogsProps) => {
                                         <div className="w-full sm:w-[300px] sm:min-w-[300px] flex flex-col gap-2">
                                             <div className="flex justify-between text-sm">
                                                 <span className="text-zinc-400">Success Rate:</span>
-                                                <span className="font-medium text-white">
-                                                    {log.success_rate_percent}%
+                                                <span
+                                                    className="font-medium text-white">{log.success_rate_percent}%
                                                 </span>
                                             </div>
                                             <ProgressBar value={log.success_rate_percent!} max={100} className="h-2"/>
 
-                                            <div className="flex justify-between text-sm mt-2">
-                                                <span className="text-zinc-400">Avg. Response Time:</span>
-                                                <span className="font-medium text-white">
+                                            {log.api_requests != undefined ?
+                                                (
+                                                    <>
+                                                        <div className="flex justify-between text-sm mt-2">
+                                                            <span className="text-zinc-400">Avg. Response Time:</span>
+                                                            <span className="font-medium text-white">
                                                     {formatNanosToMilliseconds(log.avg_response_time!)}
                                                 </span>
-                                            </div>
-                                            <ProgressBar
-                                                value={log.avg_response_time! / 1e6} // Convert ns to ms for progress bar
-                                                max={1000}
-                                                className="h-2"
-                                                colorClass="bg-yellow-500"
-                                            />
+                                                        </div>
+                                                        <ProgressBar
+                                                            value={log.avg_response_time! / 1e6} // Convert ns to ms for progress bar
+                                                            max={1000}
+                                                            className="h-2"
+                                                            colorClass="bg-yellow-500"
+                                                        />
+                                                    </>
+                                                ) : <></>}
                                         </div>
                                     </div>
                                 )}
@@ -134,11 +151,13 @@ const Logs = ({...props}: fetchLogsProps) => {
                                 className="flex gap-1 md:gap-2 justify-end text-sm md:text-md"
                             />
                         </>
-                        : <LoadingSpinner/>
+                        :
+                        <LoadingSpinner/>
                 }
             </Container>
         </Layout>
-    );
+    )
+        ;
 };
 
 export default Logs;
