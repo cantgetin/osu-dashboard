@@ -1,4 +1,4 @@
-FROM golang:alpine
+FROM golang:1.23-alpine
 
 COPY . /go/src/app
 
