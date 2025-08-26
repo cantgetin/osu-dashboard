@@ -13,6 +13,9 @@ services:
       - OSU_API_CLIENT_SECRET=${OSU_API_CLIENT_SECRET}
       - OSU_API_REDIRECT_URI=${OSU_API_REDIRECT_URI}
       - GOPROXY=https://goproxy.io,direct
+      - GOSUMDB=off
+      - GOPRIVATE=
+      - GOTIMEOUT=300
     build:
       context: "./"
       dockerfile: Dockerfile.app
@@ -31,6 +34,9 @@ services:
       - OSU_API_CLIENT_SECRET=${OSU_API_CLIENT_SECRET}
       - OSU_API_REDIRECT_URI=${OSU_API_REDIRECT_URI}
       - GOPROXY=https://goproxy.io,direct
+      - GOSUMDB=off
+      - GOPRIVATE=
+      - GOTIMEOUT=300
     build:
       context: "./"
       dockerfile: Dockerfile.worker
@@ -44,6 +50,9 @@ services:
   pmb-cleaner:
     environment:
       - GOPROXY=https://goproxy.io,direct
+      - GOSUMDB=off
+      - GOPRIVATE=
+      - GOTIMEOUT=300
     build:
       context: "./"
       dockerfile: Dockerfile.cleaner
