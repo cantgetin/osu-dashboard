@@ -30,7 +30,7 @@ services:
       - OSU_API_CLIENT_ID=${OSU_API_CLIENT_ID}
       - OSU_API_CLIENT_SECRET=${OSU_API_CLIENT_SECRET}
       - OSU_API_REDIRECT_URI=${OSU_API_REDIRECT_URI}
-      - GOPROXY=https://proxy.golang.org
+      - GOPROXY=https://goproxy.io,direct
     build:
       context: "./"
       dockerfile: Dockerfile.worker
@@ -43,7 +43,7 @@ services:
 
   pmb-cleaner:
     environment:
-      - GOPROXY=https://proxy.golang.org
+      - GOPROXY=https://goproxy.io,direct
     build:
       context: "./"
       dockerfile: Dockerfile.cleaner
