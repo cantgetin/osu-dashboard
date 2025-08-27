@@ -14,6 +14,8 @@ import (
 const jsonbStatsMaxElements = 14
 
 func (uc *UseCase) Clean(ctx context.Context) error {
+	started := time.Now()
+
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		// get users, trim and update
 		users, err := uc.user.List(ctx, tx)
@@ -88,7 +90,7 @@ func (uc *UseCase) Clean(ctx context.Context) error {
 		SuccessRatePercent: 100,
 		TrackedAt:          time.Now().UTC(),
 		AvgResponseTime:    0,
-		ElapsedTime:        0,
+		ElapsedTime:        time.Since(started),
 		TimeSinceLastTrack: 0,
 	}); err != nil {
 		return fmt.Errorf("failed to create log: %v", err)

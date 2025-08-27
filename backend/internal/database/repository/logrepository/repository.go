@@ -45,6 +45,7 @@ func (r *GormRepository) ListLogsWithLimitOffset(
 
 	err = tx.DB().WithContext(ctx).
 		Table(logTableName).
+		Order("tracked_at desc").
 		Limit(limit).
 		Offset(offset).
 		Find(&logs).Error

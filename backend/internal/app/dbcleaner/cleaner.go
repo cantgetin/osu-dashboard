@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-const cleanEveryNHours = 14 * 24 * time.Hour
+const cleanEveryNHours = 24 * time.Hour
 
 func (w *Worker) Start(ctx context.Context) func() error {
 	finished := make(chan struct{}, 1)

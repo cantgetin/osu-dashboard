@@ -93,16 +93,6 @@ const Logs = ({...props}: fetchLogsProps) => {
                                                         {formatDate(log.tracked_at!)}
                                                     </span>
                                                 </div>
-
-                                                {log.time_since_last_track && (
-                                                    <div className="flex items-center gap-1">
-                                                        <ClockIcon className="w-4 h-4 text-blue-400"/>
-                                                        <span className="text-zinc-300">Since last track:</span>
-                                                        <span className="font-medium text-white">
-                                                            {formatDuration(log.time_since_last_track)}
-                                                        </span>
-                                                    </div>
-                                                )}
                                             </div>
 
                                             <div className="mt-2 flex flex-wrap gap-3">

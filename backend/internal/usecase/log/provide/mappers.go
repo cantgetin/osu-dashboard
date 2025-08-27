@@ -5,8 +5,8 @@ import (
 	"playcount-monitor-backend/internal/dto"
 )
 
-func mapLogModelsToLogsDTOs(models []*model.Log) []*dto.Log {
-	res := make([]*dto.Log, 0, len(models))
+func mapLogModelsToLogsDTOs(models []*model.Log) []dto.Log {
+	res := make([]dto.Log, 0, len(models))
 
 	for _, l := range models {
 		if l != nil {
@@ -16,8 +16,8 @@ func mapLogModelsToLogsDTOs(models []*model.Log) []*dto.Log {
 	return res
 }
 
-func mapLogModelToLogDTO(model *model.Log) *dto.Log {
-	return &dto.Log{
+func mapLogModelToLogDTO(model *model.Log) dto.Log {
+	return dto.Log{
 		ID:                 model.ID,
 		Name:               model.Name,
 		Message:            string(model.Message),
