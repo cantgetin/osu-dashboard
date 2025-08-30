@@ -24,7 +24,9 @@ const MapsetHero = ({beatmapset, children, background}: MapsetHeroProps) => (
                 artist={beatmapset.artist}
                 id={beatmapset.id}
             />
-            <Tags tags={beatmapset.tags}/>
+            <div className="flex gap-1 flex-wrap-reverse">
+                <Tags tags={beatmapset.tags}/>
+            </div>
             <MapsetMeta
                 status={beatmapset.status}
                 creator={beatmapset.creator}

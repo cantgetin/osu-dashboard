@@ -1,9 +1,8 @@
 import Tags from "../common/Tags.tsx";
-import {useAppSelector} from "../../../store/hooks.ts";
-import {selectUserStats, selectUserStatsLoading,} from "../../../store/userStatsSlice.ts";
-import {LoadingState} from "../../../interfaces/LoadingState.ts";
-import LoadingSpinner from "../../ui/LoadingSpinner.tsx";
-import {useFetchUserStatsOnce} from "../../../hooks/useFetchUserStats.ts";
+import {useAppSelector} from "@/store/hooks.ts";
+import {selectUserStats, selectUserStatsLoading,} from "@/store/userStatsSlice.ts";
+import {LoadingState} from "@/interfaces/LoadingState.ts";
+import {useFetchUserStatsOnce} from "@/hooks/useFetchUserStats.ts";
 
 interface UserTagsProps {
     userID: string;
@@ -19,7 +18,7 @@ const UserTags = (props: UserTagsProps) => {
         <>
             {userStatsLoaded == LoadingState.Succeeded ?
                 <Tags tags={userStats!.combined.filter(item => item !== "")} colorized={true}/>
-                : <LoadingSpinner/>
+                :   <Tags tags={["lol","tag1"]} colorized={true}/>
             }
         </>
     );

@@ -30,7 +30,7 @@ const Tags = ({ tags, colorized = false }: MapsetTagsProps) => {
         : tags.split(/[\s,]+/).filter(tag => tag.trim() !== '');
 
     return (
-        <div className="flex gap-1 flex-wrap max-w-[600px]">
+        <>
             {normalizedTags.map((tag, index) => (
                 <div
                     key={index}
@@ -48,7 +48,7 @@ const Tags = ({ tags, colorized = false }: MapsetTagsProps) => {
                     {tag}
                 </div>
             ))}
-        </div>
+        </>
     );
 };
 

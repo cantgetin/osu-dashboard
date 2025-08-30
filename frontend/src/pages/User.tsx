@@ -13,6 +13,7 @@ import UserCharts from "../components/features/user/UserCharts.tsx";
 import UserDiagrams from "../components/features/user/UserDiagrams.tsx";
 import MapsetList from "../components/features/mapset/MapsetList.tsx";
 import UserTags from "../components/features/user/UserTags.tsx";
+import {useFetchUserStatsOnce} from "@/hooks/useFetchUserStats.ts";
 
 const UserPage = () => {
     const {userId} = useParams();
@@ -23,6 +24,8 @@ const UserPage = () => {
     useEffect(() => {
         dispatch(fetchUser(Number(userId)))
     }, [dispatch, userId])
+
+    useFetchUserStatsOnce(userId!)
 
     const extLinkOnClick = (userId: number) => window.open(`https://osu.ppy.sh/users/${userId}`)
 
@@ -35,9 +38,9 @@ const UserPage = () => {
                         externalLinkOnClick={() => extLinkOnClick(user.id)}
                         className="bg-zinc-900"
                     >
-                        <div className="flex flex-col gap-2">
-                            <MapStatsSummary user={user}/>
+                        <div className="flex gap-1.5 flex-wrap-reverse">
                             <UserTags userID={userId!}/>
+                            <MapStatsSummary user={user}/>
                         </div>
                         <UserStatsSummary data={mapUserStatsToArray(user.user_stats)}/>
                     </User>

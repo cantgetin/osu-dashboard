@@ -1,5 +1,5 @@
 import Layout from "../components/ui/Layout.tsx";
-import Button from "../components/ui/Button.tsx";
+import MyButton from "../components/ui/MyButton.tsx";
 import { useNavigate } from "react-router-dom";
 
 const NotFound = () => {
@@ -12,9 +12,9 @@ const NotFound = () => {
                 <h1 className="text-5xl text-gray-400 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]">
                     The page you requested could not be found.
                 </h1>
-                <Button onClick={() => navigate("/")}
-                        className="text-xl rounded-md px-6 py-3 my-6 bg-green-800 hover:bg-green-900"
-                        content="Home"
+                <MyButton onClick={() => navigate("/")}
+                          className="text-xl rounded-md px-6 py-3 my-6 bg-green-800 hover:bg-green-900"
+                          content="Home"
                 />
             </div>
         </Layout>

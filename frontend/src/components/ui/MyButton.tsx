@@ -5,7 +5,7 @@ interface ButtonProps {
     content: React.ReactNode;
 }
 
-const Button = (props: ButtonProps) => {
+const MyButton = (props: ButtonProps) => {
     return (
         <button
             key={props.keyNumber}
@@ -17,4 +17,4 @@ const Button = (props: ButtonProps) => {
     );
 };
 
-export default Button;
+export default MyButton;

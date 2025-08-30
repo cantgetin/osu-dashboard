@@ -1,5 +1,5 @@
 import List from "../logic/List.tsx";
-import Button from "./Button.tsx";
+import MyButton from "./MyButton.tsx";
 
 interface PaginationProps {
     className?: string;
@@ -42,14 +42,14 @@ const Pagination = (props: PaginationProps) => {
               title="Page:"
               items={buttons}
               renderItem={(num) =>
-                  <Button keyNumber={num}
-                          key={num}
-                          onClick={(key: number) => {
+                  <MyButton keyNumber={num}
+                            key={num}
+                            onClick={(key: number) => {
                               props.onPageChange(key)
                           }}
-                          className={"rounded-md w-12 " + (num === props.currentPage ? "bg-white text-black"
+                            className={"rounded-md w-12 " + (num === props.currentPage ? "bg-white text-black"
                               : "bg-zinc-800")}
-                          content={num.toString()}
+                            content={num.toString()}
                   />
               }
         />

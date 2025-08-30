@@ -1,4 +1,4 @@
-import Button from "../../ui/Button.tsx";
+import MyButton from "../../ui/MyButton.tsx";
 import Summarized from "../../../images/summarized.png"
 import {useNavigate} from "react-router-dom";
 
@@ -15,13 +15,13 @@ const HeroSection = () => {
                     See all your map statistics in dynamic, track your daily map plays, favourites, comments
                 </h1>
                 <div className="flex flex-col md:flex-row gap-3 md:gap-10">
-                    <Button onClick={() => navigate('/authorize')}
-                            className="text-lg md:text-xl rounded-md p-3 md:p-4 bg-green-800 w-full md:w-1/4 hover:bg-green-900"
-                            content="Start for free"
+                    <MyButton onClick={() => navigate('/authorize')}
+                              className="text-lg md:text-xl rounded-md p-3 md:p-4 bg-green-800 w-full md:w-1/4 hover:bg-green-900"
+                              content="Start for free"
                     />
-                    <Button onClick={() => window.location.href = '#features'}
-                            className="text-lg md:text-xl rounded-md p-3 md:p-4 bg-zinc-700 w-full md:w-1/4 hover:bg-zinc-800"
-                            content="Learn more"
+                    <MyButton onClick={() => window.location.href = '#features'}
+                              className="text-lg md:text-xl rounded-md p-3 md:p-4 bg-zinc-700 w-full md:w-1/4 hover:bg-zinc-800"
+                              content="Learn more"
                     />
                 </div>
             </div>

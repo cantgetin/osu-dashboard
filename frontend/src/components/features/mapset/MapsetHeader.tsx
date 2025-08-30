@@ -1,4 +1,4 @@
-import Button from "../../ui/Button.tsx";
+import MyButton from "../../ui/MyButton.tsx";
 import {FaExternalLinkAlt} from "react-icons/fa";
 
 interface MapsetHeaderProps {
@@ -14,7 +14,7 @@ const MapsetHeader = ({ title, artist, id }: MapsetHeaderProps) => {
         <div>
             <div className="flex gap-4 items-center">
                 <h1 className="text-2xl md:text-5xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]">{title}</h1>
-                <Button
+                <MyButton
                     onClick={externalLinkOnClick}
                     className="bg-zinc-800 rounded-md p-1 h-6"
                     content={<FaExternalLinkAlt className="h-3"/>}
