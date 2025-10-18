@@ -1,26 +1,22 @@
 import HeaderLink from "./HeaderLink.tsx";
-import {useState} from "react";
-import UserLogin from "../logic/LoginNew.tsx";
-import SearchBar from "@/components/ui/SearchBar.tsx";
-
 const Header = () => {
 
-    const [user, setUser] = useState<{
-        name: string;
-        email: string;
-        avatar?: string;
-        id: string,
-    } | null>(null);
-
-    const handleLogin = () => {
-        // Simulate login
-        setUser({
-            name: "Gasha",
-            email: "john.doe@example.com",
-            avatar: "https://a.ppy.sh/7192129?1725050876.jpeg",
-            id: "7192129",
-        });
-    };
+    // const [user, setUser] = useState<{
+    //     name: string;
+    //     email: string;
+    //     avatar?: string;
+    //     id: string,
+    // } | null>(null);
+    //
+    // const handleLogin = () => {
+    //     // Simulate login
+    //     setUser({
+    //         name: "Gasha",
+    //         email: "john.doe@example.com",
+    //         avatar: "https://a.ppy.sh/7192129?1725050876.jpeg",
+    //         id: "7192129",
+    //     });
+    // };
 
     return (
         <div
@@ -35,22 +31,23 @@ const Header = () => {
                         <HeaderLink to="/beatmapsets">Beatmaps</HeaderLink>
                         <HeaderLink to="/logs">Logs</HeaderLink>
                     </div>
-                    <div className="flex gap-4 items-center">
-                        <SearchBar className="bg-zinc-800 bg-opacity-80 my-2 rounded-md w-24 sm:w-40 md:w-64 px-3 sm:px-5 h-8"
-                                   placeholder="Search anything"></SearchBar>
-                        <UserLogin
-                            nicknamePosition={"left"}
-                            user={user}
-                            onLogin={handleLogin}
-                            onLogout={() => setUser(null)}
-                            onProfile={() => {
-                                console.log("Profile clicked");
-                            }}
-                            onFeedback={() => {
-                                console.log("Feedback clicked");
-                            }}
-                        />
-                    </div>
+                    {/*TODO*/}
+                    {/*<div className="flex gap-4 items-center">*/}
+                    {/*    <SearchBar className="bg-zinc-800 bg-opacity-80 my-2 rounded-md w-24 sm:w-40 md:w-64 px-3 sm:px-5 h-8"*/}
+                    {/*               placeholder="Search anything"></SearchBar>*/}
+                    {/*    <UserLogin*/}
+                    {/*        nicknamePosition={"left"}*/}
+                    {/*        user={user}*/}
+                    {/*        onLogin={handleLogin}*/}
+                    {/*        onLogout={() => setUser(null)}*/}
+                    {/*        onProfile={() => {*/}
+                    {/*            console.log("Profile clicked");*/}
+                    {/*        }}*/}
+                    {/*        onFeedback={() => {*/}
+                    {/*            console.log("Feedback clicked");*/}
+                    {/*        }}*/}
+                    {/*    />*/}
+                    {/*</div>*/}
                 </div>
             </div>
         </div>

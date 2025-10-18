@@ -19,7 +19,7 @@ const User = (props: UserProps) => {
                 className="w-16 h-16 md:w-64 md:h-64"
                 alt="user avatar"
             />
-            <div className="py-4 pl-4 sm:px-4 md:flex flex-col h-full md:max-w-[400px] justify-between whitespace-nowrap">
+            <div className="py-4 pl-4 sm:px-4 md:flex flex-col h-full md:max-w-[450px] justify-between whitespace-nowrap">
                 <div>
                     <div className="flex gap-2 items-center">
                         <h1 className={`text-xl md:text-3xl ${props.nameOnClick != undefined ?
