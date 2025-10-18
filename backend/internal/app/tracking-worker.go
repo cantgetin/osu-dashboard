@@ -57,6 +57,7 @@ func RunTrackingWorker(
 
 	worker := trackingworker.New(cfg, lg, track.New(
 		cfg,
+		lg,
 		txm,
 		osuAPI,
 		userRepo,

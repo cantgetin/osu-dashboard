@@ -2,12 +2,55 @@ package track
 
 import (
 	"context"
+	"fmt"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
 	"playcount-monitor-backend/internal/service/osuapi"
 	"playcount-monitor-backend/internal/usecase/command"
 	"playcount-monitor-backend/internal/usecase/mappers"
+	"time"
 )
+
+func (uc *UseCase) createOrUpdateData(
+	ctx context.Context,
+	following *model.Following,
+	user *osuapi.User,
+	userMapsets []*osuapi.MapsetExtended,
+) error {
+	// create/update data in db
+	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
+		userExists, err := uc.user.Exists(ctx, tx, user.ID)
+		if err != nil {
+			return err
+		}
+
+		if userExists {
+			// update
+			err = uc.updateUserCard(ctx, tx, user, userMapsets)
+			if err != nil {
+				return fmt.Errorf("failed to update user card, user id: %v, err: %w", user.ID, err)
+			}
+		} else {
+			// create
+			err = uc.createUserCard(ctx, tx, user, userMapsets)
+			if err != nil {
+				return fmt.Errorf("failed to create user card, user id: %v, err: %w", user.ID, err)
+			}
+		}
+
+		err = uc.following.SetLastFetchedForUser(ctx, tx, following.Username, time.Now().UTC())
+		if err != nil {
+			return fmt.Errorf("failed to set last fetched for following %v: %w", following.Username, err)
+		}
+
+		return nil
+	})
+	if txErr != nil {
+		return txErr
+	}
+
+	return nil
+}
 
 func (uc *UseCase) updateUserCard(
 	ctx context.Context,

@@ -9,7 +9,7 @@ import (
 
 type (
 	tracker interface {
-		TrackAllFollowings(ctx context.Context, lg *log.Logger, timeSinceLastFetch time.Duration) error
+		TrackAllFollowings(ctx context.Context, startTime time.Time, timeSinceLastFetch time.Duration) error
 		GetLastTimeTracked(ctx context.Context) (*time.Time, error)
 	}
 

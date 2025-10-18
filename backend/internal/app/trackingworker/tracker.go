@@ -34,7 +34,8 @@ func (w *Worker) Start(ctx context.Context) func() error {
 				loopCtx, cancel := context.WithTimeout(ctx, w.cfg.TrackingTimeout)
 				defer cancel()
 
-				if err = w.tracker.TrackAllFollowings(loopCtx, w.lg, timeSinceLastFetch); err != nil {
+				startTime := time.Now()
+				if err = w.tracker.TrackAllFollowings(loopCtx, startTime, timeSinceLastFetch); err != nil {
 					w.lg.Errorf("encountered error while tracking: %v", err)
 					return
 				}

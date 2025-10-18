@@ -19,7 +19,7 @@ type Config struct {
 	PgPingInterval time.Duration `env:"PG_PING_INTERVAL" envDefault:"5s"`
 	PgPassword     string        `env:"POSTGRES_PASSWORD" envDefault:""`
 
-	TrackingTimeout  time.Duration `env:"TRACKING_TIMEOUT" envDefault:"30m"`
+	TrackingTimeout  time.Duration `env:"TRACKING_TIMEOUT" envDefault:"1h"`
 	TrackingInterval time.Duration `env:"TRACKING_INTERVAL" envDefault:"24h"`
 
 	CleaningTimeout  time.Duration `env:"CLEANING_TIMEOUT" envDefault:"30m"`

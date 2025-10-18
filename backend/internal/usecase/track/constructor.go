@@ -2,6 +2,7 @@ package track
 
 import (
 	"context"
+	log "github.com/sirupsen/logrus"
 	"playcount-monitor-backend/internal/config"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
@@ -49,6 +50,7 @@ type LogSource interface {
 
 type UseCase struct {
 	cfg       *config.Config
+	lg        *log.Logger
 	txm       txmanager.TxManager
 	osuApi    *osuapi.Service
 	user      userStore
@@ -61,6 +63,7 @@ type UseCase struct {
 
 func New(
 	cfg *config.Config,
+	lg *log.Logger,
 	txManager txmanager.TxManager,
 	osuAPI *osuapi.Service,
 	user userStore,
@@ -72,6 +75,7 @@ func New(
 ) *UseCase {
 	return &UseCase{
 		cfg:       cfg,
+		lg:        lg,
 		txm:       txManager,
 		osuApi:    osuAPI,
 		user:      user,

@@ -148,6 +148,7 @@ func (f *UseCaseFactory) MakeCreateLogUseCase() *logcreate.UseCase {
 func (f *UseCaseFactory) MakeTrackUseCase() *track.UseCase {
 	return track.New(
 		f.cfg,
+		f.lg,
 		f.txManager,
 		f.osuApi,
 		f.repos.UserRepo,

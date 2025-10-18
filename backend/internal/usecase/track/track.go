@@ -3,21 +3,17 @@ package track
 import (
 	"context"
 	"fmt"
-	log "github.com/sirupsen/logrus"
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
-	"playcount-monitor-backend/internal/service/osuapi"
 	"strconv"
 	"time"
 )
 
 func (uc *UseCase) TrackAllFollowings(
 	ctx context.Context,
-	lg *log.Logger,
+	startTime time.Time,
 	timeSinceLast time.Duration,
 ) error {
-	startTime := time.Now()
-
 	// get all following IDs from db and get updated data from api, update data in db
 	var follows []*model.Following
 	if err := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
@@ -30,54 +26,20 @@ func (uc *UseCase) TrackAllFollowings(
 		return err
 	}
 
-	lg.Infof("got following IDs from db, %v total", len(follows))
+	uc.lg.Infof("got following IDs from db, %v total", len(follows))
 	if len(follows) == 0 {
 		return fmt.Errorf("no following users present in db")
 	}
 
-	// max 300 requests a minute
 	for i, following := range follows {
-		lg.Infof("fetching user %s with id %v, %v/%v", following.Username, following.ID, i, len(follows))
+		uc.lg.Infof("fetching user %s with id %v, %v/%v", following.Username, following.ID, i, len(follows))
 		if err := uc.TrackSingleFollowing(ctx, following); err != nil {
-			lg.Infof("failed to fetch specific user: %s", err.Error())
+			uc.lg.Infof("failed to fetch specific user: %s", err.Error())
 		}
 	}
 
 	defer uc.osuApi.ResetStats()
-
-	var (
-		elapsed       = time.Since(startTime)
-		reqs          = uc.osuApi.GetOutgoingRequestCount()
-		respTime      = uc.osuApi.AverageResponseTime()
-		avgReqsPerMin = float64(reqs) / elapsed.Minutes()
-		successRate   = uc.osuApi.SuccessRate()
-	)
-
-	lg.Infof("Sent %v requests to api in %v minutes", reqs, elapsed.Minutes())
-	lg.Infof("Average requests per minute: %f", avgReqsPerMin)
-
-	if err := uc.CreateTrackRecord(ctx); err != nil {
-		return fmt.Errorf("failed to create track record: %v", err)
-	}
-
-	if err := uc.log.Create(ctx, &model.Log{
-		Name:               "Daily tracking for all users",
-		Message:            model.LogMessageDailyTrack,
-		Service:            "playcount-tracker",
-		AppVersion:         "v1.0",
-		Platform:           "Backend",
-		Type:               model.TrackTypeRegular,
-		APIRequests:        reqs,
-		SuccessRatePercent: successRate,
-		TrackedAt:          time.Now().UTC(),
-		AvgResponseTime:    respTime,
-		ElapsedTime:        elapsed,
-		TimeSinceLastTrack: timeSinceLast,
-	}); err != nil {
-		return fmt.Errorf("failed to create log: %v", err)
-	}
-
-	return nil
+	return uc.CreateTrackAndLogRecords(ctx, startTime, timeSinceLast)
 }
 
 func (uc *UseCase) TrackSingleFollowing(ctx context.Context, following *model.Following) error {
@@ -144,46 +106,5 @@ func (uc *UseCase) TrackSingleFollowing(ctx context.Context, following *model.Fo
 	if err := uc.createOrUpdateData(ctx, following, user, userMapsets); err != nil {
 		return fmt.Errorf("failed to create or update data, user id: %v, err: %w", following.ID, err)
 	}
-	return nil
-}
-
-func (uc *UseCase) createOrUpdateData(
-	ctx context.Context,
-	following *model.Following,
-	user *osuapi.User,
-	userMapsets []*osuapi.MapsetExtended,
-) error {
-	// create/update data in db
-	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-		userExists, err := uc.user.Exists(ctx, tx, user.ID)
-		if err != nil {
-			return err
-		}
-
-		if userExists {
-			// update
-			err = uc.updateUserCard(ctx, tx, user, userMapsets)
-			if err != nil {
-				return fmt.Errorf("failed to update user card, user id: %v, err: %w", user.ID, err)
-			}
-		} else {
-			// create
-			err = uc.createUserCard(ctx, tx, user, userMapsets)
-			if err != nil {
-				return fmt.Errorf("failed to create user card, user id: %v, err: %w", user.ID, err)
-			}
-		}
-
-		err = uc.following.SetLastFetchedForUser(ctx, tx, following.Username, time.Now().UTC())
-		if err != nil {
-			return fmt.Errorf("failed to set last fetched for following %v: %w", following.Username, err)
-		}
-
-		return nil
-	})
-	if txErr != nil {
-		return txErr
-	}
-
 	return nil
 }
