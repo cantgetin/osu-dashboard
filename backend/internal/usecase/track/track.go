@@ -6,6 +6,7 @@ import (
 	"playcount-monitor-backend/internal/database/repository/model"
 	"playcount-monitor-backend/internal/database/txmanager"
 	"strconv"
+	"sync"
 	"time"
 )
 
@@ -31,12 +32,31 @@ func (uc *UseCase) TrackAllFollowings(
 		return fmt.Errorf("no following users present in db")
 	}
 
+	// worker pool to limit concurrent goroutines and prevent overwhelming the API
+	semaphore := make(chan struct{}, uc.cfg.TrackingMaxParallelWorkers)
+
+	var wg sync.WaitGroup
+
 	for i, following := range follows {
-		uc.lg.Infof("fetching user %s with id %v, %v/%v", following.Username, following.ID, i, len(follows))
-		if err := uc.TrackSingleFollowing(ctx, following); err != nil {
-			uc.lg.Infof("failed to fetch specific user: %s", err.Error())
-		}
+		wg.Add(1)
+		go func(index int, f *model.Following) {
+			defer wg.Done()
+
+			semaphore <- struct{}{}
+			defer func() {
+				<-semaphore
+			}()
+
+			uc.lg.Infof("fetching user %s with id %v, %v/%v", f.Username, f.ID, index+1, len(follows))
+
+			if err := uc.TrackSingleFollowing(ctx, f); err != nil {
+				uc.lg.Infof("failed to fetch specific user: %s", err.Error())
+			}
+		}(i, following)
 	}
+
+	// Wait for all goroutines to complete
+	wg.Wait()
 
 	defer uc.osuApi.ResetStats()
 	return uc.CreateTrackAndLogRecords(ctx, startTime, timeSinceLast)
