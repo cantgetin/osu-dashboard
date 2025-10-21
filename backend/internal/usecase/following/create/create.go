@@ -9,12 +9,12 @@ import (
 )
 
 func (uc *UseCase) Create(ctx context.Context, code string) error {
-	token, err := uc.osuAPI.ExchangeCodeForToken(code)
+	token, err := uc.osuAPI.ExchangeCodeForToken(ctx, code)
 	if err != nil {
 		return fmt.Errorf("failed to exchange code for access token: %w", err)
 	}
 
-	user, err := uc.osuAPI.GetUserInfoByHisToken(token.AccessToken)
+	user, err := uc.osuAPI.GetUserInfoByHisToken(ctx, token.AccessToken)
 	if err != nil {
 		return fmt.Errorf("failed to get user info: %w", err)
 	}

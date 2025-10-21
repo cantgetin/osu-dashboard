@@ -24,8 +24,8 @@ type trackSource interface {
 }
 
 type osuAPI interface {
-	GetUserInfoByHisToken(accessToken string) (*osuapi.UserResponse, error)
-	ExchangeCodeForToken(code string) (*osuapi.TokenResponse, error)
+	GetUserInfoByHisToken(ctx context.Context, accessToken string) (*osuapi.UserResponse, error)
+	ExchangeCodeForToken(ctx context.Context, code string) (*osuapi.TokenResponse, error)
 	GetTransportStats() osuapi.TransportStats
 	ResetStats()
 }
