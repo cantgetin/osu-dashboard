@@ -1,6 +1,8 @@
 module playcount-monitor-backend
 
-go 1.23.0
+go 1.24.0
+
+toolchain go1.24.9
 
 require (
 	github.com/caarlos0/env v3.5.0+incompatible
@@ -13,6 +15,7 @@ require (
 	github.com/rubenv/sql-migrate v1.8.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.10.0
+	golang.org/x/sync v0.17.0
 	gorm.io/driver/postgres v1.6.0
 	gorm.io/gorm v1.30.1
 )
@@ -64,7 +67,6 @@ require (
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
 	golang.org/x/crypto v0.41.0 // indirect
 	golang.org/x/net v0.43.0 // indirect
-	golang.org/x/sync v0.16.0 // indirect
 	golang.org/x/sys v0.35.0 // indirect
 	golang.org/x/text v0.28.0 // indirect
 	golang.org/x/time v0.12.0 // indirect

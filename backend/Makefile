@@ -4,13 +4,13 @@ up:
 	docker compose up --build pmb-cleaner -d
 
 up-bff:
-	docker compose up --build pmb-service -d
+	docker-compose up --build pmb-service -d
 
 up-cleaner:
-	docker compose up --build pmb-cleaner -d
+	docker-compose up --build pmb-cleaner -d
 
 up-tracker:
-	docker compose up --build pmb-worker -d
+	docker-compose up --build pmb-worker -d
 
 run:
 	go run cmd/playcount-monitor/main.go || exit 1
