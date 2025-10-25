@@ -1,7 +1,6 @@
 package osuapi
 
 import (
-	"playcount-monitor-backend/internal/bootstrap"
 	"time"
 )
 
@@ -20,17 +19,17 @@ func (s *Service) GetTransportStats() TransportStats {
 }
 
 func (s *Service) GetOutgoingRequestCount() int {
-	return s.httpClient.Transport.(*bootstrap.CounterTransport).RequestCount()
+	return s.httpClient.RequestCount()
 }
 
 func (s *Service) AverageResponseTime() time.Duration {
-	return s.httpClient.Transport.(*bootstrap.CounterTransport).AverageResponseTime()
+	return s.httpClient.AverageResponseTime()
 }
 
 func (s *Service) SuccessRate() float64 {
-	return s.httpClient.Transport.(*bootstrap.CounterTransport).SuccessRate()
+	return s.httpClient.SuccessRate()
 }
 
 func (s *Service) ResetStats() {
-	s.httpClient.Transport.(*bootstrap.CounterTransport).ResetStats()
+	s.httpClient.ResetStats()
 }

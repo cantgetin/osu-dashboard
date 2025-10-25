@@ -2,7 +2,7 @@ package osuapitokenprovider
 
 import (
 	"context"
-	"net/http"
+	"playcount-monitor-backend/internal/bootstrap"
 	"playcount-monitor-backend/internal/config"
 	"sync"
 	"time"
@@ -11,7 +11,7 @@ import (
 type (
 	TokenProvider struct {
 		cfg        *config.Config
-		httpClient *http.Client
+		httpClient *bootstrap.CustomHTTPClient
 
 		token      string
 		validUntil time.Time
@@ -23,7 +23,7 @@ type (
 	}
 )
 
-func New(cfg *config.Config, httpClient *http.Client) *TokenProvider {
+func New(cfg *config.Config, httpClient *bootstrap.CustomHTTPClient) *TokenProvider {
 	return &TokenProvider{
 		cfg:        cfg,
 		httpClient: httpClient,

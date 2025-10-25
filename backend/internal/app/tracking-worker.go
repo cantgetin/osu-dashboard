@@ -52,8 +52,8 @@ func RunTrackingWorker(
 
 	// init api
 	httpClient := bootstrap.NewHTTPClient()
-	osuTokenProvider := osuapitokenprovider.New(cfg, &httpClient)
-	osuAPI := osuapi.New(cfg, osuTokenProvider, &httpClient)
+	osuTokenProvider := osuapitokenprovider.New(cfg, httpClient)
+	osuAPI := osuapi.New(cfg, osuTokenProvider, httpClient)
 
 	worker := trackingworker.New(cfg, lg, track.New(
 		cfg,

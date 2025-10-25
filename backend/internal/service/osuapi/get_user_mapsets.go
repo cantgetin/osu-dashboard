@@ -83,13 +83,11 @@ func (s *Service) fetchBeatmapsets(
 		return nil, fmt.Errorf("failed to decode response body: %w", err)
 	}
 
-	// If there are more pages to fetch, recursively call for next page
 	if len(maps) >= 100 {
 		nextPageMaps, err := s.fetchBeatmapsets(ctx, userID, mapsetType, offset+100, headers)
 		if err != nil {
 			return nil, err
 		}
-		// Combine current page results with next page results
 		maps = append(maps, nextPageMaps...)
 	}
 

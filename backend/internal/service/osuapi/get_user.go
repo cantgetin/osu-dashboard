@@ -35,7 +35,6 @@ func (s *Service) GetUser(ctx context.Context, userID string) (*User, error) {
 	}
 	defer resp.Body.Close()
 
-	// Parsing JSON response
 	var user *User
 	err = json.NewDecoder(resp.Body).Decode(&user)
 	if err != nil {

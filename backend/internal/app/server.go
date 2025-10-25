@@ -45,8 +45,8 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 
 	// init api
 	httpClient := bootstrap.NewHTTPClient()
-	osuTokenProvider := osuapitokenprovider.New(cfg, &httpClient)
-	osuAPI := osuapi.New(cfg, osuTokenProvider, &httpClient)
+	osuTokenProvider := osuapitokenprovider.New(cfg, httpClient)
+	osuAPI := osuapi.New(cfg, osuTokenProvider, httpClient)
 
 	// useCase factory
 	f, err := factory.New(cfg, lg, txm, osuAPI, &factory.Repositories{

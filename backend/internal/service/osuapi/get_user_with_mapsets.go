@@ -36,8 +36,17 @@ func (s *Service) GetUserWithMapsets(ctx context.Context, userID string) (*User,
 		return nil, nil, err
 	}
 
+	// now we wanna get comments count for each mapset hehe
+	// can be a lot of mapsets here so limit parallel calls
+	semaphore := make(chan struct{}, s.cfg.TrackingMaxParallelMapsetCalls)
+
 	for _, mapset := range mapsets {
 		eg.Go(func() (errG error) {
+			semaphore <- struct{}{}
+			defer func() {
+				<-semaphore
+			}()
+
 			commentCount, errG := s.GetMapsetCommentsCount(egCtx, strconv.Itoa(mapset.Id))
 			if errG != nil {
 				return errG
