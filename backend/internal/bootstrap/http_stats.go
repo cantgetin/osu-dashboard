@@ -5,10 +5,16 @@ import (
 	"time"
 )
 
+func NewStats() *Stats {
+	return &Stats{
+		mu: new(sync.Mutex),
+	}
+}
+
 type Stats struct {
 	count     int
 	success   int
-	mu        sync.Mutex
+	mu        *sync.Mutex
 	totalTime time.Duration
 }
 

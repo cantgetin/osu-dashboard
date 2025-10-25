@@ -11,10 +11,8 @@ func (s *Service) GetUserWithMapsets(ctx context.Context, userID string) (*User,
 	eg, egCtx := errgroup.WithContext(ctx)
 
 	var (
-		user            *User
-		mapsets         []*Mapset
-		mapsetsExtended []*MapsetExtended
-		mu              = sync.Mutex{}
+		user    *User
+		mapsets []*Mapset
 	)
 
 	eg.Go(func() (errG error) {
@@ -36,16 +34,25 @@ func (s *Service) GetUserWithMapsets(ctx context.Context, userID string) (*User,
 		return nil, nil, err
 	}
 
-	// now we wanna get comments count for each mapset hehe
-	// can be a lot of mapsets here so limit parallel calls
-	semaphore := make(chan struct{}, s.cfg.TrackingMaxParallelMapsetCalls)
+	mapsetsExtended, err := s.getMapsetsWithComments(ctx, mapsets)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return user, mapsetsExtended, nil
+}
+
+func (s *Service) getMapsetsWithComments(ctx context.Context, mapsets []*Mapset) ([]*MapsetExtended, error) {
+	eg, egCtx := errgroup.WithContext(ctx)
+	eg.SetLimit(s.cfg.TrackingMaxParallelMapsetCalls)
+
+	var (
+		mu              = sync.Mutex{}
+		mapsetsExtended []*MapsetExtended
+	)
 
 	for _, mapset := range mapsets {
 		eg.Go(func() (errG error) {
-			semaphore <- struct{}{}
-			defer func() {
-				<-semaphore
-			}()
 
 			commentCount, errG := s.GetMapsetCommentsCount(egCtx, strconv.Itoa(mapset.Id))
 			if errG != nil {
@@ -63,10 +70,10 @@ func (s *Service) GetUserWithMapsets(ctx context.Context, userID string) (*User,
 		})
 	}
 
-	err = eg.Wait()
+	err := eg.Wait()
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	return user, mapsetsExtended, nil
+	return mapsetsExtended, nil
 }
