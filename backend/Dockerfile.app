@@ -2,7 +2,7 @@ FROM golang:1.25-alpine
 
 COPY . /go/src/app
 
-WORKDIR /go/src/app/cmd/osu-dashboard
+WORKDIR /go/src/app/cmd/bff
 
 RUN go build -o app main.go
 

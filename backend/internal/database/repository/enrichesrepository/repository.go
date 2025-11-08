@@ -24,9 +24,15 @@ func New(cfg *config.Config, lg *log.Logger) *GormRepository {
 }
 
 func (r *GormRepository) Create(ctx context.Context, tx txmanager.Tx, enrich *model.Enrich) error {
-	enrich.ID = 0
+	// todo: fix this auto increment crap
+	var maxID *int
+	err := tx.DB().WithContext(ctx).Table(enrichesTableName).Select("max(id)").Row().Scan(&maxID)
+	if err != nil {
+		return fmt.Errorf("failed to create clean: %w", err)
+	}
+	enrich.ID = *maxID + 1
 
-	err := tx.DB().WithContext(ctx).Table(enrichesTableName).Create(enrich).Error
+	err = tx.DB().WithContext(ctx).Table(enrichesTableName).Create(enrich).Error
 	if err != nil {
 		return fmt.Errorf("failed to create enrich: %w", err)
 	}

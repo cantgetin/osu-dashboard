@@ -1,6 +1,6 @@
 up:
-	docker-compose up --build osu-dashboard-bff
-	docker-compose up --build osu-dashboard-jobs
+	docker-compose up --build osu-dashboard-bff -d
+	docker-compose up --build osu-dashboard-jobs -d
 
 up-bff:
 	docker-compose up --build osu-dashboard-bff -d

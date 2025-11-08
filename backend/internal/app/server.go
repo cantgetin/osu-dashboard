@@ -34,7 +34,7 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 		return err
 	}
 
-	txm := bootstrap.ConnectTxManager("playcount-monitor-backend", 5, db, lg)
+	txm := bootstrap.ConnectTxManager("osu-dashboard-bff", 5, db, lg)
 
 	userRepo := userrepository.New(cfg, lg)
 	mapsetRepo := mapsetrepository.New(cfg, lg)

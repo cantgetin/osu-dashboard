@@ -10,7 +10,7 @@ import (
 )
 
 type Config struct {
-	AppName  string `env:"APP_NAME" envDefault:"playcount-monitor-backend"`
+	AppName  string `env:"APP_NAME" envDefault:"osu-dashboard"`
 	HTTPAddr string `env:"HTTP_ADDR" envDefault:":8080"`
 
 	PgDSN          string        `env:"PG_DSN" envDefault:"postgresql://pmb-db:5432/db?user=db&password=db"`
