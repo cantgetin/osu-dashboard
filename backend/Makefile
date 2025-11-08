@@ -1,22 +1,18 @@
 up:
-	docker compose up --build pmb-service -d
-	docker compose up --build pmb-worker -d
-	docker compose up --build pmb-cleaner -d
+	docker-compose up --build osu-dashboard-bff
+	docker-compose up --build osu-dashboard-jobs
 
 up-bff:
-	docker-compose up --build pmb-service -d
+	docker-compose up --build osu-dashboard-bff -d
 
-up-cleaner:
-	docker-compose up --build pmb-cleaner -d
-
-up-tracker:
-	docker-compose up --build pmb-worker -d
+up-jobs:
+	docker-compose up --build osu-dashboard-jobs -d
 
 run:
-	go run cmd/playcount-monitor/main.go || exit 1
+	go run cmd/bff/main.go || exit 1
 
-run-tracker:
-	go run cmd/playcount-tracker/main.go || exit 1
+run-jobs:
+	go run cmd/jobs/main.go || exit 1
 
 migrate:
 	sql-migrate up -env="local"
@@ -25,14 +21,14 @@ deps:
 	go mod tidy; go mod vendor
 
 build:
-	go build -o bin/bff cmd/osu-dashboard/main.go
+	go build -o bin/bff cmd/bff/main.go
 
 build-jobs:
-	go build -o bin/tracker cmd/osu-dashboard-jobs/main.go
+	go build -o bin/jobs cmd/jobs/main.go
 
 build-all:
-	go build -o bin/bff cmd/osu-dashboard/main.go
-	go build -o bin/jobs cmd/osu-dashboard-jobs/main.go
+	go build -o bin/bff cmd/bff/main.go
+	go build -o bin/jobs cmd/jobs/main.go
 
 test:
 	go test ./... -v -cover

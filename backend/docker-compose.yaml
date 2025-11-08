@@ -1,13 +1,11 @@
 version: "3.8"
 
-# pmb stands for Playcount Monitor Backend
-
 networks:
   pmb-network:
     external: false
 
 services:
-  pmb-service:
+  osu-dashboard-bff:
     environment:
       - OSU_API_CLIENT_ID=${OSU_API_CLIENT_ID}
       - OSU_API_CLIENT_SECRET=${OSU_API_CLIENT_SECRET}
@@ -28,27 +26,11 @@ services:
         condition: service_healthy
     restart: "on-failure"
 
-  pmb-worker:
+  osu-dashboard-jobs:
     environment:
       - OSU_API_CLIENT_ID=${OSU_API_CLIENT_ID}
       - OSU_API_CLIENT_SECRET=${OSU_API_CLIENT_SECRET}
       - OSU_API_REDIRECT_URI=${OSU_API_REDIRECT_URI}
-      - GOPROXY=https://goproxy.cn,https://proxy.golang.org,https://goproxy.io,direct
-      - GOSUMDB=off
-      - GOPRIVATE=
-      - GOTIMEOUT=300
-    build:
-      context: "./"
-      dockerfile: Dockerfile.worker
-    networks:
-      - "pmb-network"
-    depends_on:
-      "pmb-service":
-        condition: service_started
-    restart: "on-failure"
-
-  pmb-cleaner:
-    environment:
       - GOPROXY=https://goproxy.cn,https://proxy.golang.org,https://goproxy.io,direct
       - GOSUMDB=off
       - GOPRIVATE=

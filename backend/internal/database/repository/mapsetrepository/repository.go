@@ -32,6 +32,15 @@ func (r *GormRepository) Get(ctx context.Context, tx txmanager.Tx, id int) (*mod
 }
 
 func (r *GormRepository) Update(ctx context.Context, tx txmanager.Tx, mapset *model.Mapset) error {
+	err := tx.DB().WithContext(ctx).Table(mapsetsTableName).Omit("genre", "language").Save(mapset).Error
+	if err != nil {
+		return fmt.Errorf("failed to update mapset: %w", err)
+	}
+
+	return nil
+}
+
+func (r *GormRepository) UpdateFull(ctx context.Context, tx txmanager.Tx, mapset *model.Mapset) error {
 	err := tx.DB().WithContext(ctx).Table(mapsetsTableName).Save(mapset).Error
 	if err != nil {
 		return fmt.Errorf("failed to update mapset: %w", err)
@@ -92,11 +101,7 @@ func (r *GormRepository) UpdateGenreLanguage(
 	mapset.Genre = newGenre
 	mapset.Language = newLanguage
 
-	if err = r.Update(ctx, tx, mapset); err != nil {
-		return err
-	}
-
-	return nil
+	return r.UpdateFull(ctx, tx, mapset)
 }
 
 func (r *GormRepository) ListStatusesForUser(
