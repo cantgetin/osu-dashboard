@@ -2,10 +2,10 @@ package usercardcreate
 
 import (
 	"context"
-	"playcount-monitor-backend/internal/database/repository/model"
-	"playcount-monitor-backend/internal/database/txmanager"
-	"playcount-monitor-backend/internal/usecase/command"
-	"playcount-monitor-backend/internal/usecase/mappers"
+	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/txmanager"
+	"osu-dashboard/internal/usecase/command"
+	"osu-dashboard/internal/usecase/mappers"
 )
 
 func (uc *UseCase) Create(

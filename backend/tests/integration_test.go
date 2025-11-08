@@ -5,9 +5,9 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/suite"
 	"gorm.io/gorm"
-	"playcount-monitor-backend/internal/app"
-	"playcount-monitor-backend/internal/config"
-	"playcount-monitor-backend/tests/integration"
+	"osu-dashboard/internal/app"
+	"osu-dashboard/internal/config"
+	"osu-dashboard/tests/integration"
 	"testing"
 	"time"
 )

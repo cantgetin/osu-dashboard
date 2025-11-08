@@ -2,8 +2,8 @@ package logcreate
 
 import (
 	"context"
-	"playcount-monitor-backend/internal/database/repository/model"
-	"playcount-monitor-backend/internal/database/txmanager"
+	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/txmanager"
 )
 
 type LogSource interface {

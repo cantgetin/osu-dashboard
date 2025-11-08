@@ -2,8 +2,8 @@ package statisticprovide
 
 import (
 	"context"
-	"playcount-monitor-backend/internal/database/txmanager"
-	"playcount-monitor-backend/internal/dto"
+	"osu-dashboard/internal/database/txmanager"
+	"osu-dashboard/internal/dto"
 	"strconv"
 	"strings"
 )

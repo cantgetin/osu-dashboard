@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/ory/dockertest/v3"
 	dc "github.com/ory/dockertest/v3/docker"
-	"playcount-monitor-backend/internal/config"
+	"osu-dashboard/internal/config"
 	"testing"
 )
 

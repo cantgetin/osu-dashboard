@@ -1,6 +1,6 @@
 package mapsetserviceapi
 
-import "playcount-monitor-backend/internal/dto"
+import "osu-dashboard/internal/dto"
 
 type MapsetListResponse struct {
 	Mapsets     []*dto.Mapset `json:"mapsets"`

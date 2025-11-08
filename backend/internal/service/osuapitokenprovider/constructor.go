@@ -2,8 +2,8 @@ package osuapitokenprovider
 
 import (
 	"context"
-	"playcount-monitor-backend/internal/bootstrap"
-	"playcount-monitor-backend/internal/config"
+	"osu-dashboard/internal/bootstrap"
+	"osu-dashboard/internal/config"
 	"sync"
 	"time"
 )

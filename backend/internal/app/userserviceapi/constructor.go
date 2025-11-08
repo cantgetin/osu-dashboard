@@ -3,9 +3,9 @@ package userserviceapi
 import (
 	"context"
 	log "github.com/sirupsen/logrus"
-	"playcount-monitor-backend/internal/database/repository/model"
-	"playcount-monitor-backend/internal/dto"
-	userprovide "playcount-monitor-backend/internal/usecase/user/provide"
+	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/dto"
+	userprovide "osu-dashboard/internal/usecase/user/provide"
 )
 
 type userCreator interface {

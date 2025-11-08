@@ -1,7 +1,7 @@
 package dtosort
 
 import (
-	"playcount-monitor-backend/internal/dto"
+	"osu-dashboard/internal/dto"
 	"time"
 )
 

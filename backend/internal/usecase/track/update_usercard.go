@@ -3,11 +3,11 @@ package track
 import (
 	"context"
 	"fmt"
-	"playcount-monitor-backend/internal/database/repository/model"
-	"playcount-monitor-backend/internal/database/txmanager"
-	"playcount-monitor-backend/internal/service/osuapi"
-	"playcount-monitor-backend/internal/usecase/command"
-	"playcount-monitor-backend/internal/usecase/mappers"
+	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/txmanager"
+	"osu-dashboard/internal/service/osuapi"
+	"osu-dashboard/internal/usecase/command"
+	"osu-dashboard/internal/usecase/mappers"
 	"time"
 )
 

@@ -3,7 +3,7 @@ package dbcleaner
 import (
 	"context"
 	log "github.com/sirupsen/logrus"
-	"playcount-monitor-backend/internal/config"
+	"osu-dashboard/internal/config"
 	"time"
 )
 

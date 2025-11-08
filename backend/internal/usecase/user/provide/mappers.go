@@ -1,8 +1,8 @@
 package userprovide
 
 import (
-	"playcount-monitor-backend/internal/dto"
-	"playcount-monitor-backend/internal/service/osuapi"
+	"osu-dashboard/internal/dto"
+	"osu-dashboard/internal/service/osuapi"
 	"time"
 )
 

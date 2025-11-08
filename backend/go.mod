@@ -1,4 +1,4 @@
-module playcount-monitor-backend
+module osu-dashboard
 
 go 1.24.0
 

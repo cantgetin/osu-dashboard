@@ -1,8 +1,8 @@
 package track
 
 import (
-	"playcount-monitor-backend/internal/service/osuapi"
-	"playcount-monitor-backend/internal/usecase/command"
+	"osu-dashboard/internal/service/osuapi"
+	"osu-dashboard/internal/usecase/command"
 )
 
 // create

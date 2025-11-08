@@ -2,7 +2,7 @@ package followingrepository
 
 import (
 	log "github.com/sirupsen/logrus"
-	"playcount-monitor-backend/internal/config"
+	"osu-dashboard/internal/config"
 )
 
 type GormRepository struct {

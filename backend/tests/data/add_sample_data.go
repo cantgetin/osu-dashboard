@@ -8,10 +8,10 @@ import (
 	"gorm.io/gorm"
 	"os"
 	"path/filepath"
-	"playcount-monitor-backend/internal/bootstrap"
-	"playcount-monitor-backend/internal/config"
-	"playcount-monitor-backend/internal/database/repository"
-	"playcount-monitor-backend/internal/database/repository/model"
+	"osu-dashboard/internal/bootstrap"
+	"osu-dashboard/internal/config"
+	"osu-dashboard/internal/database/repository"
+	"osu-dashboard/internal/database/repository/model"
 	"time"
 )
 

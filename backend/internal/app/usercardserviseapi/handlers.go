@@ -2,7 +2,7 @@ package usercardserviseapi
 
 import (
 	"github.com/labstack/echo/v4"
-	"playcount-monitor-backend/internal/usecase/command"
+	"osu-dashboard/internal/usecase/command"
 	"strconv"
 )
 

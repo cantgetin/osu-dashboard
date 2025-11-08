@@ -2,7 +2,7 @@ package mapsetrepository
 
 import (
 	"github.com/stretchr/testify/assert"
-	"playcount-monitor-backend/internal/database/repository/model"
+	"osu-dashboard/internal/database/repository/model"
 	"testing"
 )
 

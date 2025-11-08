@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"playcount-monitor-backend/internal/app/mapsetserviceapi"
-	"playcount-monitor-backend/internal/database/repository"
-	"playcount-monitor-backend/internal/database/repository/model"
-	"playcount-monitor-backend/internal/dto"
-	"playcount-monitor-backend/tests/integration"
+	"osu-dashboard/internal/app/mapsetserviceapi"
+	"osu-dashboard/internal/database/repository"
+	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/dto"
+	"osu-dashboard/tests/integration"
 	"time"
 )
 

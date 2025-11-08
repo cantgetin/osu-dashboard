@@ -1,7 +1,7 @@
 package model
 
 import (
-	"playcount-monitor-backend/internal/database/repository"
+	"osu-dashboard/internal/database/repository"
 	"time"
 )
 

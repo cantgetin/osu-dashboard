@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"golang.org/x/sync/errgroup"
-	"playcount-monitor-backend/internal/database/repository/model"
-	"playcount-monitor-backend/internal/database/txmanager"
+	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/txmanager"
 	"strconv"
 	"time"
 )

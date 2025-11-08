@@ -2,7 +2,7 @@ package cleaner
 
 import (
 	"context"
-	"playcount-monitor-backend/internal/database/txmanager"
+	"osu-dashboard/internal/database/txmanager"
 	"time"
 )
 

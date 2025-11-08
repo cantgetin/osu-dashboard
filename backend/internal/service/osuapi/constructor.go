@@ -1,9 +1,9 @@
 package osuapi
 
 import (
-	"playcount-monitor-backend/internal/bootstrap"
-	"playcount-monitor-backend/internal/config"
-	"playcount-monitor-backend/internal/service/osuapitokenprovider"
+	"osu-dashboard/internal/bootstrap"
+	"osu-dashboard/internal/config"
+	"osu-dashboard/internal/service/osuapitokenprovider"
 )
 
 type (

@@ -3,8 +3,8 @@ package mappers
 import (
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
-	"playcount-monitor-backend/internal/database/repository"
-	"playcount-monitor-backend/internal/database/repository/model"
+	"osu-dashboard/internal/database/repository"
+	"osu-dashboard/internal/database/repository/model"
 	"testing"
 	"time"
 )

@@ -1,8 +1,8 @@
 package logprovide
 
 import (
-	"playcount-monitor-backend/internal/database/repository/model"
-	"playcount-monitor-backend/internal/dto"
+	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/dto"
 )
 
 func mapLogModelsToLogsDTOs(models []*model.Log) []dto.Log {

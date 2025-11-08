@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"playcount-monitor-backend/internal/app"
-	"playcount-monitor-backend/internal/config"
+	"osu-dashboard/internal/app"
+	"osu-dashboard/internal/config"
 
 	log "github.com/sirupsen/logrus"
 )

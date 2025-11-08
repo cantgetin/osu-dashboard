@@ -2,10 +2,10 @@ package userprovide
 
 import (
 	"context"
-	"playcount-monitor-backend/internal/config"
-	"playcount-monitor-backend/internal/database/repository/model"
-	"playcount-monitor-backend/internal/database/txmanager"
-	"playcount-monitor-backend/internal/service/osuapi"
+	"osu-dashboard/internal/config"
+	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/txmanager"
+	"osu-dashboard/internal/service/osuapi"
 
 	log "github.com/sirupsen/logrus"
 )

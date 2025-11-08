@@ -3,7 +3,7 @@ package logserviceapi
 import (
 	"context"
 	log "github.com/sirupsen/logrus"
-	"playcount-monitor-backend/internal/dto"
+	"osu-dashboard/internal/dto"
 )
 
 type logProvider interface {

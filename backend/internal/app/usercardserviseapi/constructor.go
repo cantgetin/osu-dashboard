@@ -3,8 +3,8 @@ package usercardserviseapi
 import (
 	"context"
 	log "github.com/sirupsen/logrus"
-	"playcount-monitor-backend/internal/dto"
-	"playcount-monitor-backend/internal/usecase/command"
+	"osu-dashboard/internal/dto"
+	"osu-dashboard/internal/usecase/command"
 )
 
 type userCardCreator interface {

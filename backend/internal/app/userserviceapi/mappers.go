@@ -1,6 +1,6 @@
 package userserviceapi
 
-import "playcount-monitor-backend/internal/database/repository/model"
+import "osu-dashboard/internal/database/repository/model"
 
 func mapSortQueryParamsToUserSort(fieldParam string, directionParam string) model.UserSort {
 	var res model.UserSort

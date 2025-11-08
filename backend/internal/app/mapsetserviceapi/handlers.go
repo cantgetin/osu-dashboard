@@ -3,8 +3,8 @@ package mapsetserviceapi
 import (
 	"github.com/labstack/echo/v4"
 	"net/http"
-	"playcount-monitor-backend/internal/usecase/command"
-	mapsetprovide "playcount-monitor-backend/internal/usecase/mapset/provide"
+	"osu-dashboard/internal/usecase/command"
+	mapsetprovide "osu-dashboard/internal/usecase/mapset/provide"
 	"strconv"
 )
 

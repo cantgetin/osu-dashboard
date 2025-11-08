@@ -2,9 +2,9 @@ package mapsetprovide
 
 import (
 	"context"
-	"playcount-monitor-backend/internal/database/txmanager"
-	"playcount-monitor-backend/internal/dto"
-	"playcount-monitor-backend/internal/usecase/mappers"
+	"osu-dashboard/internal/database/txmanager"
+	"osu-dashboard/internal/dto"
+	"osu-dashboard/internal/usecase/mappers"
 )
 
 func (uc *UseCase) Get(

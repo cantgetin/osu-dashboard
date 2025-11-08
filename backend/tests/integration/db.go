@@ -8,8 +8,8 @@ import (
 	"gorm.io/gorm"
 	"os"
 	"path/filepath"
-	"playcount-monitor-backend/internal/bootstrap"
-	"playcount-monitor-backend/internal/config"
+	"osu-dashboard/internal/bootstrap"
+	"osu-dashboard/internal/config"
 	"testing"
 )
 

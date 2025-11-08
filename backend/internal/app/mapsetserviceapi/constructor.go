@@ -3,9 +3,9 @@ package mapsetserviceapi
 import (
 	"context"
 	log "github.com/sirupsen/logrus"
-	"playcount-monitor-backend/internal/dto"
-	"playcount-monitor-backend/internal/usecase/command"
-	mapsetprovide "playcount-monitor-backend/internal/usecase/mapset/provide"
+	"osu-dashboard/internal/dto"
+	"osu-dashboard/internal/usecase/command"
+	mapsetprovide "osu-dashboard/internal/usecase/mapset/provide"
 )
 
 type mapsetCreator interface {

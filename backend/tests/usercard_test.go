@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"playcount-monitor-backend/internal/database/repository"
-	"playcount-monitor-backend/internal/database/repository/model"
-	"playcount-monitor-backend/internal/dto"
-	"playcount-monitor-backend/internal/usecase/command"
-	"playcount-monitor-backend/tests/integration"
+	"osu-dashboard/internal/database/repository"
+	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/dto"
+	"osu-dashboard/internal/usecase/command"
+	"osu-dashboard/tests/integration"
 	"time"
 )
 

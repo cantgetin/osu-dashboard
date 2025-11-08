@@ -3,7 +3,7 @@ package mapsetserviceapi
 import (
 	"errors"
 	"github.com/labstack/echo/v4"
-	"playcount-monitor-backend/internal/database/repository/model"
+	"osu-dashboard/internal/database/repository/model"
 	"strconv"
 )
 

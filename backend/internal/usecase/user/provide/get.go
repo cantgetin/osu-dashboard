@@ -2,10 +2,10 @@ package userprovide
 
 import (
 	"context"
-	"playcount-monitor-backend/internal/database/repository/model"
-	"playcount-monitor-backend/internal/database/txmanager"
-	"playcount-monitor-backend/internal/dto"
-	"playcount-monitor-backend/internal/usecase/mappers"
+	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/txmanager"
+	"osu-dashboard/internal/dto"
+	"osu-dashboard/internal/usecase/mappers"
 	"strconv"
 )
 
