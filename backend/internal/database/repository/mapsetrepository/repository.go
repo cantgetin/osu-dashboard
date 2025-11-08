@@ -80,6 +80,25 @@ func (r *GormRepository) TotalCount(ctx context.Context, tx txmanager.Tx) (int, 
 	return int(count), nil
 }
 
+func (r *GormRepository) UpdateGenreLanguage(
+	ctx context.Context, tx txmanager.Tx, id int, newGenre string, newLanguage string,
+) error {
+	// select mapset and switch its genre and language inside a transaction
+	mapset, err := r.Get(ctx, tx, id)
+	if err != nil {
+		return err
+	}
+
+	mapset.Genre = newGenre
+	mapset.Language = newLanguage
+
+	if err = r.Update(ctx, tx, mapset); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r *GormRepository) ListStatusesForUser(
 	ctx context.Context,
 	tx txmanager.Tx,

@@ -27,6 +27,9 @@ type Config struct {
 	CleaningTimeout  time.Duration `env:"CLEANING_TIMEOUT" envDefault:"30m"`
 	CleaningInterval time.Duration `env:"CLEANING_INTERVAL" envDefault:"24h"`
 
+	EnrichingTimeout  time.Duration `env:"ENRICHING_TIMEOUT" envDefault:"30m"`
+	EnrichingInterval time.Duration `env:"ENRICHING_TIMEOUT" envDefault:"168h"`
+
 	OsuAPIClientID     string `env:"OSU_API_CLIENT_ID" envDefault:""`
 	OsuAPIClientSecret string `env:"OSU_API_CLIENT_SECRET" envDefault:""`
 	OsuAPIRedirectURI  string `env:"OSU_API_REDIRECT_URI" envDefault:""`

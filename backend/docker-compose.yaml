@@ -55,7 +55,7 @@ services:
       - GOTIMEOUT=300
     build:
       context: "./"
-      dockerfile: Dockerfile.cleaner
+      dockerfile: Dockerfile.jobs
     networks:
       - "pmb-network"
     depends_on:

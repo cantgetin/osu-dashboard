@@ -1,9 +1,0 @@
-FROM golang:1.25-alpine
-
-COPY . /go/src/app
-
-WORKDIR /go/src/app/cmd/playcount-tracker
-
-RUN go build -o app main.go
-
-CMD ["./app"]

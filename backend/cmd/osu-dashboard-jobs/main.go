@@ -17,7 +17,7 @@ func main() {
 
 	ctx := context.Background()
 
-	if err := app.RunDBCleaner(ctx, cfg, lg); err != nil {
-		log.Fatalf("failed to start cleaning worker app, %v", err)
+	if err := app.RunJobs(ctx, cfg, lg); err != nil {
+		log.Fatalf("failed to start jobs app, %v", err)
 	}
 }

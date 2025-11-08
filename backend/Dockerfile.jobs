@@ -2,7 +2,7 @@ FROM golang:1.25-alpine
 
 COPY . /go/src/app
 
-WORKDIR /go/src/app/cmd/db-cleaner
+WORKDIR /go/src/app/cmd/osu-dashboard-jobs
 
 RUN go build -o app main.go
 
