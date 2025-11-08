@@ -1,7 +1,7 @@
 version: "3.8"
 
 networks:
-  pmb-network:
+  osu-dashboard-network:
     external: false
 
 services:
@@ -18,7 +18,7 @@ services:
       context: "./"
       dockerfile: Dockerfile.app
     networks:
-      - "pmb-network"
+      - "osu-dashboard-network"
     ports:
       - 8080:8080
     depends_on:
@@ -39,9 +39,9 @@ services:
       context: "./"
       dockerfile: Dockerfile.jobs
     networks:
-      - "pmb-network"
+      - "osu-dashboard-network"
     depends_on:
-      "pmb-service":
+      "osu-dashboard-bff":
         condition: service_started
     restart: "on-failure"
 
@@ -52,7 +52,7 @@ services:
     expose:
       - 5432
     networks:
-      - "pmb-network"
+      - "osu-dashboard-network"
     environment:
       POSTGRES_USER: db
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -68,7 +68,7 @@ services:
   pmb-adminer:
     image: "adminer"
     networks:
-      - "pmb-network"
+      - "osu-dashboard-network"
     restart: "on-failure"
     depends_on:
       - "pmb-db"
