@@ -53,7 +53,6 @@ func (uc *UseCase) Update(ctx context.Context, cmd *command.UpdateUserCardComman
 					return err
 				}
 			}
-
 		}
 
 		return nil

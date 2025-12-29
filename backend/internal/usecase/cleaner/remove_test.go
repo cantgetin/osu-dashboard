@@ -2,11 +2,12 @@ package cleaner
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
 	"osu-dashboard/internal/database/repository"
 	"osu-dashboard/internal/database/repository/model"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRemoveAllMapEntriesExceptLastN_Mapset(t *testing.T) {

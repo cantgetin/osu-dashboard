@@ -2,9 +2,10 @@ package usercardhandlers
 
 import (
 	"context"
-	log "github.com/sirupsen/logrus"
 	"osu-dashboard/internal/dto"
 	"osu-dashboard/internal/usecase/command"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type (
@@ -28,16 +29,11 @@ type (
 	}
 )
 
-func New(
-	lg *log.Logger,
-	userCreator userCardCreator,
-	userProvider userCardProvider,
-	userUpdater userCardUpdater,
-) *Handlers {
+func New(lg *log.Logger, c userCardCreator, p userCardProvider, u userCardUpdater) *Handlers {
 	return &Handlers{
 		lg:               lg,
-		userCardCreator:  userCreator,
-		userCardProvider: userProvider,
-		userCardUpdater:  userUpdater,
+		userCardCreator:  c,
+		userCardProvider: p,
+		userCardUpdater:  u,
 	}
 }

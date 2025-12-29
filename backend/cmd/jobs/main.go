@@ -2,9 +2,10 @@ package main
 
 import (
 	"context"
-	log "github.com/sirupsen/logrus"
 	"osu-dashboard/internal/app"
 	"osu-dashboard/internal/config"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {

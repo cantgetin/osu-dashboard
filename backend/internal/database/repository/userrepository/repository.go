@@ -3,10 +3,11 @@ package userrepository
 import (
 	"context"
 	"fmt"
-	"gorm.io/gorm"
 	"osu-dashboard/internal/database/repository/model"
 	"osu-dashboard/internal/database/txmanager"
 	"strings"
+
+	"gorm.io/gorm"
 )
 
 const usersTableName = "users"
@@ -123,7 +124,7 @@ func (r *GormRepository) TotalCount(ctx context.Context, tx txmanager.Tx) (int, 
 	return int(count), nil
 }
 
-func buildListByFilterQuery(filter model.UserFilter) (string, []interface{}) {
+func buildListByFilterQuery(filter model.UserFilter) (string, []any) {
 	if len(filter) == 0 {
 		return "", nil
 	}
@@ -135,7 +136,7 @@ func buildListByFilterQuery(filter model.UserFilter) (string, []interface{}) {
 			if !ok {
 				return "", nil
 			}
-			return "username ILIKE ?", []interface{}{"%" + username + "%"}
+			return "username ILIKE ?", []any{"%" + username + "%"}
 
 		default:
 			return "", nil

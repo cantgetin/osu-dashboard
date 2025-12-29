@@ -2,10 +2,11 @@ package integration
 
 import (
 	"fmt"
-	"github.com/ory/dockertest/v3"
-	dc "github.com/ory/dockertest/v3/docker"
 	"osu-dashboard/internal/config"
 	"testing"
+
+	"github.com/ory/dockertest/v3"
+	dc "github.com/ory/dockertest/v3/docker"
 )
 
 func Start(t *testing.T, cfg *config.Config) (*dockertest.Pool, CloseFn) {

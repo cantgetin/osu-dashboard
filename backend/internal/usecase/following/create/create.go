@@ -30,7 +30,8 @@ func (uc *UseCase) Create(ctx context.Context, code string) error {
 	}
 
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-		f, err := uc.following.Get(ctx, tx, following.ID)
+		var f *model.Following
+		f, err = uc.following.Get(ctx, tx, following.ID)
 		if f != nil {
 			return nil // assume it's already added
 		}
@@ -62,26 +63,32 @@ func (uc *UseCase) trackAndCreateRecord(ctx context.Context, following *model.Fo
 
 	err := uc.track.TrackSingleFollowing(ctx, following)
 	if err != nil {
-		return fmt.Errorf("failed to track specific user %v", err)
+		return fmt.Errorf("failed to track specific user %w", err)
 	}
 
 	stats := uc.osuAPI.GetTransportStats()
 	defer uc.osuAPI.ResetStats()
 
-	if err = uc.log.Create(ctx, &model.Log{
-		Name:               fmt.Sprintf("Initial tracking for user %s", following.Username),
-		Message:            model.LogMessageInitialTrack,
-		Service:            "osu-dashboard-api",
-		AppVersion:         "v1.0",
-		Platform:           "Backend",
-		Type:               model.TrackTypeInitial,
-		TrackedAt:          time.Now().UTC(),
-		ElapsedTime:        time.Since(started),
-		APIRequests:        stats.RequestCount,
-		SuccessRatePercent: stats.SuccessRate,
-		AvgResponseTime:    stats.AvgResponseTime,
-	}); err != nil {
-		return fmt.Errorf("failed to create log: %v", err)
+	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
+		if err = uc.log.Create(ctx, tx, &model.Log{
+			Name:               fmt.Sprintf("Initial tracking for user %s", following.Username),
+			Message:            model.LogMessageInitialTrack,
+			Service:            "osu-dashboard-api",
+			AppVersion:         "v1.0",
+			Platform:           "Backend",
+			Type:               model.TrackTypeInitial,
+			TrackedAt:          time.Now().UTC(),
+			ElapsedTime:        time.Since(started),
+			APIRequests:        stats.RequestCount,
+			SuccessRatePercent: stats.SuccessRate,
+			AvgResponseTime:    stats.AvgResponseTime,
+		}); err != nil {
+			return fmt.Errorf("failed to create log: %w", err)
+		}
+		return nil
+	})
+	if txErr != nil {
+		return txErr
 	}
 
 	return nil

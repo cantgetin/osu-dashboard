@@ -11,7 +11,7 @@ import (
 )
 
 func (s *Service) GetUserInfoByHisToken(ctx context.Context, accessToken string) (*UserResponse, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", "https://osu.ppy.sh/api/v2/me", nil)
+	req, err := http.NewRequestWithContext(ctx, "GET", "https://osu.ppy.sh/api/v2/me", http.NoBody)
 	if err != nil {
 		return nil, err
 	}

@@ -106,7 +106,6 @@ func (uc *UseCase) updateUserCard(
 				return err
 			}
 		}
-
 	}
 
 	return nil

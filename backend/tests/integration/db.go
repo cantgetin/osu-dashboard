@@ -1,16 +1,17 @@
 package integration
 
 import (
-	_ "github.com/lib/pq"
-	"github.com/ory/dockertest/v3"
-	migrate "github.com/rubenv/sql-migrate"
-	log "github.com/sirupsen/logrus"
-	"gorm.io/gorm"
 	"os"
 	"osu-dashboard/internal/bootstrap"
 	"osu-dashboard/internal/config"
 	"path/filepath"
 	"testing"
+
+	_ "github.com/lib/pq"
+	"github.com/ory/dockertest/v3"
+	migrate "github.com/rubenv/sql-migrate"
+	log "github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 )
 
 type CloseFn func() error

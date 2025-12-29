@@ -163,7 +163,7 @@ func (f *UseCaseFactory) MakeTrackUseCase() *track.UseCase {
 		f.repos.BeatmapRepo,
 		f.repos.FollowingRepo,
 		f.repos.TrackRepo,
-		f.MakeCreateLogUseCase(),
+		f.repos.LogRepo,
 	)
 }
 
@@ -174,7 +174,7 @@ func (f *UseCaseFactory) MakeCreateFollowingUseCase() *followingcreate.UseCase {
 		f.txManager,
 		f.repos.FollowingRepo,
 		f.MakeTrackUseCase(),
-		f.MakeCreateLogUseCase(),
+		f.repos.LogRepo,
 		f.osuApi,
 	)
 }
@@ -215,7 +215,7 @@ func (f *UseCaseFactory) MakeCleanerUseCase() *cleanerUseCase.UseCase {
 		f.repos.UserRepo,
 		f.repos.MapsetRepo,
 		f.repos.BeatmapRepo,
-		f.MakeCreateLogUseCase(),
+		f.repos.LogRepo,
 		f.repos.CleanRepo)
 }
 

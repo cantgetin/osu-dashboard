@@ -1,55 +1,59 @@
 package usercardhandlers
 
 import (
-	"github.com/labstack/echo/v4"
+	"net/http"
+	"osu-dashboard/internal/app/handlerutils"
 	"osu-dashboard/internal/usecase/command"
 	"strconv"
+
+	"github.com/labstack/echo/v4"
 )
 
 func (s *Handlers) Create(c echo.Context) error {
 	userCard := new(command.CreateUserCardCommand)
 	if err := c.Bind(userCard); err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return s.userCardCreator.Create(c.Request().Context(), userCard)
+	if err := s.userCardCreator.Create(c.Request().Context(), userCard); err != nil {
+		return handlerutils.EchoInternalError(err)
+	}
+
+	return c.JSON(http.StatusCreated, userCard)
 }
 
 func (s *Handlers) Get(c echo.Context) error {
 	id := c.Param("id")
 	if id == "" {
-		return echo.ErrBadRequest
+		return echo.NewHTTPError(http.StatusBadRequest, "empty id")
 	}
 	idInt, err := strconv.Atoi(id)
 	if err != nil {
-		return echo.ErrBadRequest
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	page := c.QueryParam("page")
-	pageInt := 1
-	if page != "" {
-		pageInt, err = strconv.Atoi(page)
-		if err != nil {
-			return echo.ErrBadRequest
-		}
-		if pageInt <= 0 {
-			return echo.ErrBadRequest
-		}
-	}
-
-	userCard, err := s.userCardProvider.Get(c.Request().Context(), idInt, pageInt)
+	page, err := handlerutils.GetPageQueryParam(c)
 	if err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return c.JSON(200, userCard)
+	userCard, err := s.userCardProvider.Get(c.Request().Context(), idInt, page)
+	if err != nil {
+		return handlerutils.EchoInternalError(err)
+	}
+
+	return c.JSON(http.StatusOK, userCard)
 }
 
 func (s *Handlers) Update(c echo.Context) error {
 	userCard := new(command.UpdateUserCardCommand)
 	if err := c.Bind(userCard); err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return s.userCardUpdater.Update(c.Request().Context(), userCard)
+	if err := s.userCardUpdater.Update(c.Request().Context(), userCard); err != nil {
+		return handlerutils.EchoInternalError(err)
+	}
+
+	return c.JSON(http.StatusAccepted, userCard)
 }

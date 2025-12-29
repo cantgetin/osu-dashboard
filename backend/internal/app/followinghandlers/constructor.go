@@ -2,8 +2,9 @@ package followinghandlers
 
 import (
 	"context"
-	log "github.com/sirupsen/logrus"
 	"osu-dashboard/internal/dto"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type (
@@ -14,22 +15,18 @@ type (
 	followingProvider interface {
 		List(ctx context.Context) ([]*dto.Following, error)
 	}
+
+	Handlers struct {
+		lg                *log.Logger
+		followingCreator  followingCreator
+		followingProvider followingProvider
+	}
 )
 
-type Handlers struct {
-	lg                *log.Logger
-	followingCreator  followingCreator
-	followingProvider followingProvider
-}
-
-func New(
-	lg *log.Logger,
-	followingCreator followingCreator,
-	followingProvider followingProvider,
-) *Handlers {
+func New(lg *log.Logger, c followingCreator, p followingProvider) *Handlers {
 	return &Handlers{
 		lg:                lg,
-		followingCreator:  followingCreator,
-		followingProvider: followingProvider,
+		followingCreator:  c,
+		followingProvider: p,
 	}
 }

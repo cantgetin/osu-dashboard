@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/txmanager"
 	"time"
 )
 
@@ -20,24 +21,30 @@ func (uc *UseCase) CreateTrackAndLogRecords(ctx context.Context, startTime time.
 	uc.lg.Infof("Average requests per minute: %f", avgReqsPerMin)
 
 	if err := uc.CreateTrackRecord(ctx); err != nil {
-		return fmt.Errorf("failed to create track record: %v", err)
+		return fmt.Errorf("failed to create track record: %w", err)
 	}
 
-	if err := uc.log.Create(ctx, &model.Log{
-		Name:               "Daily tracking for all users",
-		Message:            model.LogMessageDailyTrack,
-		Service:            "playcount-tracker",
-		AppVersion:         "v1.0",
-		Platform:           "Backend",
-		Type:               model.TrackTypeRegular,
-		APIRequests:        reqs,
-		SuccessRatePercent: successRate,
-		TrackedAt:          time.Now().UTC(),
-		AvgResponseTime:    respTime,
-		ElapsedTime:        elapsed,
-		TimeSinceLastTrack: timeSinceLast,
-	}); err != nil {
-		return fmt.Errorf("failed to create log: %v", err)
+	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
+		if err := uc.log.Create(ctx, tx, &model.Log{
+			Name:               "Daily tracking for all users",
+			Message:            model.LogMessageDailyTrack,
+			Service:            "playcount-tracker",
+			AppVersion:         "v1.0",
+			Platform:           "Backend",
+			Type:               model.TrackTypeRegular,
+			APIRequests:        reqs,
+			SuccessRatePercent: successRate,
+			TrackedAt:          time.Now().UTC(),
+			AvgResponseTime:    respTime,
+			ElapsedTime:        elapsed,
+			TimeSinceLastTrack: timeSinceLast,
+		}); err != nil {
+			return fmt.Errorf("failed to create log: %w", err)
+		}
+		return nil
+	})
+	if txErr != nil {
+		return txErr
 	}
 
 	return nil

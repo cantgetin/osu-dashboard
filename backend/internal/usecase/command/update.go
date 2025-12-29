@@ -24,7 +24,7 @@ type UpdateMapsetCommand struct {
 	PreviewUrl     string                  `json:"preview_url"`
 	Tags           string                  `json:"tags"`
 	PlayCount      int                     `json:"play_count"`
-	FavouriteCount int                     `json:"favourite_count"`
+	FavouriteCount int                     `json:"favorite_count"`
 	CommentsCount  int                     `json:"comments_count"`
 	Bpm            float64                 `json:"bpm"`
 	Creator        string                  `json:"creator"`

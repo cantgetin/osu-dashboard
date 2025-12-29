@@ -2,14 +2,15 @@ package tests
 
 import (
 	"context"
-	log "github.com/sirupsen/logrus"
-	"github.com/stretchr/testify/suite"
-	"gorm.io/gorm"
 	"osu-dashboard/internal/app"
 	"osu-dashboard/internal/config"
 	"osu-dashboard/tests/integration"
 	"testing"
 	"time"
+
+	log "github.com/sirupsen/logrus"
+	"github.com/stretchr/testify/suite"
+	"gorm.io/gorm"
 )
 
 type ContextKey string

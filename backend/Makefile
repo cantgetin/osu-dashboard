@@ -41,7 +41,7 @@ integration-test:
     endif
 
 lint:
-	golangci-lint run
+	golangci-lint run --fix --config=.golangci.yml
 
 add-sample-data:
 	go run tests/data/add_sample_data.go

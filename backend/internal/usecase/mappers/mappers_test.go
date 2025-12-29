@@ -2,11 +2,12 @@ package mappers
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
 	"osu-dashboard/internal/database/repository"
 	"osu-dashboard/internal/database/repository/model"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 // TODO: refactor
@@ -83,5 +84,5 @@ func Test_KeepLastNKeyValuesFromStats(t *testing.T) {
 	}
 
 	KeepLastNKeyValuesFromStats(data, 7)
-	assert.Equal(t, 7, len(data))
+	assert.Len(t, data, 7)
 }

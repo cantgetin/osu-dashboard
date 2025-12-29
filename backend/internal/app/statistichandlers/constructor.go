@@ -2,8 +2,9 @@ package statistichandlers
 
 import (
 	"context"
-	log "github.com/sirupsen/logrus"
 	"osu-dashboard/internal/dto"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type (
@@ -18,10 +19,7 @@ type (
 	}
 )
 
-func New(
-	lg *log.Logger,
-	statisticProvider statisticProvider,
-) *Handlers {
+func New(lg *log.Logger, statisticProvider statisticProvider) *Handlers {
 	return &Handlers{
 		lg:                lg,
 		statisticProvider: statisticProvider,

@@ -1,6 +1,8 @@
 package userhandlers
 
 import (
+	"net/http"
+	"osu-dashboard/internal/app/handlerutils"
 	"osu-dashboard/internal/database/repository/model"
 	"osu-dashboard/internal/dto"
 	userprovide "osu-dashboard/internal/usecase/user/provide"
@@ -12,54 +14,59 @@ import (
 func (s *Handlers) Create(c echo.Context) error {
 	user := new(dto.User)
 	if err := c.Bind(user); err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return s.userCreator.Create(c.Request().Context(), user)
+	if err := s.userCreator.Create(c.Request().Context(), user); err != nil {
+		return handlerutils.EchoInternalError(err)
+	}
+	return c.JSON(http.StatusCreated, user)
 }
 
 func (s *Handlers) Update(c echo.Context) error {
 	user := new(model.User)
 	if err := c.Bind(user); err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return s.userUpdater.Update(c.Request().Context(), user)
+	if err := s.userUpdater.Update(c.Request().Context(), user); err != nil {
+		return handlerutils.EchoInternalError(err)
+	}
+	return c.JSON(http.StatusAccepted, user)
 }
 
 func (s *Handlers) Get(c echo.Context) error {
 	id := c.Param("id")
-
 	if id == "" {
-		return echo.ErrBadRequest
+		return echo.NewHTTPError(http.StatusBadRequest, "empty user id")
 	}
 	idInt, err := strconv.Atoi(id)
 	if err != nil {
-		return echo.ErrBadRequest
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	user, err := s.userProvider.Get(c.Request().Context(), idInt)
 	if err != nil {
-		return err
+		return handlerutils.EchoInternalError(err)
 	}
 
-	return c.JSON(200, user)
+	return c.JSON(http.StatusOK, user)
 }
 
 func (s *Handlers) GetByName(c echo.Context) error {
 	name := c.Param("name")
 	user, err := s.userProvider.GetByName(c.Request().Context(), name)
 	if err != nil {
-		return err
+		return handlerutils.EchoInternalError(err)
 	}
 
-	return c.JSON(200, user)
+	return c.JSON(http.StatusOK, user)
 }
 
 func (s *Handlers) List(c echo.Context) error {
-	pageInt, err := getPageQueryParam(c)
+	pageInt, err := handlerutils.GetPageQueryParam(c)
 	if err != nil {
-		return echo.ErrBadRequest
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	userSort := mapSortQueryParamsToUserSort(
@@ -77,24 +84,8 @@ func (s *Handlers) List(c echo.Context) error {
 		Filter: userFilter,
 	})
 	if err != nil {
-		return err
+		return handlerutils.EchoInternalError(err)
 	}
 
-	return c.JSON(200, users)
-}
-
-func getPageQueryParam(c echo.Context) (int, error) {
-	page := c.QueryParam("page")
-	var pageInt int
-	if page == "" {
-		pageInt = 1
-	} else {
-		var err error
-		pageInt, err = strconv.Atoi(page)
-		if err != nil || pageInt <= 0 {
-			return 0, err
-		}
-	}
-
-	return pageInt, nil
+	return c.JSON(http.StatusOK, users)
 }

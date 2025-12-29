@@ -31,9 +31,7 @@ type Server struct {
 	logs      *loghandlers.Handlers
 }
 
-func New(
-	cfg *config.Config, lg *log.Logger, f *factory.UseCaseFactory,
-) *Server {
+func New(cfg *config.Config, lg *log.Logger, f *factory.UseCaseFactory) *Server {
 	server := echo.New()
 	server.HideBanner = true
 	server.HidePort = true

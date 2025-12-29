@@ -3,11 +3,12 @@ package mapsetrepository
 import (
 	"context"
 	"fmt"
-	"gorm.io/gorm"
 	"osu-dashboard/internal/database/repository/model"
 	"osu-dashboard/internal/database/txmanager"
 	"sort"
 	"strings"
+
+	"gorm.io/gorm"
 )
 
 const mapsetsTableName = "mapsets"
@@ -238,9 +239,9 @@ func (r *GormRepository) ListForUserWithFilterSortLimitOffset(
 	return mapsets, int(count), nil
 }
 
-func buildListByFilterQuery(filter model.MapsetFilter) (string, []interface{}) {
+func buildListByFilterQuery(filter model.MapsetFilter) (string, []any) {
 	var queryBuilder strings.Builder
-	values := make([]interface{}, 0, len(filter))
+	values := make([]any, 0, len(filter))
 	keys := make([]string, 0, len(filter))
 	for column := range filter {
 		keys = append(keys, string(column))
@@ -263,7 +264,6 @@ func buildListByFilterQuery(filter model.MapsetFilter) (string, []interface{}) {
 				values = append(values, "%"+filter[model.MapsetFilterField(column)].(string)+"%")
 			}
 			queryBuilder.WriteString(" )")
-
 		} else {
 			queryBuilder.WriteString(column + " = ?")
 			values = append(values, filter[model.MapsetFilterField(column)])

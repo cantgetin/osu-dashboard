@@ -9,42 +9,6 @@ import (
 	"time"
 )
 
-func (uc *UseCase) GetLastTimeEnriched(ctx context.Context) (*time.Time, error) {
-	t := time.Time{}
-	if err := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-		enrich, err := uc.enriches.GetLastEnrich(ctx, tx)
-		if err != nil {
-			return err
-		}
-
-		t = enrich.EnrichedAt
-
-		return nil
-	}); err != nil {
-		return nil, err
-	}
-
-	return &t, nil
-}
-
-func (uc *UseCase) CreateEnrichRecord(ctx context.Context) error {
-	enrich := &model.Enrich{
-		EnrichedAt: time.Now().UTC(),
-	}
-
-	if err := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-		err := uc.enriches.Create(ctx, tx, enrich)
-		if err != nil {
-			return err
-		}
-		return nil
-	}); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (uc *UseCase) Enrich(ctx context.Context) error {
 	// getting all users IDs
 	var follows []*model.Following
@@ -66,7 +30,7 @@ func (uc *UseCase) Enrich(ctx context.Context) error {
 
 	for _, f := range follows {
 		if err := uc.enrichUserMapsets(ctx, f.ID); err != nil {
-			return fmt.Errorf("failed to enrich user mapsets: %v", err)
+			return fmt.Errorf("failed to enrich user mapsets: %w", err)
 		}
 	}
 
@@ -106,7 +70,42 @@ func (uc *UseCase) enrichUserMapsets(ctx context.Context, userID int) error {
 		if txErr != nil {
 			return fmt.Errorf("failed to update genre lang, transaction failed: err: %w", err)
 		}
-
 	}
+	return nil
+}
+
+func (uc *UseCase) GetLastTimeEnriched(ctx context.Context) (*time.Time, error) {
+	t := time.Time{}
+	if err := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
+		enrich, err := uc.enriches.GetLastEnrich(ctx, tx)
+		if err != nil {
+			return err
+		}
+
+		t = enrich.EnrichedAt
+
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+
+	return &t, nil
+}
+
+func (uc *UseCase) CreateEnrichRecord(ctx context.Context) error {
+	enrich := &model.Enrich{
+		EnrichedAt: time.Now().UTC(),
+	}
+
+	if err := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
+		err := uc.enriches.Create(ctx, tx, enrich)
+		if err != nil {
+			return err
+		}
+		return nil
+	}); err != nil {
+		return err
+	}
+
 	return nil
 }

@@ -2,10 +2,11 @@ package userhandlers
 
 import (
 	"context"
-	log "github.com/sirupsen/logrus"
 	"osu-dashboard/internal/database/repository/model"
 	"osu-dashboard/internal/dto"
 	userprovide "osu-dashboard/internal/usecase/user/provide"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type (
@@ -31,16 +32,11 @@ type (
 	}
 )
 
-func New(
-	lg *log.Logger,
-	userCreator userCreator,
-	userProvider userProvider,
-	userUpdater userUpdater,
-) *Handlers {
+func New(lg *log.Logger, c userCreator, p userProvider, u userUpdater) *Handlers {
 	return &Handlers{
 		lg:           lg,
-		userCreator:  userCreator,
-		userProvider: userProvider,
-		userUpdater:  userUpdater,
+		userCreator:  c,
+		userProvider: p,
+		userUpdater:  u,
 	}
 }

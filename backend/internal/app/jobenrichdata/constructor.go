@@ -2,9 +2,10 @@ package enricher
 
 import (
 	"context"
-	log "github.com/sirupsen/logrus"
 	"osu-dashboard/internal/config"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type (
@@ -21,11 +22,7 @@ type (
 	}
 )
 
-func New(
-	cfg *config.Config,
-	lg *log.Logger,
-	enrich enricher,
-) *Worker {
+func New(cfg *config.Config, lg *log.Logger, enrich enricher) *Worker {
 	return &Worker{
 		cfg:      cfg,
 		lg:       lg,

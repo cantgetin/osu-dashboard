@@ -12,7 +12,7 @@ const (
 	MapsetArtistOrTitleOrTagsFields MapsetFilterField = ""
 )
 
-type MapsetFilter map[MapsetFilterField]interface{}
+type MapsetFilter map[MapsetFilterField]any
 
 // sort
 

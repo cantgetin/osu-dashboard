@@ -2,11 +2,12 @@ package config
 
 import (
 	"fmt"
-	"github.com/caarlos0/env"
-	"github.com/joho/godotenv"
 	"path/filepath"
 	"runtime"
 	"time"
+
+	"github.com/caarlos0/env"
+	"github.com/joho/godotenv"
 )
 
 type Config struct {

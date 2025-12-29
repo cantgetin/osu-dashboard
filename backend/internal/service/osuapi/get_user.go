@@ -14,7 +14,7 @@ func (s *Service) GetUser(ctx context.Context, userID string) (*User, error) {
 	}
 
 	// https://osu.ppy.sh/api/v2/users/123/osu
-	req, err := http.NewRequestWithContext(ctx, "GET", s.cfg.OsuAPIHost+"/users/"+userID+"/osu", nil)
+	req, err := http.NewRequestWithContext(ctx, "GET", s.cfg.OsuAPIHost+"/users/"+userID+"/osu", http.NoBody)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create http request: %w", err)
 	}

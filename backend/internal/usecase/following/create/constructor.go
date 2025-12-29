@@ -17,7 +17,7 @@ type (
 	}
 
 	logSource interface {
-		Create(ctx context.Context, log *model.Log) error
+		Create(ctx context.Context, tx txmanager.Tx, log *model.Log) error
 	}
 
 	trackSource interface {

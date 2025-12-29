@@ -13,21 +13,13 @@ const (
 	statsMaxElements = 7
 )
 
-type (
-	ListCommand struct {
-		Page   int
-		Sort   model.MapsetSort
-		Filter model.MapsetFilter
-	}
+type ListCommand struct {
+	Page   int
+	Sort   model.MapsetSort
+	Filter model.MapsetFilter
+}
 
-	ListResponse struct {
-		Mapsets     []*dto.Mapset
-		CurrentPage int
-		Pages       int
-	}
-)
-
-func (uc *UseCase) List(ctx context.Context, cmd *ListCommand) (*ListResponse, error) {
+func (uc *UseCase) List(ctx context.Context, cmd *ListCommand) (*dto.MapsetsPaged, error) {
 	var dtoMapsets []*dto.Mapset
 	var count int
 
@@ -72,14 +64,14 @@ func (uc *UseCase) List(ctx context.Context, cmd *ListCommand) (*ListResponse, e
 		}
 	}
 
-	return &ListResponse{
+	return &dto.MapsetsPaged{
 		Mapsets:     dtoMapsets,
 		CurrentPage: cmd.Page,
 		Pages:       (count + mapsetsPerPage - 1) / mapsetsPerPage,
 	}, nil
 }
 
-func (uc *UseCase) ListForUser(ctx context.Context, userID int, cmd *ListCommand) (*ListResponse, error) {
+func (uc *UseCase) ListForUser(ctx context.Context, userID int, cmd *ListCommand) (*dto.MapsetsPaged, error) {
 	var dtoMapsets []*dto.Mapset
 	var count int
 
@@ -138,7 +130,7 @@ func (uc *UseCase) ListForUser(ctx context.Context, userID int, cmd *ListCommand
 		}
 	}
 
-	return &ListResponse{
+	return &dto.MapsetsPaged{
 		Mapsets:     dtoMapsets,
 		CurrentPage: cmd.Page,
 		Pages:       (count + mapsetsPerPage - 1) / mapsetsPerPage,

@@ -2,9 +2,10 @@ package mapsethandlers
 
 import (
 	"errors"
-	"github.com/labstack/echo/v4"
 	"osu-dashboard/internal/database/repository/model"
 	"strconv"
+
+	"github.com/labstack/echo/v4"
 )
 
 func mapSortQueryParamsToMapsetSort(fieldParam string, directionParam string) model.MapsetSort {
@@ -63,22 +64,6 @@ func checkIfStatusIsValid(status string) bool {
 		status == "approved" ||
 		status == "qualified" ||
 		status == "loved"
-}
-
-func getPageQueryParam(c echo.Context) (int, error) {
-	page := c.QueryParam("page")
-	var pageInt int
-	if page == "" {
-		pageInt = 1
-	} else {
-		var err error
-		pageInt, err = strconv.Atoi(page)
-		if err != nil || pageInt <= 0 {
-			return 0, err
-		}
-	}
-
-	return pageInt, nil
 }
 
 func getUserIDFromContext(c echo.Context) (int, error) {

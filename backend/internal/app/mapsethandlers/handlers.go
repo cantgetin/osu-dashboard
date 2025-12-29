@@ -1,46 +1,51 @@
 package mapsethandlers
 
 import (
-	"github.com/labstack/echo/v4"
 	"net/http"
+	"osu-dashboard/internal/app/handlerutils"
 	"osu-dashboard/internal/usecase/command"
 	mapsetprovide "osu-dashboard/internal/usecase/mapset/provide"
 	"strconv"
+
+	"github.com/labstack/echo/v4"
 )
 
 func (s *Handlers) Create(c echo.Context) error {
 	mapset := new(command.CreateMapsetCommand)
 	if err := c.Bind(mapset); err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return s.mapsetCreator.Create(c.Request().Context(), mapset)
+	if err := s.mapsetCreator.Create(c.Request().Context(), mapset); err != nil {
+		return handlerutils.EchoInternalError(err)
+	}
+
+	return c.JSON(http.StatusCreated, mapset)
 }
 
 func (s *Handlers) Get(c echo.Context) error {
 	id := c.Param("id")
 
 	if id == "" {
-		return echo.ErrBadRequest
+		return echo.NewHTTPError(http.StatusBadRequest, "empty id param")
 	}
 	idInt, err := strconv.Atoi(id)
 	if err != nil {
-		return echo.ErrBadRequest
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	mapset, err := s.mapsetProvider.Get(c.Request().Context(), idInt)
-
 	if err != nil {
-		return err
+		return handlerutils.EchoInternalError(err)
 	}
 
-	return c.JSON(200, mapset)
+	return c.JSON(http.StatusOK, mapset)
 }
 
 func (s *Handlers) List(c echo.Context) error {
-	pageInt, err := getPageQueryParam(c)
+	pageInt, err := handlerutils.GetPageQueryParam(c)
 	if err != nil {
-		return echo.ErrBadRequest
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	mapsetSort := mapSortQueryParamsToMapsetSort(
@@ -62,27 +67,21 @@ func (s *Handlers) List(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		return handlerutils.EchoInternalError(err)
 	}
 
-	response := MapsetListResponse{
-		Mapsets:     listResp.Mapsets,
-		CurrentPage: listResp.CurrentPage,
-		Pages:       listResp.Pages,
-	}
-
-	return c.JSON(http.StatusOK, response)
+	return c.JSON(http.StatusOK, listResp)
 }
 
 func (s *Handlers) ListForUser(c echo.Context) error {
 	idInt, err := getUserIDFromContext(c)
 	if err != nil {
-		return echo.ErrBadRequest
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	pageInt, err := getPageQueryParam(c)
+	pageInt, err := handlerutils.GetPageQueryParam(c)
 	if err != nil {
-		return echo.ErrBadRequest
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	mapsetSort := mapSortQueryParamsToMapsetSort(
@@ -105,14 +104,8 @@ func (s *Handlers) ListForUser(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		return handlerutils.EchoInternalError(err)
 	}
 
-	response := MapsetListResponse{
-		Mapsets:     listResp.Mapsets,
-		CurrentPage: listResp.CurrentPage,
-		Pages:       listResp.Pages,
-	}
-
-	return c.JSON(http.StatusOK, response)
+	return c.JSON(http.StatusOK, listResp)
 }

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"osu-dashboard/internal/app/mapsethandlers"
 	"osu-dashboard/internal/database/repository"
 	"osu-dashboard/internal/database/repository/model"
 	"osu-dashboard/internal/dto"
@@ -24,7 +23,7 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 		var tt = []struct {
 			name    string
 			create  *models
-			out     *mapsethandlers.MapsetListResponse
+			out     *dto.MapsetsPaged
 			outCode int
 		}{
 			{
@@ -34,7 +33,7 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 						ID:        1,
 						AvatarURL: "avatarurl.com",
 						Username:  "username",
-						UserStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favourite_count":2, "map_count":1}}`),
+						UserStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favorite_count":2, "map_count":1}}`),
 					},
 					Mapsets: []*model.Mapset{
 						{
@@ -49,7 +48,7 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 							PreviewURL:  "previewurl.com",
 							Tags:        "tags shmags",
 							BPM:         210,
-							MapsetStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favourite_count":2}}`),
+							MapsetStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favorite_count":2}}`),
 						},
 						{
 							ID:          2,
@@ -63,7 +62,7 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 							PreviewURL:  "previewurl.com",
 							Tags:        "tags shmags",
 							BPM:         220,
-							MapsetStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favourite_count":2}}`),
+							MapsetStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favorite_count":2}}`),
 						},
 					},
 					Beatmaps: []*model.Beatmap{
@@ -99,7 +98,7 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 						},
 					},
 				},
-				out: &mapsethandlers.MapsetListResponse{
+				out: &dto.MapsetsPaged{
 					Mapsets: []*dto.Mapset{
 						{
 							Id:          2,
@@ -208,45 +207,45 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 				body, err := io.ReadAll(out.Body)
 				s.Require().NoError(err)
 
-				var actual mapsethandlers.MapsetListResponse
+				var actual *dto.MapsetsPaged
 				err = json.Unmarshal(body, &actual)
 				s.Require().NoError(err)
 
-				s.Assert().Equal(2, len(actual.Mapsets))
+				s.Assert().Len(actual.Mapsets, 2)
 
 				for i, actualMapset := range actual.Mapsets {
 					expectedMapset := tc.out.Mapsets[i]
 
-					s.Assert().Equal(expectedMapset.Id, actualMapset.Id)
-					s.Assert().Equal(expectedMapset.Artist, actualMapset.Artist)
-					s.Assert().Equal(expectedMapset.Title, actualMapset.Title)
-					s.Assert().Equal(expectedMapset.Covers, actualMapset.Covers)
-					s.Assert().Equal(expectedMapset.Status, actualMapset.Status)
-					s.Assert().Equal(expectedMapset.UserId, actualMapset.UserId)
-					s.Assert().Equal(expectedMapset.PreviewUrl, actualMapset.PreviewUrl)
-					s.Assert().Equal(expectedMapset.Tags, actualMapset.Tags)
+					s.Equal(expectedMapset.Id, actualMapset.Id)
+					s.Equal(expectedMapset.Artist, actualMapset.Artist)
+					s.Equal(expectedMapset.Title, actualMapset.Title)
+					s.Equal(expectedMapset.Covers, actualMapset.Covers)
+					s.Equal(expectedMapset.Status, actualMapset.Status)
+					s.Equal(expectedMapset.UserId, actualMapset.UserId)
+					s.Equal(expectedMapset.PreviewUrl, actualMapset.PreviewUrl)
+					s.Equal(expectedMapset.Tags, actualMapset.Tags)
 					s.Assert().Equal(expectedMapset.Bpm, actualMapset.Bpm)
-					s.Assert().Equal(expectedMapset.Creator, actualMapset.Creator)
+					s.Equal(expectedMapset.Creator, actualMapset.Creator)
 
-					s.Assert().Equal(1, len(actualMapset.MapsetStats))
+					s.Assert().Len(actualMapset.MapsetStats, 1)
 
 					for j, actualBeatmap := range actualMapset.Beatmaps {
 						expectedBeatmap := tc.out.Mapsets[i].Beatmaps[j]
 
-						s.Assert().Equal(expectedBeatmap.Id, actualBeatmap.Id)
-						s.Assert().Equal(expectedBeatmap.BeatmapsetId, actualBeatmap.BeatmapsetId)
+						s.Equal(expectedBeatmap.Id, actualBeatmap.Id)
+						s.Equal(expectedBeatmap.BeatmapsetId, actualBeatmap.BeatmapsetId)
 						s.Assert().Equal(expectedBeatmap.DifficultyRating, actualBeatmap.DifficultyRating)
-						s.Assert().Equal(expectedBeatmap.Version, actualBeatmap.Version)
+						s.Equal(expectedBeatmap.Version, actualBeatmap.Version)
 						s.Assert().Equal(expectedBeatmap.Accuracy, actualBeatmap.Accuracy)
 						s.Assert().Equal(expectedBeatmap.Ar, actualBeatmap.Ar)
 						s.Assert().Equal(expectedBeatmap.Bpm, actualBeatmap.Bpm)
 						s.Assert().Equal(expectedBeatmap.Cs, actualBeatmap.Cs)
-						s.Assert().Equal(expectedBeatmap.Status, actualBeatmap.Status)
-						s.Assert().Equal(expectedBeatmap.Url, actualBeatmap.Url)
-						s.Assert().Equal(expectedBeatmap.TotalLength, actualBeatmap.TotalLength)
-						s.Assert().Equal(expectedBeatmap.UserId, actualBeatmap.UserId)
+						s.Equal(expectedBeatmap.Status, actualBeatmap.Status)
+						s.Equal(expectedBeatmap.Url, actualBeatmap.Url)
+						s.Equal(expectedBeatmap.TotalLength, actualBeatmap.TotalLength)
+						s.Equal(expectedBeatmap.UserId, actualBeatmap.UserId)
 
-						s.Assert().Equal(1, len(actualBeatmap.BeatmapStats))
+						s.Assert().Len(actualBeatmap.BeatmapStats, 1)
 					}
 				}
 			})

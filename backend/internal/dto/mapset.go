@@ -22,3 +22,9 @@ type Mapset struct {
 	Creator     string            `json:"creator"`
 	Beatmaps    []*Beatmap        `json:"beatmaps"`
 }
+
+type MapsetsPaged struct {
+	Mapsets     []*Mapset `json:"mapsets"`
+	CurrentPage int       `json:"current_page"`
+	Pages       int       `json:"pages"`
+}

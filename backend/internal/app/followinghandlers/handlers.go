@@ -1,20 +1,21 @@
 package followinghandlers
 
 import (
-	"github.com/labstack/echo/v4"
 	"net/http"
+	"osu-dashboard/internal/app/handlerutils"
+
+	"github.com/labstack/echo/v4"
 )
 
 func (s *Handlers) Create(c echo.Context) error {
 	code := c.Param("code")
 	if code == "" {
-		return echo.ErrBadRequest
+		return echo.NewHTTPError(http.StatusBadRequest, "empty code")
 	}
 
 	err := s.followingCreator.Create(c.Request().Context(), code)
 	if err != nil {
-		s.lg.Printf("failed to create following: %v", err)
-		return echo.NewHTTPError(http.StatusInternalServerError, "failed to create following")
+		return handlerutils.EchoInternalError(err)
 	}
 
 	return c.NoContent(http.StatusCreated)
@@ -23,9 +24,8 @@ func (s *Handlers) Create(c echo.Context) error {
 func (s *Handlers) List(c echo.Context) error {
 	trackingList, err := s.followingProvider.List(c.Request().Context())
 	if err != nil {
-		s.lg.Printf("failed to list followings: %v", err)
-		return echo.NewHTTPError(http.StatusInternalServerError, "failed to list followings")
+		return handlerutils.EchoInternalError(err)
 	}
 
-	return c.JSON(200, trackingList)
+	return c.JSON(http.StatusOK, trackingList)
 }

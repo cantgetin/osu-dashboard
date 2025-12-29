@@ -3,16 +3,15 @@ package app
 import (
 	"context"
 	"fmt"
-	dbcleaner "osu-dashboard/internal/app/jobdbcleaner"
+	jobcleandb "osu-dashboard/internal/app/jobdbcleaner"
 	jobenrich "osu-dashboard/internal/app/jobenrichdata"
-	trackingworker "osu-dashboard/internal/app/jobtrackingworker"
+	jobtrack "osu-dashboard/internal/app/jobtrackingworker"
 	"osu-dashboard/internal/bootstrap"
 	"osu-dashboard/internal/config"
 	repositoryfactory "osu-dashboard/internal/database/repository/factory"
 	"osu-dashboard/internal/service/osuapi"
 	"osu-dashboard/internal/service/osuapitokenprovider"
 	"osu-dashboard/internal/usecase/factory"
-	"time"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -31,8 +30,7 @@ func RunJobs(ctx context.Context, cfg *config.Config, lg *log.Logger) error {
 		return fmt.Errorf("failed to apply migrations: %w", err)
 	}
 
-	const waitForConnection = 5 * time.Second
-	txm := bootstrap.ConnectTxManager("osu-dashboard-jobs", waitForConnection, db, lg)
+	txm := bootstrap.ConnectTxManager("osu-dashboard-jobs", db, lg)
 
 	// init repos
 	repoFactory := repositoryfactory.New(cfg, lg)
@@ -65,16 +63,12 @@ func RunJobs(ctx context.Context, cfg *config.Config, lg *log.Logger) error {
 	enricherUC := useCaseFactory.MakeEnricherUseCase()
 	trackUC := useCaseFactory.MakeTrackUseCase()
 
-	// init tracker
-	tracker := trackingworker.New(cfg, lg, trackUC)
-
-	// init cleaner
-	cleaner := dbcleaner.New(cfg, lg, cleanerUC)
-
-	// init enricher
+	// init jobs
+	tracker := jobtrack.New(cfg, lg, trackUC)
+	cleaner := jobcleandb.New(cfg, lg, cleanerUC)
 	enricher := jobenrich.New(cfg, lg, enricherUC)
 
-	// start workers
+	// start parallel job workers
 	go tracker.Start(ctx)
 	go cleaner.Start(ctx)
 	go enricher.Start(ctx)

@@ -2,6 +2,7 @@ package usercardprovide
 
 import (
 	"context"
+	"osu-dashboard/internal/database/repository/model"
 	"osu-dashboard/internal/database/txmanager"
 	"osu-dashboard/internal/dto"
 	"osu-dashboard/internal/usecase/mappers"
@@ -34,12 +35,14 @@ func (uc *UseCase) Get(ctx context.Context, userID int, page int) (*dto.UserCard
 
 		// for each mapset get its beatmaps and map to DTO
 		for _, mapset := range mapsets {
-			beatmaps, err := uc.beatmap.ListForMapset(ctx, tx, mapset.ID)
+			var beatmaps []*model.Beatmap
+			beatmaps, err = uc.beatmap.ListForMapset(ctx, tx, mapset.ID)
 			if err != nil {
 				return err
 			}
 
-			mapsetWithMaps, err := mappers.MapMapsetModelToMapsetDTO(mapset, beatmaps)
+			var mapsetWithMaps *dto.Mapset
+			mapsetWithMaps, err = mappers.MapMapsetModelToMapsetDTO(mapset, beatmaps)
 			if err != nil {
 				return err
 			}

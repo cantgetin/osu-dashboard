@@ -2,9 +2,10 @@ package dbcleaner
 
 import (
 	"context"
-	log "github.com/sirupsen/logrus"
 	"osu-dashboard/internal/config"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type (
@@ -21,11 +22,7 @@ type (
 	}
 )
 
-func New(
-	cfg *config.Config,
-	lg *log.Logger,
-	cleaner cleaner,
-) *Worker {
+func New(cfg *config.Config, lg *log.Logger, cleaner cleaner) *Worker {
 	return &Worker{
 		cfg:     cfg,
 		lg:      lg,

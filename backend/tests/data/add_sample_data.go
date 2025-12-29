@@ -2,17 +2,18 @@ package main
 
 import (
 	"context"
-	"github.com/caarlos0/env"
-	migrate "github.com/rubenv/sql-migrate"
-	log "github.com/sirupsen/logrus"
-	"gorm.io/gorm"
 	"os"
-	"path/filepath"
 	"osu-dashboard/internal/bootstrap"
 	"osu-dashboard/internal/config"
 	"osu-dashboard/internal/database/repository"
 	"osu-dashboard/internal/database/repository/model"
+	"path/filepath"
 	"time"
+
+	"github.com/caarlos0/env"
+	migrate "github.com/rubenv/sql-migrate"
+	log "github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 )
 
 type ContextKey string
@@ -43,10 +44,10 @@ func addSampleData(ctx context.Context, cfg *config.Config) error {
 		Username:  "Gasha",
 		AvatarURL: "https://a.ppy.sh/7192129?1602378137.jpeg",
 		UserStats: repository.JSON(`
-{"2023-12-24T12:00:00Z":{"play_count":11000,"favourite_count":2, "map_count":3}, 
-"2023-12-25T12:00:00Z":{"play_count":11090,"favourite_count":3, "map_count":4},
-"2023-12-26T12:00:00Z":{"play_count":11200,"favourite_count":4, "map_count":5},
-"2023-12-27T12:00:00Z":{"play_count":11634,"favourite_count":10, "map_count":6}}`),
+{"2023-12-24T12:00:00Z":{"play_count":11000,"favorite_count":2, "map_count":3}, 
+"2023-12-25T12:00:00Z":{"play_count":11090,"favorite_count":3, "map_count":4},
+"2023-12-26T12:00:00Z":{"play_count":11200,"favorite_count":4, "map_count":5},
+"2023-12-27T12:00:00Z":{"play_count":11634,"favorite_count":10, "map_count":6}}`),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 	}
@@ -54,7 +55,7 @@ func addSampleData(ctx context.Context, cfg *config.Config) error {
 	mapset := &model.Mapset{
 		ID:     2015413,
 		Artist: "Rizza",
-		Title:  "bizzare",
+		Title:  "bizarre",
 		Covers: repository.JSON(`
 {"cover": "https://assets.ppy.sh/beatmaps/2015413/covers/cover.jpg?1690122670",
 "cover@2x": "https://assets.ppy.sh/beatmaps/2015413/covers/cover@2x.jpg?1690122670",
@@ -72,10 +73,10 @@ func addSampleData(ctx context.Context, cfg *config.Config) error {
 		Tags:        "rap trap hyperpop synthwave chill girl rizza sqwore",
 		BPM:         150,
 		MapsetStats: repository.JSON(`
-{"2023-12-24T12:00:00Z":{"play_count":654,"favourite_count":2},
-"2023-12-25T12:00:00Z":{"play_count":800,"favourite_count":3},
-"2023-12-26T12:00:00Z":{"play_count":2000,"favourite_count":4},
-"2023-12-27T12:00:00Z":{"play_count":2300,"favourite_count":15}}`),
+{"2023-12-24T12:00:00Z":{"play_count":654,"favorite_count":2},
+"2023-12-25T12:00:00Z":{"play_count":800,"favorite_count":3},
+"2023-12-26T12:00:00Z":{"play_count":2000,"favorite_count":4},
+"2023-12-27T12:00:00Z":{"play_count":2300,"favorite_count":15}}`),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 	}

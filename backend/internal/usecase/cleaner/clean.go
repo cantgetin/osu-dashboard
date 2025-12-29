@@ -2,12 +2,10 @@ package cleaner
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"osu-dashboard/internal/database/repository"
 	"osu-dashboard/internal/database/repository/model"
 	"osu-dashboard/internal/database/txmanager"
-	"sort"
 	"time"
 )
 
@@ -16,15 +14,16 @@ const jsonbStatsMaxElements = 14
 func (uc *UseCase) Clean(ctx context.Context) error {
 	started := time.Now()
 
+	// list users, trim stats and update
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
-		// get users, trim and update
 		users, err := uc.user.List(ctx, tx)
 		if err != nil {
 			return err
 		}
 
 		for _, user := range users {
-			updatedStats, err := removeAllMapEntriesExceptLastN(&user.UserStats, jsonbStatsMaxElements)
+			var updatedStats *repository.JSON
+			updatedStats, err = removeAllMapEntriesExceptLastN(&user.UserStats, jsonbStatsMaxElements)
 			if err != nil {
 				return err
 			}
@@ -36,14 +35,22 @@ func (uc *UseCase) Clean(ctx context.Context) error {
 			}
 		}
 
-		// get mapsets, its beatmaps, trim and update
+		return nil
+	})
+	if txErr != nil {
+		return fmt.Errorf("failed to clean users: %w", txErr)
+	}
+
+	// list mapsets, its beatmaps, trim and update
+	txErr = uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		mapsets, err := uc.mapset.List(ctx, tx)
 		if err != nil {
 			return err
 		}
 
 		for _, mapset := range mapsets {
-			updatedMapsetStats, err := removeAllMapEntriesExceptLastN(&mapset.MapsetStats, jsonbStatsMaxElements)
+			var updatedMapsetStats *repository.JSON
+			updatedMapsetStats, err = removeAllMapEntriesExceptLastN(&mapset.MapsetStats, jsonbStatsMaxElements)
 			if err != nil {
 				return err
 			}
@@ -54,13 +61,15 @@ func (uc *UseCase) Clean(ctx context.Context) error {
 				return err
 			}
 
-			beatmaps, err := uc.beatmap.ListForMapset(ctx, tx, mapset.ID)
+			var beatmaps []*model.Beatmap
+			beatmaps, err = uc.beatmap.ListForMapset(ctx, tx, mapset.ID)
 			if err != nil {
 				return err
 			}
 
 			for _, beatmap := range beatmaps {
-				beatmapStats, err := removeAllMapEntriesExceptLastN(&beatmap.BeatmapStats, jsonbStatsMaxElements)
+				var beatmapStats *repository.JSON
+				beatmapStats, err = removeAllMapEntriesExceptLastN(&beatmap.BeatmapStats, jsonbStatsMaxElements)
 				if err != nil {
 					return err
 				}
@@ -76,66 +85,70 @@ func (uc *UseCase) Clean(ctx context.Context) error {
 		return nil
 	})
 	if txErr != nil {
-		return txErr
+		return fmt.Errorf("failed to clean mapsets and beatmaps: %w", txErr)
 	}
 
-	if err := uc.log.Create(ctx, &model.Log{
-		Name:               "Daily data clean for all users",
-		Message:            model.LogMessageDailyClean,
-		Service:            "db-cleaner",
-		AppVersion:         "v1.0",
-		Platform:           "Backend",
-		Type:               model.TrackTypeRegular,
-		APIRequests:        0,
-		SuccessRatePercent: 100,
-		TrackedAt:          time.Now().UTC(),
-		AvgResponseTime:    0,
-		ElapsedTime:        time.Since(started),
-		TimeSinceLastTrack: 0,
-	}); err != nil {
-		return fmt.Errorf("failed to create log: %v", err)
+	// create log
+	txErr = uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
+		if err := uc.log.Create(ctx, tx, &model.Log{
+			Name:               "Daily data clean for all users",
+			Message:            model.LogMessageDailyClean,
+			Service:            "db-cleaner",
+			AppVersion:         "v1.0",
+			Platform:           "Backend",
+			Type:               model.TrackTypeRegular,
+			APIRequests:        0,
+			SuccessRatePercent: 100,
+			TrackedAt:          time.Now().UTC(),
+			AvgResponseTime:    0,
+			ElapsedTime:        time.Since(started),
+			TimeSinceLastTrack: 0,
+		}); err != nil {
+			return err
+		}
+		return nil
+	})
+	if txErr != nil {
+		return fmt.Errorf("failed to create clean log: %w", txErr)
 	}
 
 	return nil
 }
 
-func removeAllMapEntriesExceptLastN(jsonData *repository.JSON, n int) (*repository.JSON, error) {
-	if jsonData == nil {
-		return nil, fmt.Errorf("jsonData is nil")
+func (uc *UseCase) CreateCleanRecord(ctx context.Context) error {
+	track := &model.Clean{
+		CleanedAt: time.Now().UTC(),
 	}
 
-	if *jsonData == nil {
-		return nil, fmt.Errorf("jsonData ptr is nil")
+	if err := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
+		err := uc.clean.Create(ctx, tx, track)
+		if err != nil {
+			return err
+		}
+		return nil
+	}); err != nil {
+		return err
 	}
 
-	var data map[time.Time]interface{}
-	if err := json.Unmarshal(*jsonData, &data); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal JSON: %v", err)
+	return nil
+}
+
+func (uc *UseCase) GetLastTimeCleaned(
+	ctx context.Context,
+) (*time.Time, error) {
+	t := time.Time{}
+	if err := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
+		track, err := uc.clean.GetLastClean(ctx, tx)
+		if err != nil {
+			return err
+		}
+
+		t = track.CleanedAt
+
+		return nil
+	}); err != nil {
+		return nil, err
 	}
 
-	if len(data) <= n {
-		return jsonData, nil
-	}
-
-	keys := make([]time.Time, len(data))
-	for key := range data {
-		keys = append(keys, key)
-	}
-
-	// sort in ascending order
-	sort.Slice(keys, func(i, j int) bool {
-		return keys[i].Before(keys[j])
-	})
-
-	for i := 0; i < len(keys)-n; i++ {
-		delete(data, keys[i])
-	}
-	
-	updatedJSON, err := json.Marshal(data)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal updated JSON: %v", err)
-	}
-
-	r := repository.JSON(updatedJSON)
-	return &r, nil
+	return &t, nil
 }

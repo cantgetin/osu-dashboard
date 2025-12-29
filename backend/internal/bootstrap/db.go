@@ -2,15 +2,16 @@ package bootstrap
 
 import (
 	"fmt"
-	"github.com/ds248a/closer"
-	migrate "github.com/rubenv/sql-migrate"
-	log "github.com/sirupsen/logrus"
 	"osu-dashboard/internal/config"
 	"osu-dashboard/internal/database/txmanager"
 	"path/filepath"
 	"runtime"
 	"strings"
 	"time"
+
+	"github.com/ds248a/closer"
+	migrate "github.com/rubenv/sql-migrate"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"gorm.io/driver/postgres"
@@ -31,7 +32,7 @@ func InitDB(cfg *config.Config) (*gorm.DB, error) {
 			},
 		)}
 
-	// switch pgDSN to secret password from .env
+	// Switch PgDSN password to secret password from .env
 	cfg.PgDSN = strings.Replace(cfg.PgDSN, "password=db", "password="+cfg.PgPassword, 1)
 
 	db, err := gorm.Open(postgres.Open(cfg.PgDSN), gormConfig)
@@ -64,18 +65,15 @@ func InitDB(cfg *config.Config) (*gorm.DB, error) {
 	return db, nil
 }
 
-// TODO: look at this later, applying existing migrations causing it to fail
 func ApplyMigrations(gdb *gorm.DB) error {
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {
 		return fmt.Errorf("failed to get current file information")
 	}
 
-	// Get the directory containing the current file
 	baseDir := filepath.Dir(filename)
 	migrationsDir := filepath.Join(baseDir, "..", "..", "migrations")
 
-	// Create a migration source with the absolute path
 	migrations := migrate.FileMigrationSource{
 		Dir: migrationsDir,
 	}
@@ -85,7 +83,6 @@ func ApplyMigrations(gdb *gorm.DB) error {
 		return err
 	}
 
-	// Apply migrations
 	n, err := migrate.Exec(db, "postgres", migrations, migrate.Up)
 	if err != nil {
 		return err
@@ -95,7 +92,7 @@ func ApplyMigrations(gdb *gorm.DB) error {
 	return nil
 }
 
-func ConnectTxManager(ns string, wait time.Duration, db *gorm.DB, lg *log.Logger) txmanager.TxManager {
+func ConnectTxManager(ns string, db *gorm.DB, lg *log.Logger) txmanager.TxManager {
 	m := prometheus.NewHistogramVec(prometheus.HistogramOpts{
 		Namespace: ns,
 		Subsystem: "database",

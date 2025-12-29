@@ -18,7 +18,7 @@ func (p *TokenProvider) GetToken(ctx context.Context) (string, error) {
 		return p.token, nil
 	}
 
-	//curl --request POST \
+	// curl --request POST \
 	//    "https://osu.ppy.sh/oauth/token" \
 	//    --header "Accept: application/json" \
 	//    --header "Content-Type: application/x-www-form-urlencoded" \

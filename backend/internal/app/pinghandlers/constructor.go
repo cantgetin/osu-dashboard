@@ -8,9 +8,7 @@ type Handlers struct {
 	lg *log.Logger
 }
 
-func New(
-	lg *log.Logger,
-) *Handlers {
+func New(lg *log.Logger) *Handlers {
 	return &Handlers{
 		lg: lg,
 	}

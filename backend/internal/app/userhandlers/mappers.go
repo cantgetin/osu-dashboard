@@ -14,7 +14,7 @@ func mapSortQueryParamsToUserSort(fieldParam string, directionParam string) mode
 			field = model.UserPlaycount
 		case "map_count":
 			field = model.UserMapCount
-		case "favourites":
+		case "favorites":
 			field = model.UserFavs
 		case "comments":
 			field = model.UserComms

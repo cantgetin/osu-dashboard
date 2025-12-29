@@ -1,11 +1,12 @@
 package bootstrap
 
 import (
-	"github.com/hashicorp/go-retryablehttp"
-	log "github.com/sirupsen/logrus"
 	"net/http"
 	"sync"
 	"time"
+
+	"github.com/hashicorp/go-retryablehttp"
+	log "github.com/sirupsen/logrus"
 )
 
 type CustomHTTPClient struct {

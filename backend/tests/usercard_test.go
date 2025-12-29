@@ -107,7 +107,7 @@ func (s *IntegrationSuite) Test_CreateUseCard() {
 				s.Require().NoError(err)
 				s.Require().NotNil(out)
 
-				s.Assert().Equal(tc.outCode, out.StatusCode)
+				s.Equal(tc.outCode, out.StatusCode)
 			})
 		}
 	})
@@ -142,7 +142,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 						ID:        123,
 						Username:  "username1",
 						AvatarURL: "avararurl.com",
-						UserStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":52,"favourite_count":2, "map_count":3}}`),
+						UserStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":52,"favorite_count":2, "map_count":3}}`),
 						CreatedAt: time.Now().UTC(),
 						UpdatedAt: time.Now().UTC(),
 					},
@@ -159,7 +159,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 							PreviewURL:  "avararurl.com",
 							Tags:        "tags tags",
 							BPM:         150,
-							MapsetStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":52,"favourite_count":2}}`),
+							MapsetStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":52,"favorite_count":2}}`),
 							CreatedAt:   time.Now().UTC(),
 							UpdatedAt:   time.Now().UTC(),
 						},
@@ -418,7 +418,6 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 		}
 		for _, tc := range tt {
 			s.Run(tc.name, func() {
-
 				// create models for update
 				err := s.db.Create(&tc.create.User).Error
 				s.Require().NoError(err)
@@ -443,7 +442,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 				)
 
 				s.Require().NoError(err)
-				equal := s.Assert().Equal(tc.outCode, out.StatusCode)
+				equal := s.Equal(tc.outCode, out.StatusCode)
 				if !equal {
 					s.Failf("unexpected response code", "expected %d, got %d", tc.outCode, out.StatusCode)
 				}
@@ -456,13 +455,13 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 				err = s.db.Table("users").Where("id = ?", expectedUser.ID).First(&actualUser).Error
 				s.Require().NoError(err)
 
-				s.Assert().Equal(expectedUser.ID, actualUser.ID)
-				s.Assert().Equal(expectedUser.AvatarURL, actualUser.AvatarURL)
-				s.Assert().Equal(expectedUser.Username, actualUser.Username)
-				s.Assert().Positive(actualUser.CreatedAt.Unix()) // todo
-				s.Assert().Positive(actualUser.UpdatedAt.Unix()) // todo
+				s.Equal(expectedUser.ID, actualUser.ID)
+				s.Equal(expectedUser.AvatarURL, actualUser.AvatarURL)
+				s.Equal(expectedUser.Username, actualUser.Username)
+				s.Positive(actualUser.CreatedAt.Unix()) // todo
+				s.Positive(actualUser.UpdatedAt.Unix()) // todo
 
-				var data map[string]interface{}
+				var data map[string]any
 
 				err = json.Unmarshal(actualUser.UserStats, &data)
 				if err != nil {
@@ -470,7 +469,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 					return
 				}
 
-				s.Assert().Equal(len(data), 2)
+				s.Assert().Equal(2, len(data))
 
 				// mapsets
 				expectedMapsets := tc.result.Mapsets
@@ -480,19 +479,19 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 					err = s.db.Table("mapsets").Where("id = ?", expectedMapset.ID).First(&actualMapset).Error
 					s.Require().NoError(err)
 
-					s.Assert().Equal(expectedMapset.ID, actualMapset.ID)
-					s.Assert().Equal(expectedMapset.Artist, actualMapset.Artist)
-					s.Assert().Equal(expectedMapset.Title, actualMapset.Title)
-					s.Assert().Equal(expectedMapset.Status, actualMapset.Status)
-					s.Assert().Equal(expectedMapset.UserID, actualMapset.UserID)
-					s.Assert().Equal(expectedMapset.PreviewURL, actualMapset.PreviewURL)
-					s.Assert().Equal(expectedMapset.Tags, actualMapset.Tags)
+					s.Equal(expectedMapset.ID, actualMapset.ID)
+					s.Equal(expectedMapset.Artist, actualMapset.Artist)
+					s.Equal(expectedMapset.Title, actualMapset.Title)
+					s.Equal(expectedMapset.Status, actualMapset.Status)
+					s.Equal(expectedMapset.UserID, actualMapset.UserID)
+					s.Equal(expectedMapset.PreviewURL, actualMapset.PreviewURL)
+					s.Equal(expectedMapset.Tags, actualMapset.Tags)
 					s.Assert().Equal(expectedMapset.BPM, actualMapset.BPM)
 
-					s.Assert().Positive(actualMapset.CreatedAt.Unix()) // todo
-					s.Assert().Positive(actualMapset.UpdatedAt.Unix()) // todo
+					s.Positive(actualMapset.CreatedAt.Unix()) // todo
+					s.Positive(actualMapset.UpdatedAt.Unix()) // todo
 
-					var data map[string]interface{}
+					var data map[string]any
 
 					err := json.Unmarshal(expectedMapset.MapsetStats, &data)
 					if err != nil {
@@ -501,9 +500,9 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 					}
 
 					if actualMapset.ID == 123 {
-						s.Assert().Equal(len(data), 2)
+						s.Assert().Equal(2, len(data))
 					} else {
-						s.Assert().Equal(len(data), 1)
+						s.Assert().Equal(1, len(data))
 					}
 				}
 
@@ -515,24 +514,24 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 					err = s.db.Table("beatmaps").Where("id = ?", expectedBeatmap.ID).First(&actualBeatmap).Error
 					s.Require().NoError(err)
 
-					s.Assert().Equal(expectedBeatmap.ID, actualBeatmap.ID)
-					s.Assert().Equal(expectedBeatmap.MapsetID, actualBeatmap.MapsetID)
+					s.Equal(expectedBeatmap.ID, actualBeatmap.ID)
+					s.Equal(expectedBeatmap.MapsetID, actualBeatmap.MapsetID)
 					s.Assert().Equal(expectedBeatmap.DifficultyRating, actualBeatmap.DifficultyRating)
-					s.Assert().Equal(expectedBeatmap.Version, actualBeatmap.Version)
+					s.Equal(expectedBeatmap.Version, actualBeatmap.Version)
 					s.Assert().Equal(expectedBeatmap.Accuracy, actualBeatmap.Accuracy)
 					s.Assert().Equal(expectedBeatmap.AR, actualBeatmap.AR)
 					s.Assert().Equal(expectedBeatmap.BPM, actualBeatmap.BPM)
 					s.Assert().Equal(expectedBeatmap.CS, actualBeatmap.CS)
-					s.Assert().Equal(expectedBeatmap.Status, actualBeatmap.Status)
-					s.Assert().Equal(expectedBeatmap.URL, actualBeatmap.URL)
-					s.Assert().Equal(expectedBeatmap.TotalLength, actualBeatmap.TotalLength)
-					s.Assert().Equal(expectedBeatmap.UserID, actualBeatmap.UserID)
-					s.Assert().Equal(expectedBeatmap.LastUpdated, actualBeatmap.LastUpdated)
+					s.Equal(expectedBeatmap.Status, actualBeatmap.Status)
+					s.Equal(expectedBeatmap.URL, actualBeatmap.URL)
+					s.Equal(expectedBeatmap.TotalLength, actualBeatmap.TotalLength)
+					s.Equal(expectedBeatmap.UserID, actualBeatmap.UserID)
+					s.Equal(expectedBeatmap.LastUpdated, actualBeatmap.LastUpdated)
 
-					s.Assert().Positive(actualBeatmap.CreatedAt.Unix()) // todo
-					s.Assert().Positive(actualBeatmap.UpdatedAt.Unix()) // todo
+					s.Positive(actualBeatmap.CreatedAt.Unix()) // todo
+					s.Positive(actualBeatmap.UpdatedAt.Unix()) // todo
 
-					var data map[string]interface{}
+					var data map[string]any
 
 					err := json.Unmarshal(expectedBeatmap.BeatmapStats, &data)
 					if err != nil {
@@ -541,9 +540,9 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 					}
 
 					if actualBeatmap.ID == 3 || actualBeatmap.ID == 4 {
-						s.Assert().Equal(len(data), 2)
+						s.Assert().Equal(2, len(data))
 					} else {
-						s.Assert().Equal(len(data), 1)
+						s.Assert().Equal(1, len(data))
 					}
 				}
 			})
@@ -580,7 +579,7 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 						ID:        1,
 						AvatarURL: "avatarurl.com",
 						Username:  "username",
-						UserStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favourite_count":2, "map_count":1}}`),
+						UserStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favorite_count":2, "map_count":1}}`),
 					},
 					Mapsets: []*model.Mapset{
 						{
@@ -595,7 +594,7 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 							PreviewURL:  "previewurl.com",
 							Tags:        "tags shmags",
 							BPM:         210,
-							MapsetStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favourite_count":2}}`),
+							MapsetStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favorite_count":2}}`),
 						},
 					},
 					Beatmaps: []*model.Beatmap{
@@ -720,47 +719,47 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 
 				expectedUser := tc.out.User
 
-				s.Assert().Equal(expectedUser.ID, actual.User.ID)
-				s.Assert().Equal(expectedUser.AvatarURL, actual.User.AvatarURL)
-				s.Assert().Equal(expectedUser.Username, actual.User.Username)
+				s.Equal(expectedUser.ID, actual.User.ID)
+				s.Equal(expectedUser.AvatarURL, actual.User.AvatarURL)
+				s.Equal(expectedUser.Username, actual.User.Username)
 
-				s.Assert().Equal(len(actual.User.UserStats), 1)
+				s.Assert().Equal(1, len(actual.User.UserStats))
 
-				s.Assert().Equal(1, len(actual.Mapsets))
+				s.Assert().Len(actual.Mapsets, 1)
 
 				for _, actualMapset := range actual.Mapsets {
 					expectedMapset := tc.out.Mapsets[0]
 
-					s.Assert().Equal(expectedMapset.Id, actualMapset.Id)
-					s.Assert().Equal(expectedMapset.Artist, actualMapset.Artist)
-					s.Assert().Equal(expectedMapset.Title, actualMapset.Title)
-					s.Assert().Equal(expectedMapset.Covers, actualMapset.Covers)
-					s.Assert().Equal(expectedMapset.Status, actualMapset.Status)
-					s.Assert().Equal(expectedMapset.UserId, actualMapset.UserId)
-					s.Assert().Equal(expectedMapset.PreviewUrl, actualMapset.PreviewUrl)
-					s.Assert().Equal(expectedMapset.Tags, actualMapset.Tags)
+					s.Equal(expectedMapset.Id, actualMapset.Id)
+					s.Equal(expectedMapset.Artist, actualMapset.Artist)
+					s.Equal(expectedMapset.Title, actualMapset.Title)
+					s.Equal(expectedMapset.Covers, actualMapset.Covers)
+					s.Equal(expectedMapset.Status, actualMapset.Status)
+					s.Equal(expectedMapset.UserId, actualMapset.UserId)
+					s.Equal(expectedMapset.PreviewUrl, actualMapset.PreviewUrl)
+					s.Equal(expectedMapset.Tags, actualMapset.Tags)
 					s.Assert().Equal(expectedMapset.Bpm, actualMapset.Bpm)
-					s.Assert().Equal(expectedMapset.Creator, actualMapset.Creator)
+					s.Equal(expectedMapset.Creator, actualMapset.Creator)
 
-					s.Assert().Equal(1, len(actualMapset.MapsetStats))
+					s.Assert().Len(actualMapset.MapsetStats, 1)
 
 					for i, actualBeatmap := range actualMapset.Beatmaps {
 						expectedBeatmap := tc.out.Mapsets[0].Beatmaps[i]
 
-						s.Assert().Equal(expectedBeatmap.Id, actualBeatmap.Id)
-						s.Assert().Equal(expectedBeatmap.BeatmapsetId, actualBeatmap.BeatmapsetId)
+						s.Equal(expectedBeatmap.Id, actualBeatmap.Id)
+						s.Equal(expectedBeatmap.BeatmapsetId, actualBeatmap.BeatmapsetId)
 						s.Assert().Equal(expectedBeatmap.DifficultyRating, actualBeatmap.DifficultyRating)
-						s.Assert().Equal(expectedBeatmap.Version, actualBeatmap.Version)
+						s.Equal(expectedBeatmap.Version, actualBeatmap.Version)
 						s.Assert().Equal(expectedBeatmap.Accuracy, actualBeatmap.Accuracy)
 						s.Assert().Equal(expectedBeatmap.Ar, actualBeatmap.Ar)
 						s.Assert().Equal(expectedBeatmap.Bpm, actualBeatmap.Bpm)
 						s.Assert().Equal(expectedBeatmap.Cs, actualBeatmap.Cs)
-						s.Assert().Equal(expectedBeatmap.Status, actualBeatmap.Status)
-						s.Assert().Equal(expectedBeatmap.Url, actualBeatmap.Url)
-						s.Assert().Equal(expectedBeatmap.TotalLength, actualBeatmap.TotalLength)
-						s.Assert().Equal(expectedBeatmap.UserId, actualBeatmap.UserId)
+						s.Equal(expectedBeatmap.Status, actualBeatmap.Status)
+						s.Equal(expectedBeatmap.Url, actualBeatmap.Url)
+						s.Equal(expectedBeatmap.TotalLength, actualBeatmap.TotalLength)
+						s.Equal(expectedBeatmap.UserId, actualBeatmap.UserId)
 
-						s.Assert().Equal(1, len(actualBeatmap.BeatmapStats))
+						s.Assert().Len(actualBeatmap.BeatmapStats, 1)
 					}
 				}
 			})

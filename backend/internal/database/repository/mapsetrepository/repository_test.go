@@ -1,9 +1,10 @@
 package mapsetrepository
 
 import (
-	"github.com/stretchr/testify/assert"
 	"osu-dashboard/internal/database/repository/model"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_buildListByFilterQuery(t *testing.T) {
@@ -11,7 +12,7 @@ func Test_buildListByFilterQuery(t *testing.T) {
 		name           string
 		filter         model.MapsetFilter
 		expectedQuery  string
-		expectedValues []interface{}
+		expectedValues []any
 	}{
 		{
 			name: "Artist and Title and Tags",
@@ -21,7 +22,7 @@ func Test_buildListByFilterQuery(t *testing.T) {
 				model.MapsetTagsField:   "Tags",
 			},
 			expectedQuery:  "artist = ? AND tags = ? AND title = ?",
-			expectedValues: []interface{}{"Artist", "Tags", "Title"},
+			expectedValues: []any{"Artist", "Tags", "Title"},
 		},
 		{
 			name: "Artist or Title or Tags",
@@ -29,7 +30,7 @@ func Test_buildListByFilterQuery(t *testing.T) {
 				model.MapsetArtistOrTitleOrTagsFields: "Search",
 			},
 			expectedQuery:  "( artist ILIKE ? OR title ILIKE ? OR tags ILIKE ? )",
-			expectedValues: []interface{}{"%Search%", "%Search%", "%Search%"},
+			expectedValues: []any{"%Search%", "%Search%", "%Search%"},
 		},
 		{
 			name: "Artist or Title or Tags and Status",
@@ -38,7 +39,7 @@ func Test_buildListByFilterQuery(t *testing.T) {
 				model.MapsetStatusField:               "Status",
 			},
 			expectedQuery:  "( artist ILIKE ? OR title ILIKE ? OR tags ILIKE ? ) AND status = ?",
-			expectedValues: []interface{}{"%Search%", "%Search%", "%Search%", "Status"},
+			expectedValues: []any{"%Search%", "%Search%", "%Search%", "Status"},
 		},
 	}
 

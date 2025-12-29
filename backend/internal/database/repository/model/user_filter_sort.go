@@ -8,7 +8,7 @@ const (
 	UserNameField UserFilterField = "username"
 )
 
-type UserFilter map[UserFilterField]interface{}
+type UserFilter map[UserFilterField]any
 
 // sort
 
@@ -18,7 +18,7 @@ const (
 	UserPlaycount UserMapStatsSortFields = "play_count"
 	UserMapCount  UserMapStatsSortFields = "map_count"
 	UserFavs      UserMapStatsSortFields = "comments_count"
-	UserComms     UserMapStatsSortFields = "favourite_count"
+	UserComms     UserMapStatsSortFields = "favorite_count"
 )
 
 type UserSort struct {

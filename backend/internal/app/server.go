@@ -33,7 +33,7 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 		return fmt.Errorf("failed to apply migrations: %w", err)
 	}
 
-	txm := bootstrap.ConnectTxManager("osu-dashboard-bff", 5, db, lg)
+	txm := bootstrap.ConnectTxManager("osu-dashboard-bff", db, lg)
 
 	// init repos
 	repoFactory := repositoryfactory.New(cfg, lg)
@@ -49,7 +49,7 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 	osuTokenProvider := osuapitokenprovider.New(cfg, httpClient)
 	osuAPI := osuapi.New(cfg, osuTokenProvider, httpClient)
 
-	// useCase factory
+	// usecase factory
 	f := factory.New(cfg, lg, txm, osuAPI, &factory.Repositories{
 		UserRepo:      userRepo,
 		BeatmapRepo:   beatmapRepo,

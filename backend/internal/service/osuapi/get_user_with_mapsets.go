@@ -2,9 +2,10 @@ package osuapi
 
 import (
 	"context"
-	"golang.org/x/sync/errgroup"
 	"strconv"
 	"sync"
+
+	"golang.org/x/sync/errgroup"
 )
 
 func (s *Service) GetUserWithMapsets(ctx context.Context, userID string) (*User, []*MapsetExtended, error) {
@@ -53,7 +54,6 @@ func (s *Service) getMapsetsWithComments(ctx context.Context, mapsets []*Mapset)
 
 	for _, mapset := range mapsets {
 		eg.Go(func() (errG error) {
-
 			commentCount, errG := s.GetMapsetCommentsCount(egCtx, strconv.Itoa(mapset.Id))
 			if errG != nil {
 				return errG

@@ -371,11 +371,11 @@ func MapBeatmapInfoToStatsJSON(playcount, passcount int) (repository.JSON, error
 	return statsJson, nil
 }
 
-func MapMapsetInfoToStatsJSON(playcount, favourites, comments int) (repository.JSON, error) {
+func MapMapsetInfoToStatsJSON(playcount, favorites, comments int) (repository.JSON, error) {
 	var stats = make(model.MapsetStats)
 	stats[time.Now().UTC()] = &model.MapsetStatsModel{
 		Playcount: playcount,
-		Favorites: favourites,
+		Favorites: favorites,
 		Comments:  comments,
 	}
 
@@ -417,7 +417,7 @@ func MapStatsJSONToMapsetStats(j repository.JSON) (model.MapsetStats, error) {
 	return mapsetStats, nil
 }
 
-func KeepLastNKeyValuesFromStats(m interface{}, n int) {
+func KeepLastNKeyValuesFromStats(m any, n int) {
 	mapValue := reflect.ValueOf(m)
 	if mapValue.Kind() != reflect.Map {
 		fmt.Println("Not a map")

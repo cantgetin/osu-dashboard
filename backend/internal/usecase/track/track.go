@@ -3,11 +3,12 @@ package track
 import (
 	"context"
 	"fmt"
-	"golang.org/x/sync/errgroup"
 	"osu-dashboard/internal/database/repository/model"
 	"osu-dashboard/internal/database/txmanager"
 	"strconv"
 	"time"
+
+	"golang.org/x/sync/errgroup"
 )
 
 func (uc *UseCase) TrackAllFollowings(

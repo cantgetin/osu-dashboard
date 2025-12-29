@@ -2,11 +2,12 @@ package enricherusecase
 
 import (
 	"context"
-	log "github.com/sirupsen/logrus"
 	"osu-dashboard/internal/config"
 	"osu-dashboard/internal/database/repository/model"
 	"osu-dashboard/internal/database/txmanager"
 	"osu-dashboard/internal/service/osuapi"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type mapsetStore interface {

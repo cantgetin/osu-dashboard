@@ -2,10 +2,11 @@ package mapsethandlers
 
 import (
 	"context"
-	log "github.com/sirupsen/logrus"
 	"osu-dashboard/internal/dto"
 	"osu-dashboard/internal/usecase/command"
 	mapsetprovide "osu-dashboard/internal/usecase/mapset/provide"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type (
@@ -15,8 +16,8 @@ type (
 
 	mapsetProvider interface {
 		Get(ctx context.Context, id int) (*dto.Mapset, error)
-		List(ctx context.Context, cmd *mapsetprovide.ListCommand) (*mapsetprovide.ListResponse, error)
-		ListForUser(ctx context.Context, userID int, cmd *mapsetprovide.ListCommand) (*mapsetprovide.ListResponse, error)
+		List(ctx context.Context, cmd *mapsetprovide.ListCommand) (*dto.MapsetsPaged, error)
+		ListForUser(ctx context.Context, userID int, cmd *mapsetprovide.ListCommand) (*dto.MapsetsPaged, error)
 	}
 
 	Handlers struct {
@@ -26,14 +27,10 @@ type (
 	}
 )
 
-func New(
-	lg *log.Logger,
-	mapsetProvider mapsetProvider,
-	mapsetCreator mapsetCreator,
-) *Handlers {
+func New(lg *log.Logger, p mapsetProvider, c mapsetCreator) *Handlers {
 	return &Handlers{
-		mapsetCreator:  mapsetCreator,
-		mapsetProvider: mapsetProvider,
+		mapsetCreator:  c,
+		mapsetProvider: p,
 		lg:             lg,
 	}
 }

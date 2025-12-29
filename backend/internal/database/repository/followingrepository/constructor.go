@@ -1,8 +1,9 @@
 package followingrepository
 
 import (
-	log "github.com/sirupsen/logrus"
 	"osu-dashboard/internal/config"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type GormRepository struct {
