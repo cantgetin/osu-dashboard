@@ -2,10 +2,6 @@ package http
 
 import (
 	"context"
-	"github.com/ds248a/closer"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	log "github.com/sirupsen/logrus"
 	"osu-dashboard/internal/app/followingserviceapi"
 	"osu-dashboard/internal/app/logserviceapi"
 	"osu-dashboard/internal/app/mapsetserviceapi"
@@ -15,6 +11,11 @@ import (
 	"osu-dashboard/internal/app/userserviceapi"
 	"osu-dashboard/internal/config"
 	"osu-dashboard/internal/usecase/factory"
+
+	"github.com/ds248a/closer"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	log "github.com/sirupsen/logrus"
 )
 
 type Server struct {
@@ -32,7 +33,7 @@ type Server struct {
 
 func New(
 	cfg *config.Config, lg *log.Logger, f *factory.UseCaseFactory,
-) (*Server, error) {
+) *Server {
 	server := echo.New()
 	server.HideBanner = true
 	server.HidePort = true
@@ -87,7 +88,7 @@ func New(
 		mapset:    mapset,
 		statistic: statistic,
 		logs:      logs,
-	}, nil
+	}
 }
 
 func (s *Server) Start() {

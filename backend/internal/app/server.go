@@ -2,16 +2,12 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/signal"
 	"osu-dashboard/internal/bootstrap"
 	"osu-dashboard/internal/config"
-	"osu-dashboard/internal/database/repository/beatmaprepository"
-	"osu-dashboard/internal/database/repository/followingrepository"
-	"osu-dashboard/internal/database/repository/logrepository"
-	"osu-dashboard/internal/database/repository/mapsetrepository"
-	"osu-dashboard/internal/database/repository/trackrepository"
-	"osu-dashboard/internal/database/repository/userrepository"
+	repositoryfactory "osu-dashboard/internal/database/repository/factory"
 	"osu-dashboard/internal/http"
 	"osu-dashboard/internal/service/osuapi"
 	"osu-dashboard/internal/service/osuapitokenprovider"
@@ -24,24 +20,29 @@ import (
 )
 
 func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
+	ctx, cancel := context.WithCancel(baseCtx)
+	defer cancel()
+
 	db, err := bootstrap.InitDB(cfg)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to init db: %w", err)
 	}
 
 	err = bootstrap.ApplyMigrations(db)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to apply migrations: %w", err)
 	}
 
 	txm := bootstrap.ConnectTxManager("osu-dashboard-bff", 5, db, lg)
 
-	userRepo := userrepository.New(cfg, lg)
-	mapsetRepo := mapsetrepository.New(cfg, lg)
-	beatmapRepo := beatmaprepository.New(cfg, lg)
-	followingRepo := followingrepository.New(cfg, lg)
-	trackRepo := trackrepository.New(cfg, lg)
-	logRepo := logrepository.New(cfg, lg)
+	// init repos
+	repoFactory := repositoryfactory.New(cfg, lg)
+	userRepo := repoFactory.NewUserRepository()
+	mapsetRepo := repoFactory.NewMapsetRepository()
+	beatmapRepo := repoFactory.NewBeatmapRepository()
+	followingRepo := repoFactory.NewFollowingsRepository()
+	trackRepo := repoFactory.NewTrackRepository()
+	logRepo := repoFactory.NewLogsRepository()
 
 	// init api
 	httpClient := bootstrap.NewHTTPClient()
@@ -49,7 +50,7 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 	osuAPI := osuapi.New(cfg, osuTokenProvider, httpClient)
 
 	// useCase factory
-	f, err := factory.New(cfg, lg, txm, osuAPI, &factory.Repositories{
+	f := factory.New(cfg, lg, txm, osuAPI, &factory.Repositories{
 		UserRepo:      userRepo,
 		BeatmapRepo:   beatmapRepo,
 		MapsetRepo:    mapsetRepo,
@@ -57,21 +58,12 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 		TrackRepo:     trackRepo,
 		LogRepo:       logRepo,
 	})
-	if err != nil {
-		return err
-	}
 
-	httpServer, err := http.New(cfg, lg, f)
-	if err != nil {
-		return err
-	}
-
-	ctx, cancel := context.WithCancel(baseCtx)
-
+	// setup http routes
+	httpServer := http.New(cfg, lg, f)
 	httpServer.Start()
 
 	gracefulShutDown(ctx, cancel)
-
 	return nil
 }
 

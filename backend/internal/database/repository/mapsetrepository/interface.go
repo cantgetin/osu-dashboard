@@ -33,4 +33,5 @@ type Interface interface {
 		offset int,
 	) ([]*model.Mapset, int, error)
 	TotalCount(ctx context.Context, tx txmanager.Tx) (int, error)
+	UpdateGenreLanguage(ctx context.Context, tx txmanager.Tx, id int, newGenre string, newLanguage string) error
 }

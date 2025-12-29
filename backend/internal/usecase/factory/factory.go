@@ -1,9 +1,10 @@
 package factory
 
 import (
-	log "github.com/sirupsen/logrus"
 	"osu-dashboard/internal/config"
 	"osu-dashboard/internal/database/repository/beatmaprepository"
+	"osu-dashboard/internal/database/repository/cleanrepository"
+	"osu-dashboard/internal/database/repository/enrichesrepository"
 	"osu-dashboard/internal/database/repository/followingrepository"
 	"osu-dashboard/internal/database/repository/logrepository"
 	"osu-dashboard/internal/database/repository/mapsetrepository"
@@ -11,6 +12,8 @@ import (
 	"osu-dashboard/internal/database/repository/userrepository"
 	"osu-dashboard/internal/database/txmanager"
 	"osu-dashboard/internal/service/osuapi"
+	cleanerUseCase "osu-dashboard/internal/usecase/cleaner"
+	enricherusecase "osu-dashboard/internal/usecase/enricher"
 	followingcreate "osu-dashboard/internal/usecase/following/create"
 	followingprovide "osu-dashboard/internal/usecase/following/provide"
 	logcreate "osu-dashboard/internal/usecase/log/create"
@@ -25,6 +28,8 @@ import (
 	usercardcreate "osu-dashboard/internal/usecase/usercard/create"
 	usercardprovide "osu-dashboard/internal/usecase/usercard/provide"
 	usercardupdate "osu-dashboard/internal/usecase/usercard/update"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type UseCaseFactory struct {
@@ -40,8 +45,10 @@ type Repositories struct {
 	BeatmapRepo   beatmaprepository.Interface
 	MapsetRepo    mapsetrepository.Interface
 	FollowingRepo followingrepository.Interface
+	EnrichesRepo  enrichesrepository.Interface
 	TrackRepo     trackrepository.Interface
 	LogRepo       logrepository.Interface
+	CleanRepo     cleanrepository.Interface
 }
 
 func New(
@@ -50,14 +57,14 @@ func New(
 	txManager txmanager.TxManager,
 	osuApi *osuapi.Service,
 	repos *Repositories,
-) (*UseCaseFactory, error) {
+) *UseCaseFactory {
 	return &UseCaseFactory{
 		cfg:       cfg,
 		lg:        lg,
 		txManager: txManager,
 		repos:     repos,
 		osuApi:    osuApi,
-	}, nil
+	}
 }
 
 func (f *UseCaseFactory) MakeCreateMapsetUseCase() *mapsetcreate.UseCase {
@@ -197,5 +204,29 @@ func (f *UseCaseFactory) MakeProvideLogsUseCase() *logprovide.UseCase {
 	return logprovide.New(
 		f.txManager,
 		f.repos.LogRepo,
+	)
+}
+
+func (f *UseCaseFactory) MakeCleanerUseCase() *cleanerUseCase.UseCase {
+	return cleanerUseCase.New(
+		f.cfg,
+		f.lg,
+		f.txManager,
+		f.repos.UserRepo,
+		f.repos.MapsetRepo,
+		f.repos.BeatmapRepo,
+		f.MakeCreateLogUseCase(),
+		f.repos.CleanRepo)
+}
+
+func (f *UseCaseFactory) MakeEnricherUseCase() *enricherusecase.UseCase {
+	return enricherusecase.New(
+		f.cfg,
+		f.lg,
+		f.txManager,
+		f.osuApi,
+		f.repos.MapsetRepo,
+		f.repos.FollowingRepo,
+		f.repos.EnrichesRepo,
 	)
 }
