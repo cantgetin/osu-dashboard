@@ -2,13 +2,13 @@ package http
 
 import (
 	"context"
-	"osu-dashboard/internal/app/followingserviceapi"
-	"osu-dashboard/internal/app/logserviceapi"
-	"osu-dashboard/internal/app/mapsetserviceapi"
-	"osu-dashboard/internal/app/pingserviceapi"
-	"osu-dashboard/internal/app/statisticserviceapi"
-	"osu-dashboard/internal/app/usercardserviseapi"
-	"osu-dashboard/internal/app/userserviceapi"
+	"osu-dashboard/internal/app/followinghandlers"
+	"osu-dashboard/internal/app/loghandlers"
+	"osu-dashboard/internal/app/mapsethandlers"
+	"osu-dashboard/internal/app/pinghandlers"
+	"osu-dashboard/internal/app/statistichandlers"
+	"osu-dashboard/internal/app/usercardhandlers"
+	"osu-dashboard/internal/app/userhandlers"
 	"osu-dashboard/internal/config"
 	"osu-dashboard/internal/usecase/factory"
 
@@ -22,13 +22,13 @@ type Server struct {
 	cfg       *config.Config
 	server    *echo.Echo
 	lg        *log.Logger
-	user      *userserviceapi.ServiceImpl
-	ping      *pingserviceapi.ServiceImpl
-	userCard  *usercardserviseapi.ServiceImpl
-	following *followingserviceapi.ServiceImpl
-	mapset    *mapsetserviceapi.ServiceImpl
-	statistic *statisticserviceapi.ServiceImpl
-	logs      *logserviceapi.ServiceImpl
+	user      *userhandlers.Handlers
+	ping      *pinghandlers.Handlers
+	userCard  *usercardhandlers.Handlers
+	following *followinghandlers.Handlers
+	mapset    *mapsethandlers.Handlers
+	statistic *statistichandlers.Handlers
+	logs      *loghandlers.Handlers
 }
 
 func New(
@@ -39,40 +39,40 @@ func New(
 	server.HidePort = true
 	server.Use(middleware.CORS())
 
-	ping := pingserviceapi.New(lg)
+	ping := pinghandlers.New(lg)
 
-	user := userserviceapi.New(
+	user := userhandlers.New(
 		lg,
 		f.MakeCreateUserUseCase(),
 		f.MakeProvideUserUseCase(),
 		f.MakeUpdateUserUseCase(),
 	)
 
-	userCard := usercardserviseapi.New(
+	userCard := usercardhandlers.New(
 		lg,
 		f.MakeCreateUserCardUseCase(),
 		f.MakeProvideUserCardUseCase(),
 		f.MakeUpdateUserCardUseCase(),
 	)
 
-	following := followingserviceapi.New(
+	following := followinghandlers.New(
 		lg,
 		f.MakeCreateFollowingUseCase(),
 		f.MakeProvideFollowingUseCase(),
 	)
 
-	mapset := mapsetserviceapi.New(
+	mapset := mapsethandlers.New(
 		lg,
 		f.MakeProvideMapsetUseCase(),
 		f.MakeCreateMapsetUseCase(),
 	)
 
-	statistic := statisticserviceapi.New(
+	statistic := statistichandlers.New(
 		lg,
 		f.MakeProvideStatisticUseCase(),
 	)
 
-	logs := logserviceapi.New(
+	logs := loghandlers.New(
 		lg,
 		f.MakeProvideLogsUseCase(),
 	)

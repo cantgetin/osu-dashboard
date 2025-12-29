@@ -7,26 +7,6 @@ import (
 	"time"
 )
 
-func containsMapset(entities []*model.Mapset, id int) bool {
-	for _, entity := range entities {
-		if entity.ID == id {
-			if entity.Genre == "" || entity.Language == "" {
-				return true
-			}
-		}
-	}
-	return false
-}
-
-func getMapsetByID(entities []*model.Mapset, id int) *model.Mapset {
-	for _, entity := range entities {
-		if entity.ID == id {
-			return entity
-		}
-	}
-	return nil
-}
-
 func (uc *UseCase) GetLastTimeTracked(ctx context.Context) (*time.Time, error) {
 	t := time.Time{}
 	if err := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {

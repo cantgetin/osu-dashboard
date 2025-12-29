@@ -5,12 +5,10 @@ import (
 	"strings"
 )
 
-const Unspecified = "Unspecified"
-const unspecified = "unspecified"
-
-func roundUpToNearestTen(num int) int {
-	return ((num + 9) / 10) * 10
-}
+const (
+	Unspecified = "Unspecified"
+	unspecified = "unspecified"
+)
 
 func getTopNValues(m map[string]int, n int) map[string]int {
 	if n <= 0 || len(m) == 0 {
@@ -61,6 +59,10 @@ func combineMapKeys(maps ...map[string]int) []string {
 	}
 
 	return keys
+}
+
+func roundUpToNearestTen(num int) int {
+	return ((num + 9) / 10) * 10
 }
 
 func appendToAllKeys(m map[string]int, s string) map[string]int {

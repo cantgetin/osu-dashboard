@@ -1,4 +1,4 @@
-package mapsetserviceapi
+package mapsethandlers
 
 import (
 	"context"
@@ -19,7 +19,7 @@ type (
 		ListForUser(ctx context.Context, userID int, cmd *mapsetprovide.ListCommand) (*mapsetprovide.ListResponse, error)
 	}
 
-	ServiceImpl struct {
+	Handlers struct {
 		lg             *log.Logger
 		mapsetProvider mapsetProvider
 		mapsetCreator  mapsetCreator
@@ -30,8 +30,8 @@ func New(
 	lg *log.Logger,
 	mapsetProvider mapsetProvider,
 	mapsetCreator mapsetCreator,
-) *ServiceImpl {
-	return &ServiceImpl{
+) *Handlers {
+	return &Handlers{
 		mapsetCreator:  mapsetCreator,
 		mapsetProvider: mapsetProvider,
 		lg:             lg,

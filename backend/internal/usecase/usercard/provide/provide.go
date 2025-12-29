@@ -7,14 +7,12 @@ import (
 	"osu-dashboard/internal/usecase/mappers"
 )
 
-const mapsetsPerPage = 50
-const statsMaxElements = 7
+const (
+	mapsetsPerPage   = 50
+	statsMaxElements = 7
+)
 
-func (uc *UseCase) Get(
-	ctx context.Context,
-	userID int,
-	page int,
-) (*dto.UserCard, error) {
+func (uc *UseCase) Get(ctx context.Context, userID int, page int) (*dto.UserCard, error) {
 	var userCard = new(dto.UserCard)
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		// get user

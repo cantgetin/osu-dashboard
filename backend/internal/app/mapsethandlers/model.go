@@ -1,4 +1,4 @@
-package mapsetserviceapi
+package mapsethandlers
 
 import "osu-dashboard/internal/dto"
 

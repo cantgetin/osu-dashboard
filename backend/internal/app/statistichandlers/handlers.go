@@ -1,11 +1,11 @@
-package statisticserviceapi
+package statistichandlers
 
 import (
 	"github.com/labstack/echo/v4"
 	"strconv"
 )
 
-func (s *ServiceImpl) GetUserMapStatistics(c echo.Context) error {
+func (s *Handlers) GetUserMapStatistics(c echo.Context) error {
 	userID := c.Param("id")
 	if userID == "" {
 		return echo.ErrBadRequest
@@ -23,7 +23,7 @@ func (s *ServiceImpl) GetUserMapStatistics(c echo.Context) error {
 	return c.JSON(200, userStatistics)
 }
 
-func (s *ServiceImpl) GetSystemStatistics(c echo.Context) error {
+func (s *Handlers) GetSystemStatistics(c echo.Context) error {
 	systemStats, err := s.statisticProvider.GetForSystem(c.Request().Context())
 	if err != nil {
 		return echo.ErrInternalServerError

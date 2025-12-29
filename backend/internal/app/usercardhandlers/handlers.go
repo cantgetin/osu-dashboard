@@ -1,4 +1,4 @@
-package usercardserviseapi
+package usercardhandlers
 
 import (
 	"github.com/labstack/echo/v4"
@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func (s *ServiceImpl) Create(c echo.Context) error {
+func (s *Handlers) Create(c echo.Context) error {
 	userCard := new(command.CreateUserCardCommand)
 	if err := c.Bind(userCard); err != nil {
 		return err
@@ -15,7 +15,7 @@ func (s *ServiceImpl) Create(c echo.Context) error {
 	return s.userCardCreator.Create(c.Request().Context(), userCard)
 }
 
-func (s *ServiceImpl) Get(c echo.Context) error {
+func (s *Handlers) Get(c echo.Context) error {
 	id := c.Param("id")
 	if id == "" {
 		return echo.ErrBadRequest
@@ -45,7 +45,7 @@ func (s *ServiceImpl) Get(c echo.Context) error {
 	return c.JSON(200, userCard)
 }
 
-func (s *ServiceImpl) Update(c echo.Context) error {
+func (s *Handlers) Update(c echo.Context) error {
 	userCard := new(command.UpdateUserCardCommand)
 	if err := c.Bind(userCard); err != nil {
 		return err

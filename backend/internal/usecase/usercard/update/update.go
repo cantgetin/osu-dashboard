@@ -9,10 +9,7 @@ import (
 	"time"
 )
 
-func (uc *UseCase) Update(
-	ctx context.Context,
-	cmd *command.UpdateUserCardCommand,
-) error {
+func (uc *UseCase) Update(ctx context.Context, cmd *command.UpdateUserCardCommand) error {
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		// update user
 		existingUser, err := uc.user.Get(ctx, tx, cmd.User.ID)

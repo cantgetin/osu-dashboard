@@ -7,10 +7,7 @@ import (
 	"osu-dashboard/internal/usecase/mappers"
 )
 
-func (uc *UseCase) Get(
-	ctx context.Context,
-	id int,
-) (*dto.Mapset, error) {
+func (uc *UseCase) Get(ctx context.Context, id int) (*dto.Mapset, error) {
 	var dtoMapset *dto.Mapset
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		mapset, err := uc.mapset.Get(ctx, tx, id)

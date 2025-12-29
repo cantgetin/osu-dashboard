@@ -1,4 +1,4 @@
-package mapsetserviceapi
+package mapsethandlers
 
 import (
 	"errors"

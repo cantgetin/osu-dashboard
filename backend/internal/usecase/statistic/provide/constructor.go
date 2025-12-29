@@ -8,34 +8,36 @@ import (
 	"osu-dashboard/internal/database/txmanager"
 )
 
-type beatmapStore interface {
-	ListForMapset(ctx context.Context, tx txmanager.Tx, mapsetId int) ([]*model.Beatmap, error)
-	ListForMapsets(ctx context.Context, tx txmanager.Tx, mapsetIDs ...int) ([]*model.Beatmap, error)
-	TotalCount(ctx context.Context, tx txmanager.Tx) (int, error)
-}
+type (
+	beatmapStore interface {
+		ListForMapset(ctx context.Context, tx txmanager.Tx, mapsetId int) ([]*model.Beatmap, error)
+		ListForMapsets(ctx context.Context, tx txmanager.Tx, mapsetIDs ...int) ([]*model.Beatmap, error)
+		TotalCount(ctx context.Context, tx txmanager.Tx) (int, error)
+	}
 
-type mapsetStore interface {
-	ListForUser(ctx context.Context, tx txmanager.Tx, userId int) ([]*model.Mapset, error)
-	TotalCount(ctx context.Context, tx txmanager.Tx) (int, error)
-}
+	mapsetStore interface {
+		ListForUser(ctx context.Context, tx txmanager.Tx, userId int) ([]*model.Mapset, error)
+		TotalCount(ctx context.Context, tx txmanager.Tx) (int, error)
+	}
 
-type userStore interface {
-	TotalCount(ctx context.Context, tx txmanager.Tx) (int, error)
-}
+	userStore interface {
+		TotalCount(ctx context.Context, tx txmanager.Tx) (int, error)
+	}
 
-type trackStore interface {
-	TotalCount(ctx context.Context, tx txmanager.Tx) (int, error)
-}
+	trackStore interface {
+		TotalCount(ctx context.Context, tx txmanager.Tx) (int, error)
+	}
 
-type UseCase struct {
-	cfg     *config.Config
-	lg      *log.Logger
-	txm     txmanager.TxManager
-	beatmap beatmapStore
-	mapset  mapsetStore
-	user    userStore
-	track   trackStore
-}
+	UseCase struct {
+		cfg     *config.Config
+		lg      *log.Logger
+		txm     txmanager.TxManager
+		beatmap beatmapStore
+		mapset  mapsetStore
+		user    userStore
+		track   trackStore
+	}
+)
 
 func New(
 	cfg *config.Config,

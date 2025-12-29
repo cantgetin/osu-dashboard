@@ -7,9 +7,7 @@ import (
 	"osu-dashboard/internal/dto"
 )
 
-func (uc *UseCase) List(
-	ctx context.Context,
-) ([]*dto.Following, error) {
+func (uc *UseCase) List(ctx context.Context) ([]*dto.Following, error) {
 	var trackList []*model.Following
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		var err error

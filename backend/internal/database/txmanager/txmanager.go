@@ -42,18 +42,6 @@ type txConfig struct {
 
 type TxConfigurator func(cfg *txConfig)
 
-func Level(level sql.IsolationLevel) TxConfigurator {
-	return func(cfg *txConfig) {
-		cfg.level = level
-	}
-}
-
-func Attempts(maxAttempts int) TxConfigurator {
-	return func(cfg *txConfig) {
-		cfg.maxAttempts = maxAttempts
-	}
-}
-
 type TxManager interface {
 	ReadWrite(ctx context.Context, effector Effector, configurators ...TxConfigurator) error
 	ReadOnly(ctx context.Context, effector Effector, configurators ...TxConfigurator) error
@@ -86,7 +74,6 @@ func (tm *GormTxManager) ReadWrite(ctx context.Context, effector Effector, confi
 
 	var err error
 	for attempt := 0; attempt < cfg.maxAttempts; attempt++ {
-		//nolint:ineffassign
 		err = nil
 
 		if err = tm.execUnderLock(ctx, effector, cfg); err != nil {
@@ -117,7 +104,6 @@ func (tm *GormTxManager) ReadOnly(ctx context.Context, effector Effector, config
 
 	var err error
 	for attempt := 0; attempt < cfg.maxAttempts; attempt++ {
-		//nolint:ineffassign
 		err = nil
 
 		if err = tm.execUnderLock(ctx, effector, cfg); err != nil {

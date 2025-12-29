@@ -9,17 +9,19 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type userStore interface {
-	Update(ctx context.Context, tx txmanager.Tx, user *model.User) error
-	Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error)
-}
+type (
+	userStore interface {
+		Update(ctx context.Context, tx txmanager.Tx, user *model.User) error
+		Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error)
+	}
 
-type UseCase struct {
-	cfg  *config.Config
-	lg   *log.Logger
-	txm  txmanager.TxManager
-	user userStore
-}
+	UseCase struct {
+		cfg  *config.Config
+		lg   *log.Logger
+		txm  txmanager.TxManager
+		user userStore
+	}
+)
 
 func New(
 	cfg *config.Config,

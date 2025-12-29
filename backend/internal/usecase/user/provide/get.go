@@ -9,10 +9,7 @@ import (
 	"strconv"
 )
 
-func (uc *UseCase) Get(
-	ctx context.Context,
-	id int,
-) (*dto.User, error) {
+func (uc *UseCase) Get(ctx context.Context, id int) (*dto.User, error) {
 	var user *model.User
 	var userExists bool
 
@@ -61,10 +58,7 @@ func (uc *UseCase) Get(
 	return userDto, nil
 }
 
-func (uc *UseCase) GetByName(
-	ctx context.Context,
-	name string,
-) (*dto.User, error) {
+func (uc *UseCase) GetByName(ctx context.Context, name string) (*dto.User, error) {
 	var user *model.User
 	txErr := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		var err error

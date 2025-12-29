@@ -7,9 +7,9 @@ import (
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"os"
-	"path/filepath"
 	"osu-dashboard/internal/bootstrap"
 	"osu-dashboard/internal/config"
+	"path/filepath"
 	"testing"
 )
 

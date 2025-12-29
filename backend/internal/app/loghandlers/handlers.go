@@ -1,4 +1,4 @@
-package logserviceapi
+package loghandlers
 
 import (
 	"github.com/labstack/echo/v4"
@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func (s *ServiceImpl) List(c echo.Context) error {
+func (s *Handlers) List(c echo.Context) error {
 	pageInt, err := getPageQueryParam(c)
 	if err != nil {
 		return echo.ErrBadRequest

@@ -1,4 +1,4 @@
-package userserviceapi
+package userhandlers
 
 import (
 	"osu-dashboard/internal/database/repository/model"
@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (s *ServiceImpl) Create(c echo.Context) error {
+func (s *Handlers) Create(c echo.Context) error {
 	user := new(dto.User)
 	if err := c.Bind(user); err != nil {
 		return err
@@ -18,7 +18,7 @@ func (s *ServiceImpl) Create(c echo.Context) error {
 	return s.userCreator.Create(c.Request().Context(), user)
 }
 
-func (s *ServiceImpl) Update(c echo.Context) error {
+func (s *Handlers) Update(c echo.Context) error {
 	user := new(model.User)
 	if err := c.Bind(user); err != nil {
 		return err
@@ -27,7 +27,7 @@ func (s *ServiceImpl) Update(c echo.Context) error {
 	return s.userUpdater.Update(c.Request().Context(), user)
 }
 
-func (s *ServiceImpl) Get(c echo.Context) error {
+func (s *Handlers) Get(c echo.Context) error {
 	id := c.Param("id")
 
 	if id == "" {
@@ -46,7 +46,7 @@ func (s *ServiceImpl) Get(c echo.Context) error {
 	return c.JSON(200, user)
 }
 
-func (s *ServiceImpl) GetByName(c echo.Context) error {
+func (s *Handlers) GetByName(c echo.Context) error {
 	name := c.Param("name")
 	user, err := s.userProvider.GetByName(c.Request().Context(), name)
 	if err != nil {
@@ -56,7 +56,7 @@ func (s *ServiceImpl) GetByName(c echo.Context) error {
 	return c.JSON(200, user)
 }
 
-func (s *ServiceImpl) List(c echo.Context) error {
+func (s *Handlers) List(c echo.Context) error {
 	pageInt, err := getPageQueryParam(c)
 	if err != nil {
 		return echo.ErrBadRequest

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"osu-dashboard/internal/app/mapsetserviceapi"
+	"osu-dashboard/internal/app/mapsethandlers"
 	"osu-dashboard/internal/database/repository"
 	"osu-dashboard/internal/database/repository/model"
 	"osu-dashboard/internal/dto"
@@ -24,7 +24,7 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 		var tt = []struct {
 			name    string
 			create  *models
-			out     *mapsetserviceapi.MapsetListResponse
+			out     *mapsethandlers.MapsetListResponse
 			outCode int
 		}{
 			{
@@ -99,7 +99,7 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 						},
 					},
 				},
-				out: &mapsetserviceapi.MapsetListResponse{
+				out: &mapsethandlers.MapsetListResponse{
 					Mapsets: []*dto.Mapset{
 						{
 							Id:          2,
@@ -208,7 +208,7 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 				body, err := io.ReadAll(out.Body)
 				s.Require().NoError(err)
 
-				var actual mapsetserviceapi.MapsetListResponse
+				var actual mapsethandlers.MapsetListResponse
 				err = json.Unmarshal(body, &actual)
 				s.Require().NoError(err)
 

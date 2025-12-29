@@ -1,4 +1,4 @@
-package mapsetserviceapi
+package mapsethandlers
 
 import (
 	"github.com/labstack/echo/v4"
@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-func (s *ServiceImpl) Create(c echo.Context) error {
+func (s *Handlers) Create(c echo.Context) error {
 	mapset := new(command.CreateMapsetCommand)
 	if err := c.Bind(mapset); err != nil {
 		return err
@@ -17,7 +17,7 @@ func (s *ServiceImpl) Create(c echo.Context) error {
 	return s.mapsetCreator.Create(c.Request().Context(), mapset)
 }
 
-func (s *ServiceImpl) Get(c echo.Context) error {
+func (s *Handlers) Get(c echo.Context) error {
 	id := c.Param("id")
 
 	if id == "" {
@@ -37,7 +37,7 @@ func (s *ServiceImpl) Get(c echo.Context) error {
 	return c.JSON(200, mapset)
 }
 
-func (s *ServiceImpl) List(c echo.Context) error {
+func (s *Handlers) List(c echo.Context) error {
 	pageInt, err := getPageQueryParam(c)
 	if err != nil {
 		return echo.ErrBadRequest
@@ -74,7 +74,7 @@ func (s *ServiceImpl) List(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-func (s *ServiceImpl) ListForUser(c echo.Context) error {
+func (s *Handlers) ListForUser(c echo.Context) error {
 	idInt, err := getUserIDFromContext(c)
 	if err != nil {
 		return echo.ErrBadRequest

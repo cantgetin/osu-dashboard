@@ -1,4 +1,4 @@
-package followingserviceapi
+package followinghandlers
 
 import (
 	"context"

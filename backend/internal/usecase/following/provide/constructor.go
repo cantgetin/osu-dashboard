@@ -9,16 +9,18 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type followingStore interface {
-	List(ctx context.Context, tx txmanager.Tx) ([]*model.Following, error)
-}
+type (
+	followingStore interface {
+		List(ctx context.Context, tx txmanager.Tx) ([]*model.Following, error)
+	}
 
-type UseCase struct {
-	cfg       *config.Config
-	lg        *log.Logger
-	txm       txmanager.TxManager
-	following followingStore
-}
+	UseCase struct {
+		cfg       *config.Config
+		lg        *log.Logger
+		txm       txmanager.TxManager
+		following followingStore
+	}
+)
 
 func New(
 	cfg *config.Config,

@@ -8,10 +8,7 @@ import (
 	"osu-dashboard/internal/usecase/mappers"
 )
 
-func (uc *UseCase) Create(
-	ctx context.Context,
-	cmd *command.CreateUserCardCommand,
-) error {
+func (uc *UseCase) Create(ctx context.Context, cmd *command.CreateUserCardCommand) error {
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		// create user
 		user, err := mappers.MapCreateUserCardCommandToUserModel(cmd)

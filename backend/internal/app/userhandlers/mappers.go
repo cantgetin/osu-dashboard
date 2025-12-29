@@ -1,4 +1,4 @@
-package userserviceapi
+package userhandlers
 
 import "osu-dashboard/internal/database/repository/model"
 

@@ -8,17 +8,6 @@ import (
 	"time"
 )
 
-func NewHTTPClient() *CustomHTTPClient {
-	c := retryablehttp.NewClient()
-	c.RetryMax = 3
-	c.RetryWaitMin = 3 * time.Second
-	c.RetryWaitMax = 10 * time.Second
-	c.Logger = log.New()
-
-	return NewCustomClient(c.StandardClient())
-}
-
-// TODO: move somewhere else
 type CustomHTTPClient struct {
 	*http.Client
 	*Stats
@@ -26,7 +15,17 @@ type CustomHTTPClient struct {
 	mu *sync.Mutex
 }
 
-func NewCustomClient(client *http.Client) *CustomHTTPClient {
+func NewHTTPClient() *CustomHTTPClient {
+	c := retryablehttp.NewClient()
+	c.RetryMax = 3
+	c.RetryWaitMin = 3 * time.Second
+	c.RetryWaitMax = 10 * time.Second
+	c.Logger = log.New()
+
+	return newCustomClient(c.StandardClient())
+}
+
+func newCustomClient(client *http.Client) *CustomHTTPClient {
 	return &CustomHTTPClient{
 		Client: client,
 		mu:     &sync.Mutex{},

@@ -1,4 +1,4 @@
-package logserviceapi
+package loghandlers
 
 import (
 	"context"

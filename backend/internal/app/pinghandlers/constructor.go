@@ -1,17 +1,17 @@
-package pingserviceapi
+package pinghandlers
 
 import (
 	log "github.com/sirupsen/logrus"
 )
 
-type ServiceImpl struct {
+type Handlers struct {
 	lg *log.Logger
 }
 
 func New(
 	lg *log.Logger,
-) *ServiceImpl {
-	return &ServiceImpl{
+) *Handlers {
+	return &Handlers{
 		lg: lg,
 	}
 }

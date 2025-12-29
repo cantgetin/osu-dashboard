@@ -8,25 +8,26 @@ import (
 	"osu-dashboard/internal/usecase/mappers"
 )
 
-const mapsetsPerPage = 50
-const statsMaxElements = 7
+const (
+	mapsetsPerPage   = 50
+	statsMaxElements = 7
+)
 
-type ListCommand struct {
-	Page   int
-	Sort   model.MapsetSort
-	Filter model.MapsetFilter
-}
+type (
+	ListCommand struct {
+		Page   int
+		Sort   model.MapsetSort
+		Filter model.MapsetFilter
+	}
 
-type ListResponse struct {
-	Mapsets     []*dto.Mapset
-	CurrentPage int
-	Pages       int
-}
+	ListResponse struct {
+		Mapsets     []*dto.Mapset
+		CurrentPage int
+		Pages       int
+	}
+)
 
-func (uc *UseCase) List(
-	ctx context.Context,
-	cmd *ListCommand,
-) (*ListResponse, error) {
+func (uc *UseCase) List(ctx context.Context, cmd *ListCommand) (*ListResponse, error) {
 	var dtoMapsets []*dto.Mapset
 	var count int
 
@@ -78,11 +79,7 @@ func (uc *UseCase) List(
 	}, nil
 }
 
-func (uc *UseCase) ListForUser(
-	ctx context.Context,
-	userID int,
-	cmd *ListCommand,
-) (*ListResponse, error) {
+func (uc *UseCase) ListForUser(ctx context.Context, userID int, cmd *ListCommand) (*ListResponse, error) {
 	var dtoMapsets []*dto.Mapset
 	var count int
 

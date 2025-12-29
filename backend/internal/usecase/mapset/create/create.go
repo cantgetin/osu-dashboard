@@ -9,10 +9,7 @@ import (
 	"osu-dashboard/internal/usecase/mappers"
 )
 
-func (uc *UseCase) Create(
-	ctx context.Context,
-	cmd *command.CreateMapsetCommand,
-) error {
+func (uc *UseCase) Create(ctx context.Context, cmd *command.CreateMapsetCommand) error {
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		mapsetExists, err := uc.mapset.Exists(ctx, tx, cmd.Id)
 		if err != nil {
