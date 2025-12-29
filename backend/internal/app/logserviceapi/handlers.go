@@ -2,6 +2,7 @@ package logserviceapi
 
 import (
 	"github.com/labstack/echo/v4"
+	"net/http"
 	"strconv"
 )
 
@@ -13,7 +14,8 @@ func (s *ServiceImpl) List(c echo.Context) error {
 
 	logs, err := s.logProvider.List(c.Request().Context(), pageInt)
 	if err != nil {
-		return err
+		s.lg.Printf("failed to list logs: %v", err)
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to list logs")
 	}
 
 	return c.JSON(200, logs)

@@ -8,27 +8,31 @@ import (
 	"osu-dashboard/internal/database/txmanager"
 )
 
-type userStore interface {
-	List(ctx context.Context, tx txmanager.Tx) ([]*model.User, error)
-	Update(ctx context.Context, tx txmanager.Tx, user *model.User) error
-}
-type mapsetStore interface {
-	List(ctx context.Context, tx txmanager.Tx) ([]*model.Mapset, error)
-	Update(ctx context.Context, tx txmanager.Tx, mapset *model.Mapset) error
-}
-type beatmapStore interface {
-	ListForMapset(ctx context.Context, tx txmanager.Tx, mapsetID int) ([]*model.Beatmap, error)
-	Update(ctx context.Context, tx txmanager.Tx, beatmap *model.Beatmap) error
-}
+type (
+	userStore interface {
+		List(ctx context.Context, tx txmanager.Tx) ([]*model.User, error)
+		Update(ctx context.Context, tx txmanager.Tx, user *model.User) error
+	}
 
-type cleanStore interface {
-	Create(ctx context.Context, tx txmanager.Tx, clean *model.Clean) error
-	GetLastClean(ctx context.Context, tx txmanager.Tx) (*model.Clean, error)
-}
+	mapsetStore interface {
+		List(ctx context.Context, tx txmanager.Tx) ([]*model.Mapset, error)
+		Update(ctx context.Context, tx txmanager.Tx, mapset *model.Mapset) error
+	}
 
-type logSource interface {
-	Create(ctx context.Context, log *model.Log) error
-}
+	beatmapStore interface {
+		ListForMapset(ctx context.Context, tx txmanager.Tx, mapsetID int) ([]*model.Beatmap, error)
+		Update(ctx context.Context, tx txmanager.Tx, beatmap *model.Beatmap) error
+	}
+
+	cleanStore interface {
+		Create(ctx context.Context, tx txmanager.Tx, clean *model.Clean) error
+		GetLastClean(ctx context.Context, tx txmanager.Tx) (*model.Clean, error)
+	}
+
+	logSource interface {
+		Create(ctx context.Context, log *model.Log) error
+	}
+)
 
 func New(
 	cfg *config.Config,

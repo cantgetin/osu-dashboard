@@ -117,23 +117,20 @@ func removeAllMapEntriesExceptLastN(jsonData *repository.JSON, n int) (*reposito
 		return jsonData, nil
 	}
 
-	// Convert the map keys to a slice for sorting
 	keys := make([]time.Time, len(data))
 	for key := range data {
 		keys = append(keys, key)
 	}
 
-	// Sort the keys in ascending order
+	// sort in ascending order
 	sort.Slice(keys, func(i, j int) bool {
 		return keys[i].Before(keys[j])
 	})
 
-	// Remove all entries except the last n
 	for i := 0; i < len(keys)-n; i++ {
 		delete(data, keys[i])
 	}
-
-	// Marshal the updated map back to JSON
+	
 	updatedJSON, err := json.Marshal(data)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal updated JSON: %v", err)

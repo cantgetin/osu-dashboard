@@ -36,7 +36,7 @@ func (w *Worker) Start(ctx context.Context) func() error {
 				loopCtx, cancel := context.WithTimeout(ctx, w.cfg.CleaningTimeout)
 				defer cancel()
 
-				if err := w.cleaner.Clean(loopCtx); err != nil {
+				if err = w.cleaner.Clean(loopCtx); err != nil {
 					w.lg.Errorf("encountered error while cleaning: %v", err)
 					return
 				}

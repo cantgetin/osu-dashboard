@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func (s *ServiceImpl) Create(c echo.Context) error {
+func (s *Handlers) Create(c echo.Context) error {
 	code := c.Param("code")
 	if code == "" {
 		return echo.ErrBadRequest
@@ -20,10 +20,11 @@ func (s *ServiceImpl) Create(c echo.Context) error {
 	return c.NoContent(http.StatusCreated)
 }
 
-func (s *ServiceImpl) List(c echo.Context) error {
+func (s *Handlers) List(c echo.Context) error {
 	trackingList, err := s.followingProvider.List(c.Request().Context())
 	if err != nil {
-		return err
+		s.lg.Printf("failed to list followings: %v", err)
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to list followings")
 	}
 
 	return c.JSON(200, trackingList)

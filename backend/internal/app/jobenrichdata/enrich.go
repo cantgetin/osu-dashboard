@@ -10,7 +10,7 @@ const enrichEveryNHours = 168 * time.Hour
 func (w *Worker) Start(ctx context.Context) func() error {
 	finished := make(chan struct{}, 1)
 
-	lastTimeenriched, err := w.enricher.GetLastTimeEnriched(ctx)
+	lastTimeEnriched, err := w.enricher.GetLastTimeEnriched(ctx)
 	if err != nil {
 		w.lg.Errorf("failed to get last time enrich: %v", err)
 		return func() error {
@@ -19,13 +19,13 @@ func (w *Worker) Start(ctx context.Context) func() error {
 		}
 	}
 
-	hoursSinceLastFetch := time.Since(*lastTimeenriched).Hours()
+	hoursSinceLastFetch := time.Since(*lastTimeEnriched).Hours()
 	if hoursSinceLastFetch <= enrichEveryNHours.Hours() {
 		waitDuration := time.Duration(enrichEveryNHours.Hours()-hoursSinceLastFetch) * time.Hour
 		w.lg.Errorf("persisted last time enriched:, waiting %v until next enrich", waitDuration)
 		time.Sleep(waitDuration)
 	} else {
-		w.lg.Infof("persisted last time enriched: %v, no need to wait until refetch", *lastTimeenriched)
+		w.lg.Infof("persisted last time enriched: %v, no need to wait until refetch", *lastTimeEnriched)
 	}
 
 	go func() {
@@ -36,7 +36,7 @@ func (w *Worker) Start(ctx context.Context) func() error {
 				loopCtx, cancel := context.WithTimeout(ctx, w.cfg.EnrichingTimeout)
 				defer cancel()
 
-				if err := w.enricher.Enrich(loopCtx); err != nil {
+				if err = w.enricher.Enrich(loopCtx); err != nil {
 					w.lg.Errorf("encountered error while enriching: %v", err)
 					return
 				}

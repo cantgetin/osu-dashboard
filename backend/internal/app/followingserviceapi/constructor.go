@@ -6,15 +6,17 @@ import (
 	"osu-dashboard/internal/dto"
 )
 
-type followingCreator interface {
-	Create(ctx context.Context, code string) error
-}
+type (
+	followingCreator interface {
+		Create(ctx context.Context, code string) error
+	}
 
-type followingProvider interface {
-	List(ctx context.Context) ([]*dto.Following, error)
-}
+	followingProvider interface {
+		List(ctx context.Context) ([]*dto.Following, error)
+	}
+)
 
-type ServiceImpl struct {
+type Handlers struct {
 	lg                *log.Logger
 	followingCreator  followingCreator
 	followingProvider followingProvider
@@ -24,8 +26,8 @@ func New(
 	lg *log.Logger,
 	followingCreator followingCreator,
 	followingProvider followingProvider,
-) *ServiceImpl {
-	return &ServiceImpl{
+) *Handlers {
+	return &Handlers{
 		lg:                lg,
 		followingCreator:  followingCreator,
 		followingProvider: followingProvider,

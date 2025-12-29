@@ -10,7 +10,7 @@ type logProvider interface {
 	List(ctx context.Context, page int) (*dto.LogsPaged, error)
 }
 
-type ServiceImpl struct {
+type Handlers struct {
 	lg          *log.Logger
 	logProvider logProvider
 }
@@ -18,8 +18,8 @@ type ServiceImpl struct {
 func New(
 	lg *log.Logger,
 	logProvider logProvider,
-) *ServiceImpl {
-	return &ServiceImpl{
+) *Handlers {
+	return &Handlers{
 		lg:          lg,
 		logProvider: logProvider,
 	}
