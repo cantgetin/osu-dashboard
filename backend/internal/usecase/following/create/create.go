@@ -76,7 +76,7 @@ func (uc *UseCase) trackAndCreateRecord(ctx context.Context, following *model.Fo
 			Service:            "osu-dashboard-api",
 			AppVersion:         "v1.0",
 			Platform:           "Backend",
-			Type:               model.TrackTypeInitial,
+			Type:               model.LogTypeInitial,
 			TrackedAt:          time.Now().UTC(),
 			ElapsedTime:        time.Since(started),
 			APIRequests:        stats.RequestCount,

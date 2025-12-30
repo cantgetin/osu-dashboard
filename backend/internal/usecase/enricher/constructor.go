@@ -10,19 +10,25 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type mapsetStore interface {
-	ListForUser(ctx context.Context, tx txmanager.Tx, userID int) ([]*model.Mapset, error)
-	UpdateGenreLanguage(ctx context.Context, tx txmanager.Tx, id int, newGenre string, newLanguage string) error
-}
+type (
+	mapsetStore interface {
+		ListForUser(ctx context.Context, tx txmanager.Tx, userID int) ([]*model.Mapset, error)
+		UpdateGenreLanguage(ctx context.Context, tx txmanager.Tx, id int, newGenre string, newLanguage string) error
+	}
 
-type followingStore interface {
-	List(ctx context.Context, tx txmanager.Tx) ([]*model.Following, error)
-}
+	followingStore interface {
+		List(ctx context.Context, tx txmanager.Tx) ([]*model.Following, error)
+	}
 
-type enrichStore interface {
-	Create(ctx context.Context, tx txmanager.Tx, enrich *model.Enrich) error
-	GetLastEnrich(ctx context.Context, tx txmanager.Tx) (*model.Enrich, error)
-}
+	enrichStore interface {
+		Create(ctx context.Context, tx txmanager.Tx, enrich *model.Enrich) error
+		GetLastEnrich(ctx context.Context, tx txmanager.Tx) (*model.Enrich, error)
+	}
+
+	logStore interface {
+		Create(ctx context.Context, tx txmanager.Tx, log *model.Log) error
+	}
+)
 
 type UseCase struct {
 	cfg       *config.Config
@@ -32,6 +38,7 @@ type UseCase struct {
 	osuApi    *osuapi.Service
 	following followingStore
 	enriches  enrichStore
+	log       logStore
 }
 
 func New(
@@ -42,6 +49,7 @@ func New(
 	mapset mapsetStore,
 	following followingStore,
 	enrichesStore enrichStore,
+	logStore logStore,
 ) *UseCase {
 	return &UseCase{
 		cfg:       cfg,
@@ -51,5 +59,6 @@ func New(
 		osuApi:    osuAPI,
 		following: following,
 		enriches:  enrichesStore,
+		log:       logStore,
 	}
 }

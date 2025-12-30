@@ -96,7 +96,7 @@ func (uc *UseCase) Clean(ctx context.Context) error {
 			Service:            "db-cleaner",
 			AppVersion:         "v1.0",
 			Platform:           "Backend",
-			Type:               model.TrackTypeRegular,
+			Type:               model.LogTypeRegular,
 			APIRequests:        0,
 			SuccessRatePercent: 100,
 			TrackedAt:          time.Now().UTC(),

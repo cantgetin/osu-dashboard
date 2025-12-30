@@ -10,6 +10,8 @@ import (
 )
 
 func (uc *UseCase) Enrich(ctx context.Context) error {
+	startTime := time.Now()
+
 	// getting all users IDs
 	var follows []*model.Following
 	if err := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
@@ -34,7 +36,8 @@ func (uc *UseCase) Enrich(ctx context.Context) error {
 		}
 	}
 
-	return nil
+	defer uc.osuApi.ResetStats()
+	return uc.CreateEnrichAndLogRecords(ctx, startTime)
 }
 
 func (uc *UseCase) enrichUserMapsets(ctx context.Context, userID int) error {
@@ -105,6 +108,47 @@ func (uc *UseCase) CreateEnrichRecord(ctx context.Context) error {
 		return nil
 	}); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (uc *UseCase) CreateEnrichAndLogRecords(ctx context.Context, startTime time.Time) error {
+	var (
+		elapsed       = time.Since(startTime)
+		reqs          = uc.osuApi.GetOutgoingRequestCount()
+		respTime      = uc.osuApi.AverageResponseTime()
+		avgReqsPerMin = float64(reqs) / elapsed.Minutes()
+		successRate   = uc.osuApi.SuccessRate()
+	)
+
+	uc.lg.Infof("Sent %v requests to api in %v minutes", reqs, elapsed.Minutes())
+	uc.lg.Infof("Average requests per minute: %f", avgReqsPerMin)
+
+	if err := uc.CreateEnrichRecord(ctx); err != nil {
+		return fmt.Errorf("failed to create enrich record: %w", err)
+	}
+
+	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
+		if err := uc.log.Create(ctx, tx, &model.Log{
+			Name:               "Daily mapset info enrichment",
+			Message:            model.LogMessageDailyEnrich,
+			Service:            "enricher",
+			AppVersion:         "v1.0",
+			Platform:           "Backend",
+			Type:               model.LogTypeRegular,
+			APIRequests:        reqs,
+			SuccessRatePercent: successRate,
+			TrackedAt:          time.Now().UTC(),
+			AvgResponseTime:    respTime,
+			ElapsedTime:        elapsed,
+		}); err != nil {
+			return fmt.Errorf("failed to create log: %w", err)
+		}
+		return nil
+	})
+	if txErr != nil {
+		return txErr
 	}
 
 	return nil

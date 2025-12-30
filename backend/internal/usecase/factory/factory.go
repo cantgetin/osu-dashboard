@@ -228,5 +228,6 @@ func (f *UseCaseFactory) MakeEnricherUseCase() *enricherusecase.UseCase {
 		f.repos.MapsetRepo,
 		f.repos.FollowingRepo,
 		f.repos.EnrichesRepo,
+		f.repos.LogRepo,
 	)
 }

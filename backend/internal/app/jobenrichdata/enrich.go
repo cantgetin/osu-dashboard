@@ -41,11 +41,6 @@ func (w *Worker) Start(ctx context.Context) func() error {
 					return
 				}
 
-				err = w.enricher.CreateEnrichRecord(ctx)
-				if err != nil {
-					w.lg.Errorf("failed to create enrich record: %v", err)
-				}
-
 				w.lg.Infof("enriched successfully")
 			}()
 

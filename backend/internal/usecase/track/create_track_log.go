@@ -28,10 +28,10 @@ func (uc *UseCase) CreateTrackAndLogRecords(ctx context.Context, startTime time.
 		if err := uc.log.Create(ctx, tx, &model.Log{
 			Name:               "Daily tracking for all users",
 			Message:            model.LogMessageDailyTrack,
-			Service:            "playcount-tracker",
+			Service:            "tracker",
 			AppVersion:         "v1.0",
 			Platform:           "Backend",
-			Type:               model.TrackTypeRegular,
+			Type:               model.LogTypeRegular,
 			APIRequests:        reqs,
 			SuccessRatePercent: successRate,
 			TrackedAt:          time.Now().UTC(),
