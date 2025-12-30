@@ -66,11 +66,8 @@ func Test_AppendNewMapsetStats(t *testing.T) {
 		t.Error(err)
 	}
 
-	// Convert mergedJSON to repository.JSON
-	actualMergedJSON := repository.JSON(mergedJSON)
-
 	assert.NoError(t, err)
-	assert.Equal(t, expectedMergedJSON, actualMergedJSON)
+	assert.Equal(t, expectedMergedJSON, mergedJSON)
 }
 
 func Test_KeepLastNKeyValuesFromStats(t *testing.T) {

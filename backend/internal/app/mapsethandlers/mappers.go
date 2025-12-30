@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func mapSortQueryParamsToMapsetSort(fieldParam string, directionParam string) model.MapsetSort {
+func mapSortQueryParamsToMapsetSort(fieldParam, directionParam string) model.MapsetSort {
 	var res model.MapsetSort
 
 	if fieldParam != "" && directionParam != "" {
@@ -42,7 +42,7 @@ func mapSortQueryParamsToMapsetSort(fieldParam string, directionParam string) mo
 	return res
 }
 
-func mapSearchAndFilterQueryParamsToMapsetFilter(search string, status string) model.MapsetFilter {
+func mapSearchAndFilterQueryParamsToMapsetFilter(search, status string) model.MapsetFilter {
 	res := make(model.MapsetFilter)
 
 	if search != "" {

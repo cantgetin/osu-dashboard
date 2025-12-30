@@ -103,6 +103,7 @@ func (s *IntegrationSuite) Test_CreateUseCard() {
 					"application/json",
 					bytes.NewBuffer(inJSON),
 				)
+				defer out.Body.Close()
 
 				s.Require().NoError(err)
 				s.Require().NotNil(out)
@@ -440,6 +441,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 					"application/json",
 					bytes.NewBuffer(inJSON),
 				)
+				defer out.Body.Close()
 
 				s.Require().NoError(err)
 				equal := s.Equal(tc.outCode, out.StatusCode)
@@ -469,7 +471,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 					return
 				}
 
-				s.Assert().Equal(2, len(data))
+				s.Len(data, 2)
 
 				// mapsets
 				expectedMapsets := tc.result.Mapsets
@@ -500,9 +502,9 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 					}
 
 					if actualMapset.ID == 123 {
-						s.Assert().Equal(2, len(data))
+						s.Len(data, 2)
 					} else {
-						s.Assert().Equal(1, len(data))
+						s.Len(data, 1)
 					}
 				}
 
@@ -540,9 +542,9 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 					}
 
 					if actualBeatmap.ID == 3 || actualBeatmap.ID == 4 {
-						s.Assert().Equal(2, len(data))
+						s.Len(data, 2)
 					} else {
-						s.Assert().Equal(1, len(data))
+						s.Len(data, 1)
 					}
 				}
 			})
@@ -723,9 +725,9 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 				s.Equal(expectedUser.AvatarURL, actual.User.AvatarURL)
 				s.Equal(expectedUser.Username, actual.User.Username)
 
-				s.Assert().Equal(1, len(actual.User.UserStats))
+				s.Len(actual.User.UserStats, 1)
 
-				s.Assert().Len(actual.Mapsets, 1)
+				s.Len(actual.Mapsets, 1)
 
 				for _, actualMapset := range actual.Mapsets {
 					expectedMapset := tc.out.Mapsets[0]
@@ -741,7 +743,7 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 					s.Assert().Equal(expectedMapset.Bpm, actualMapset.Bpm)
 					s.Equal(expectedMapset.Creator, actualMapset.Creator)
 
-					s.Assert().Len(actualMapset.MapsetStats, 1)
+					s.Len(actualMapset.MapsetStats, 1)
 
 					for i, actualBeatmap := range actualMapset.Beatmaps {
 						expectedBeatmap := tc.out.Mapsets[0].Beatmaps[i]
@@ -759,7 +761,7 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 						s.Equal(expectedBeatmap.TotalLength, actualBeatmap.TotalLength)
 						s.Equal(expectedBeatmap.UserId, actualBeatmap.UserId)
 
-						s.Assert().Len(actualBeatmap.BeatmapStats, 1)
+						s.Len(actualBeatmap.BeatmapStats, 1)
 					}
 				}
 			})

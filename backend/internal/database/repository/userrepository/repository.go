@@ -96,7 +96,7 @@ func (r *GormRepository) ListUsersWithFilterSortLimitOffset(
 	}
 
 	order := buildOrderBySortQuery(sort)
-	if len(strings.TrimSpace(order)) == 0 {
+	if strings.TrimSpace(order) == "" {
 		order = "created_at DESC"
 	}
 

@@ -211,7 +211,7 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 				err = json.Unmarshal(body, &actual)
 				s.Require().NoError(err)
 
-				s.Assert().Len(actual.Mapsets, 2)
+				s.Len(actual.Mapsets, 2)
 
 				for i, actualMapset := range actual.Mapsets {
 					expectedMapset := tc.out.Mapsets[i]
@@ -227,7 +227,7 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 					s.Assert().Equal(expectedMapset.Bpm, actualMapset.Bpm)
 					s.Equal(expectedMapset.Creator, actualMapset.Creator)
 
-					s.Assert().Len(actualMapset.MapsetStats, 1)
+					s.Len(actualMapset.MapsetStats, 1)
 
 					for j, actualBeatmap := range actualMapset.Beatmaps {
 						expectedBeatmap := tc.out.Mapsets[i].Beatmaps[j]
@@ -245,7 +245,7 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 						s.Equal(expectedBeatmap.TotalLength, actualBeatmap.TotalLength)
 						s.Equal(expectedBeatmap.UserId, actualBeatmap.UserId)
 
-						s.Assert().Len(actualBeatmap.BeatmapStats, 1)
+						s.Len(actualBeatmap.BeatmapStats, 1)
 					}
 				}
 			})

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"osu-dashboard/internal/database/repository/model"
 	"osu-dashboard/internal/database/txmanager"
-	"sort"
+	gosort "sort"
 	"strings"
 
 	"gorm.io/gorm"
@@ -162,7 +162,7 @@ func (r *GormRepository) ListWithFilterSortLimitOffset(
 	}
 
 	order := buildOrderBySortQuery(sort)
-	if len(strings.TrimSpace(order)) == 0 {
+	if strings.TrimSpace(order) == "" {
 		order = "created_at DESC"
 	}
 
@@ -209,7 +209,7 @@ func (r *GormRepository) ListForUserWithFilterSortLimitOffset(
 	}
 
 	order := buildOrderBySortQuery(sort)
-	if len(strings.TrimSpace(order)) == 0 {
+	if strings.TrimSpace(order) == "" {
 		order = "created_at DESC"
 	}
 
@@ -239,15 +239,15 @@ func (r *GormRepository) ListForUserWithFilterSortLimitOffset(
 	return mapsets, int(count), nil
 }
 
-func buildListByFilterQuery(filter model.MapsetFilter) (string, []any) {
+func buildListByFilterQuery(filter model.MapsetFilter) (query string, values []any) {
 	var queryBuilder strings.Builder
-	values := make([]any, 0, len(filter))
+	values = make([]any, 0, len(filter))
 	keys := make([]string, 0, len(filter))
 	for column := range filter {
 		keys = append(keys, string(column))
 	}
 
-	sort.Strings(keys)
+	gosort.Strings(keys)
 
 	for i, column := range keys {
 		if column == string(model.MapsetArtistOrTitleOrTagsFields) {

@@ -2,7 +2,7 @@ package userhandlers
 
 import "osu-dashboard/internal/database/repository/model"
 
-func mapSortQueryParamsToUserSort(fieldParam string, directionParam string) model.UserSort {
+func mapSortQueryParamsToUserSort(fieldParam, directionParam string) model.UserSort {
 	var res model.UserSort
 
 	if fieldParam != "" && directionParam != "" {
