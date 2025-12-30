@@ -9,7 +9,7 @@ interface MapsetChartsProps {
 
 const charts: { property: keyof MapsetStatsDataset, name: string, color: string }[] = [
     {property: 'play_count', name: 'Play count', color: '#86EFAC'},
-    {property: 'favourite_count', name: 'Favourite count', color: '#FF5DBD'},
+    {property: 'favorite_count', name: 'Favourite count', color: '#FF5DBD'},
     {property: 'comments_count', name: 'Comment count', color: '#f87171'}
 ];
 

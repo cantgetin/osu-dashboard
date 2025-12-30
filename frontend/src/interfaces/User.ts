@@ -38,7 +38,7 @@ interface UserStats {
 
 interface UserStatsModel {
     play_count: number;
-    favourite_count: number;
+    favorite_count: number;
     map_count: number;
     comments_count: number;
 }
@@ -46,7 +46,7 @@ interface UserStatsModel {
 interface UserStatsDataset {
     timestamp: string;
     play_count: number;
-    favourite_count: number;
+    favorite_count: number;
     map_count: number;
     comments_count: number;
 }

@@ -20,13 +20,13 @@ interface MapsetStats {
 
 interface MapsetStatsModel {
     play_count: number;
-    favourite_count: number;
+    favorite_count: number;
     comments_count: number;
 }
 
 interface MapsetStatsDataset {
     timestamp: string;
     play_count: number;
-    favourite_count: number;
+    favorite_count: number;
     comments_count: number;
 }

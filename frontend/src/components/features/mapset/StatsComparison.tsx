@@ -28,8 +28,8 @@ const StatsComparison = ({ lastStats, penultimateStats }: StatsComparisonProps) 
     <div className="flex flex-col justify-center items-center">
         <h1 className="text-lg md:text-4xl flex gap-2 items-center w-full justify-end drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]">Stats for last 24 hours:</h1>
         <StatCard
-            value={lastStats.favourite_count}
-            previousValue={penultimateStats.favourite_count}
+            value={lastStats.favorite_count}
+            previousValue={penultimateStats.favorite_count}
             label="Favorites"
             color="text-pink-300"
         />

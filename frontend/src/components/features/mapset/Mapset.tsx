@@ -27,7 +27,7 @@ const Mapset = (props: MapCardProps) => {
             const penultimateStats = mapsetStatsValues[statsCount - 2];
 
             const newPlayCountDifference = mapsetStatsValues[statsCount - 1].play_count - penultimateStats.play_count;
-            const newFavouriteCountDifference = mapsetStatsValues[statsCount - 1].favourite_count - penultimateStats.favourite_count;
+            const newFavouriteCountDifference = mapsetStatsValues[statsCount - 1].favorite_count - penultimateStats.favorite_count;
             const newCommentsCountDifference = mapsetStatsValues[statsCount - 1].comments_count - penultimateStats.comments_count;
 
             setPenultimateStats(penultimateStats);
@@ -77,7 +77,7 @@ const Mapset = (props: MapCardProps) => {
                                     {aveta(lastStats.play_count)} plays
                                 </h1>
                                 <h1 className="text-xs sm:text-sm text-pink-200">
-                                    {aveta(lastStats.favourite_count)} favorites
+                                    {aveta(lastStats.favorite_count)} favorites
                                 </h1>
                                 <h1 className="text-xs sm:text-sm text-red-400">
                                     {aveta(lastStats.comments_count)} comments

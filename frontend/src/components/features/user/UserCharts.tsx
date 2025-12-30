@@ -11,7 +11,7 @@ interface LineChartProps {
 
 const charts: { property: keyof UserStatsDataset, name: string, color: string }[] = [
     {property: 'play_count', name: 'Plays', color: '#86EFAC'},
-    {property: 'favourite_count', name: 'Favourites', color: '#FF5DBD'},
+    {property: 'favorite_count', name: 'Favourites', color: '#FF5DBD'},
     {property: 'comments_count', name: 'Comments', color: '#f87171'}
 ];
 
