@@ -30,7 +30,7 @@ SELECT
                     'map_count', graveyard_beatmapset_count + unranked_beatmapset_count,
                     'play_count', floor(random() * 200000)::integer,
                     'comments_count', floor(random() * 200)::integer,
-                    'favourite_count', floor(random() * 200)::integer
+                    'favorite_count', floor(random() * 200)::integer
             )
     ) as user_stats,
     created_at,

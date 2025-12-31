@@ -23,7 +23,7 @@ func MapCreateUserCardCommandToUserModel(cmd *command.CreateUserCardCommand) (*m
 
 	for _, ms := range cmd.Mapsets {
 		playcount += ms.PlayCount
-		favorites += ms.FavouriteCount
+		favorites += ms.FavoriteCount
 		mapCount++
 		comments += ms.CommentsCount
 	}
@@ -64,7 +64,7 @@ func MapUpdateUserCardCommandToUserModel(cmd *command.UpdateUserCardCommand) (*m
 	for _, ms := range cmd.Mapsets {
 		comments += ms.CommentsCount
 		playcount += ms.PlayCount
-		favorites += ms.FavouriteCount
+		favorites += ms.FavoriteCount
 		mapCount++
 	}
 
@@ -95,7 +95,7 @@ func MapUpdateUserCardCommandToUserModel(cmd *command.UpdateUserCardCommand) (*m
 }
 
 func MapCreateMapsetCommandToMapsetModel(mapset *command.CreateMapsetCommand) (*model.Mapset, error) {
-	mapsetStats, err := MapMapsetInfoToStatsJSON(mapset.PlayCount, mapset.FavouriteCount, mapset.CommentsCount)
+	mapsetStats, err := MapMapsetInfoToStatsJSON(mapset.PlayCount, mapset.FavoriteCount, mapset.CommentsCount)
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +127,7 @@ func MapCreateMapsetCommandToMapsetModel(mapset *command.CreateMapsetCommand) (*
 }
 
 func MapUpdateMapsetCommandToMapsetModel(mapset *command.UpdateMapsetCommand) (*model.Mapset, error) {
-	mapsetStats, err := MapMapsetInfoToStatsJSON(mapset.PlayCount, mapset.FavouriteCount, mapset.CommentsCount)
+	mapsetStats, err := MapMapsetInfoToStatsJSON(mapset.PlayCount, mapset.FavoriteCount, mapset.CommentsCount)
 	if err != nil {
 		return nil, err
 	}
