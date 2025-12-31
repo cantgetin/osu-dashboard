@@ -45,7 +45,7 @@ type Mapset struct {
 	PreviewUrl    string            `json:"preview_url"`
 	Tags          string            `json:"tags"`
 	PlayCount     int               `json:"play_count"`
-	FavoriteCount int               `json:"favorite_count"`
+	FavoriteCount int               `json:"favourite_count"` // do not rename this
 	Bpm           float64           `json:"bpm"`
 	Creator       string            `json:"creator"`
 	Beatmaps      []*Beatmap        `json:"beatmaps"`
