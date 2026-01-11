@@ -11,6 +11,9 @@ TODO frontend
 TODO backend
 
 top priority
+* rate limiting
+* grafana
+* metrics
 * add graphql handlers
 * add grpc handlers that translate to http
 * country flags

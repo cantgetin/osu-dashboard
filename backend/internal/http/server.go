@@ -2,13 +2,13 @@ package http
 
 import (
 	"context"
+	"golang.org/x/time/rate"
 	"osu-dashboard/internal/app/http/followinghandlers"
 	"osu-dashboard/internal/app/http/loghandlers"
 	"osu-dashboard/internal/app/http/mapsethandlers"
 	"osu-dashboard/internal/app/http/pinghandlers"
 	"osu-dashboard/internal/app/http/searchhandlers"
 	"osu-dashboard/internal/app/http/statistichandlers"
-	"osu-dashboard/internal/app/http/usercardhandlers"
 	"osu-dashboard/internal/app/http/userhandlers"
 	"osu-dashboard/internal/config"
 	"osu-dashboard/internal/usecase/factory"
@@ -19,78 +19,58 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type Server struct {
-	cfg       *config.Config
-	server    *echo.Echo
-	lg        *log.Logger
-	user      *userhandlers.Handlers
-	ping      *pinghandlers.Handlers
-	userCard  *usercardhandlers.Handlers
-	following *followinghandlers.Handlers
-	mapset    *mapsethandlers.Handlers
-	statistic *statistichandlers.Handlers
-	logs      *loghandlers.Handlers
-	search    *searchhandlers.Handlers
-}
+const (
+	RateLimitRequestsPerSecond = 200
+	RateLimitBurstSize         = 200
+)
+
+type (
+	Server struct {
+		cfg      *config.Config
+		server   *echo.Echo
+		lg       *log.Logger
+		handlers handlers
+	}
+
+	handlers struct {
+		user      *userhandlers.Handlers
+		ping      *pinghandlers.Handlers
+		following *followinghandlers.Handlers
+		mapset    *mapsethandlers.Handlers
+		statistic *statistichandlers.Handlers
+		logs      *loghandlers.Handlers
+		search    *searchhandlers.Handlers
+	}
+)
 
 func New(cfg *config.Config, lg *log.Logger, f *factory.UseCaseFactory) *Server {
 	server := echo.New()
 	server.HideBanner = true
 	server.HidePort = true
+	server.Use(RateLimitMiddleware(rate.Limit(RateLimitRequestsPerSecond), RateLimitBurstSize))
 	server.Use(middleware.CORS())
 
 	ping := pinghandlers.New(lg)
-
-	user := userhandlers.New(
-		lg,
-		f.MakeCreateUserUseCase(),
-		f.MakeProvideUserUseCase(),
-		f.MakeUpdateUserUseCase(),
-	)
-
-	userCard := usercardhandlers.New(
-		lg,
-		f.MakeCreateUserCardUseCase(),
-		f.MakeProvideUserCardUseCase(),
-		f.MakeUpdateUserCardUseCase(),
-	)
-
-	following := followinghandlers.New(
-		lg,
-		f.MakeCreateFollowingUseCase(),
-		f.MakeProvideFollowingUseCase(),
-	)
-
-	mapset := mapsethandlers.New(
-		lg,
-		f.MakeProvideMapsetUseCase(),
-		f.MakeCreateMapsetUseCase(),
-	)
-
-	statistic := statistichandlers.New(
-		lg,
-		f.MakeProvideStatisticUseCase(),
-	)
-
-	logs := loghandlers.New(
-		lg,
-		f.MakeProvideLogsUseCase(),
-	)
-
+	user := userhandlers.New(lg, f.MakeCreateUserUseCase(), f.MakeProvideUserUseCase(), f.MakeUpdateUserUseCase())
+	following := followinghandlers.New(lg, f.MakeCreateFollowingUseCase(), f.MakeProvideFollowingUseCase())
+	mapset := mapsethandlers.New(lg, f.MakeProvideMapsetUseCase(), f.MakeCreateMapsetUseCase())
+	statistic := statistichandlers.New(lg, f.MakeProvideStatisticUseCase())
+	logs := loghandlers.New(lg, f.MakeProvideLogsUseCase())
 	search := searchhandlers.New(lg, f.MakeSearchUseCase())
 
 	return &Server{
-		cfg:       cfg,
-		server:    server,
-		lg:        lg,
-		ping:      ping,
-		user:      user,
-		userCard:  userCard,
-		following: following,
-		mapset:    mapset,
-		statistic: statistic,
-		logs:      logs,
-		search:    search,
+		cfg:    cfg,
+		server: server,
+		lg:     lg,
+		handlers: handlers{
+			ping:      ping,
+			user:      user,
+			following: following,
+			mapset:    mapset,
+			statistic: statistic,
+			logs:      logs,
+			search:    search,
+		},
 	}
 }
 
