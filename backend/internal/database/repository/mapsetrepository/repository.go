@@ -144,6 +144,32 @@ func (r *GormRepository) ListForUserWithLimitOffset(
 	return mapsets, nil
 }
 
+func (r *GormRepository) ListWithFilterAndLimit(
+	ctx context.Context,
+	tx txmanager.Tx,
+	filter model.MapsetFilter,
+	limit int,
+) ([]*model.Mapset, error) {
+	var mapsets []*model.Mapset
+
+	query, values := buildListByFilterQuery(filter)
+	filterGormExpr := gorm.Expr(query, values...)
+	if query == "" {
+		filterGormExpr = gorm.Expr("1 = 1")
+	}
+
+	err := tx.DB().WithContext(ctx).
+		Table(mapsetsTableName).
+		Where(filterGormExpr).
+		Limit(limit).
+		Find(&mapsets).Error
+	if err != nil {
+		return nil, fmt.Errorf("failed to list mapsets: %w", err)
+	}
+
+	return mapsets, nil
+}
+
 func (r *GormRepository) ListWithFilterSortLimitOffset(
 	ctx context.Context,
 	tx txmanager.Tx,

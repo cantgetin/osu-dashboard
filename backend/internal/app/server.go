@@ -33,7 +33,7 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 		return fmt.Errorf("failed to apply migrations: %w", err)
 	}
 
-	txm := bootstrap.ConnectTxManager("osu-dashboard-bff", db, lg)
+	txm := bootstrap.ConnectTxManager(db, lg)
 
 	// init repos
 	repoFactory := repositoryfactory.New(cfg, lg)
@@ -62,6 +62,8 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 	// setup http routes
 	httpServer := http.New(cfg, lg, f)
 	httpServer.Start()
+
+	// TODO: setup grpc and gql
 
 	gracefulShutDown(ctx, cancel)
 	return nil

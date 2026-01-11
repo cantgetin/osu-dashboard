@@ -5,13 +5,10 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"runtime/debug"
 	"strings"
-	"time"
 
-	log "github.com/sirupsen/logrus"
-
-	"github.com/prometheus/client_golang/prometheus"
 	"gorm.io/gorm"
 )
 
@@ -49,16 +46,14 @@ type TxManager interface {
 }
 
 type GormTxManager struct {
-	db      *gorm.DB
-	lg      *log.Logger
-	metrics *prometheus.HistogramVec
+	db *gorm.DB
+	lg *log.Logger
 }
 
-func New(gdb *gorm.DB, metrics *prometheus.HistogramVec, lg *log.Logger) *GormTxManager {
+func New(gdb *gorm.DB, lg *log.Logger) *GormTxManager {
 	return &GormTxManager{
-		db:      gdb,
-		metrics: metrics,
-		lg:      lg,
+		db: gdb,
+		lg: lg,
 	}
 }
 
@@ -127,20 +122,6 @@ func (tm *GormTxManager) execUnderLock(
 	effector Effector,
 	cfg *txConfig,
 ) (err error) {
-	start := time.Now()
-	defer func() {
-		var t string
-		if cfg.readOnly {
-			t = "read-only"
-		} else {
-			t = "read-write"
-		}
-
-		tm.metrics.
-			WithLabelValues(cfg.level.String(), t).
-			Observe(float64(time.Since(start).Milliseconds()))
-	}()
-
 	tx := tm.db.Begin(&sql.TxOptions{
 		Isolation: cfg.level,
 		ReadOnly:  cfg.readOnly,

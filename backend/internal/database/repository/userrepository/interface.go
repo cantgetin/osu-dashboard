@@ -22,4 +22,10 @@ type Interface interface {
 		limit int,
 		offset int,
 	) ([]*model.User, int, error)
+	ListUsersWithFilterAndLimit(
+		ctx context.Context,
+		tx txmanager.Tx,
+		filter model.UserFilter,
+		limit int,
+	) (users []*model.User, err error)
 }

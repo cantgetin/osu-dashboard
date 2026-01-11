@@ -20,6 +20,7 @@ import (
 	logprovide "osu-dashboard/internal/usecase/log/provide"
 	mapsetcreate "osu-dashboard/internal/usecase/mapset/create"
 	mapsetprovide "osu-dashboard/internal/usecase/mapset/provide"
+	searchusecase "osu-dashboard/internal/usecase/search"
 	statisticprovide "osu-dashboard/internal/usecase/statistic/provide"
 	"osu-dashboard/internal/usecase/track"
 	usercreate "osu-dashboard/internal/usecase/user/create"
@@ -229,5 +230,13 @@ func (f *UseCaseFactory) MakeEnricherUseCase() *enricherusecase.UseCase {
 		f.repos.FollowingRepo,
 		f.repos.EnrichesRepo,
 		f.repos.LogRepo,
+	)
+}
+
+func (f *UseCaseFactory) MakeSearchUseCase() *searchusecase.UseCase {
+	return searchusecase.New(
+		f.txManager,
+		f.repos.UserRepo,
+		f.repos.MapsetRepo,
 	)
 }

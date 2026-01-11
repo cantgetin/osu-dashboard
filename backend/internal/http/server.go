@@ -2,13 +2,14 @@ package http
 
 import (
 	"context"
-	"osu-dashboard/internal/app/followinghandlers"
-	"osu-dashboard/internal/app/loghandlers"
-	"osu-dashboard/internal/app/mapsethandlers"
-	"osu-dashboard/internal/app/pinghandlers"
-	"osu-dashboard/internal/app/statistichandlers"
-	"osu-dashboard/internal/app/usercardhandlers"
-	"osu-dashboard/internal/app/userhandlers"
+	"osu-dashboard/internal/app/http/followinghandlers"
+	"osu-dashboard/internal/app/http/loghandlers"
+	"osu-dashboard/internal/app/http/mapsethandlers"
+	"osu-dashboard/internal/app/http/pinghandlers"
+	"osu-dashboard/internal/app/http/searchhandlers"
+	"osu-dashboard/internal/app/http/statistichandlers"
+	"osu-dashboard/internal/app/http/usercardhandlers"
+	"osu-dashboard/internal/app/http/userhandlers"
 	"osu-dashboard/internal/config"
 	"osu-dashboard/internal/usecase/factory"
 
@@ -29,6 +30,7 @@ type Server struct {
 	mapset    *mapsethandlers.Handlers
 	statistic *statistichandlers.Handlers
 	logs      *loghandlers.Handlers
+	search    *searchhandlers.Handlers
 }
 
 func New(cfg *config.Config, lg *log.Logger, f *factory.UseCaseFactory) *Server {
@@ -75,6 +77,8 @@ func New(cfg *config.Config, lg *log.Logger, f *factory.UseCaseFactory) *Server 
 		f.MakeProvideLogsUseCase(),
 	)
 
+	search := searchhandlers.New(lg, f.MakeSearchUseCase())
+
 	return &Server{
 		cfg:       cfg,
 		server:    server,
@@ -86,6 +90,7 @@ func New(cfg *config.Config, lg *log.Logger, f *factory.UseCaseFactory) *Server 
 		mapset:    mapset,
 		statistic: statistic,
 		logs:      logs,
+		search:    search,
 	}
 }
 

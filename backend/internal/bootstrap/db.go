@@ -13,7 +13,6 @@ import (
 	migrate "github.com/rubenv/sql-migrate"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/prometheus/client_golang/prometheus"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	gormLogger "gorm.io/gorm/logger"
@@ -92,15 +91,7 @@ func ApplyMigrations(gdb *gorm.DB) error {
 	return nil
 }
 
-func ConnectTxManager(ns string, db *gorm.DB, lg *log.Logger) txmanager.TxManager {
-	m := prometheus.NewHistogramVec(prometheus.HistogramOpts{
-		Namespace: ns,
-		Subsystem: "database",
-		Name:      "query_time_milliseconds",
-		Help:      "query duration",
-		Buckets:   []float64{1, 2.5, 5, 10, 25, 50, 100, 500, 1000},
-	}, []string{"query", "query2"})
-
-	txm := txmanager.New(db, m, lg)
+func ConnectTxManager(db *gorm.DB, lg *log.Logger) txmanager.TxManager {
+	txm := txmanager.New(db, lg)
 	return txm
 }

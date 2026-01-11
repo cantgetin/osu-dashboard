@@ -11,6 +11,8 @@ TODO frontend
 TODO backend
 
 top priority
+* add graphql handlers
+* add grpc handlers that translate to http
 * country flags
 * compare handler - two user ids result in page with comparison
 * integration test existing routes

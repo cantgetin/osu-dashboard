@@ -17,4 +17,6 @@ func (s *Server) setupRoutes() {
 	s.server.GET("api/beatmapset/list_for_user/:id", s.mapset.ListForUser)
 
 	s.server.GET("api/system/statistic", s.statistic.GetSystemStatistics)
+
+	s.server.POST("/api/search", s.search.Search)
 }

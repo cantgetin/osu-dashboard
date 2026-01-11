@@ -114,6 +114,30 @@ func (r *GormRepository) ListUsersWithFilterSortLimitOffset(
 	return users, int(count), nil
 }
 
+func (r *GormRepository) ListUsersWithFilterAndLimit(
+	ctx context.Context,
+	tx txmanager.Tx,
+	filter model.UserFilter,
+	limit int,
+) (users []*model.User, err error) {
+	query, values := buildListByFilterQuery(filter)
+	filterGormExpr := gorm.Expr(query, values...)
+	if query == "" {
+		filterGormExpr = gorm.Expr("1 = 1")
+	}
+
+	err = tx.DB().WithContext(ctx).
+		Table(usersTableName).
+		Where(filterGormExpr).
+		Limit(limit).
+		Find(&users).Error
+	if err != nil {
+		return nil, fmt.Errorf("failed to list users: %w", err)
+	}
+
+	return users, nil
+}
+
 func (r *GormRepository) TotalCount(ctx context.Context, tx txmanager.Tx) (int, error) {
 	var count int64
 	err := tx.DB().WithContext(ctx).Table(usersTableName).Count(&count).Error

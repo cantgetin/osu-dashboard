@@ -2,7 +2,7 @@ package mapsethandlers
 
 import (
 	"net/http"
-	"osu-dashboard/internal/app/handlerutils"
+	handlerutils2 "osu-dashboard/internal/app/http/handlerutils"
 	"osu-dashboard/internal/usecase/command"
 	mapsetprovide "osu-dashboard/internal/usecase/mapset/provide"
 	"strconv"
@@ -10,20 +10,20 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (s *Handlers) Create(c echo.Context) error {
+func (h *Handlers) Create(c echo.Context) error {
 	mapset := new(command.CreateMapsetCommand)
 	if err := c.Bind(mapset); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	if err := s.mapsetCreator.Create(c.Request().Context(), mapset); err != nil {
-		return handlerutils.EchoInternalError(err)
+	if err := h.mapsetCreator.Create(c.Request().Context(), mapset); err != nil {
+		return handlerutils2.EchoInternalError(err)
 	}
 
 	return c.JSON(http.StatusCreated, mapset)
 }
 
-func (s *Handlers) Get(c echo.Context) error {
+func (h *Handlers) Get(c echo.Context) error {
 	id := c.Param("id")
 
 	if id == "" {
@@ -34,16 +34,16 @@ func (s *Handlers) Get(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	mapset, err := s.mapsetProvider.Get(c.Request().Context(), idInt)
+	mapset, err := h.mapsetProvider.Get(c.Request().Context(), idInt)
 	if err != nil {
-		return handlerutils.EchoInternalError(err)
+		return handlerutils2.EchoInternalError(err)
 	}
 
 	return c.JSON(http.StatusOK, mapset)
 }
 
-func (s *Handlers) List(c echo.Context) error {
-	pageInt, err := handlerutils.GetPageQueryParam(c)
+func (h *Handlers) List(c echo.Context) error {
+	pageInt, err := handlerutils2.GetPageQueryParam(c)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -58,7 +58,7 @@ func (s *Handlers) List(c echo.Context) error {
 		c.QueryParam("status"),
 	)
 
-	listResp, err := s.mapsetProvider.List(
+	listResp, err := h.mapsetProvider.List(
 		c.Request().Context(),
 		&mapsetprovide.ListCommand{
 			Page:   pageInt,
@@ -67,19 +67,19 @@ func (s *Handlers) List(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return handlerutils.EchoInternalError(err)
+		return handlerutils2.EchoInternalError(err)
 	}
 
 	return c.JSON(http.StatusOK, listResp)
 }
 
-func (s *Handlers) ListForUser(c echo.Context) error {
+func (h *Handlers) ListForUser(c echo.Context) error {
 	idInt, err := getUserIDFromContext(c)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	pageInt, err := handlerutils.GetPageQueryParam(c)
+	pageInt, err := handlerutils2.GetPageQueryParam(c)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -94,7 +94,7 @@ func (s *Handlers) ListForUser(c echo.Context) error {
 		c.QueryParam("status"),
 	)
 
-	listResp, err := s.mapsetProvider.ListForUser(
+	listResp, err := h.mapsetProvider.ListForUser(
 		c.Request().Context(),
 		idInt,
 		&mapsetprovide.ListCommand{
@@ -104,7 +104,7 @@ func (s *Handlers) ListForUser(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return handlerutils.EchoInternalError(err)
+		return handlerutils2.EchoInternalError(err)
 	}
 
 	return c.JSON(http.StatusOK, listResp)

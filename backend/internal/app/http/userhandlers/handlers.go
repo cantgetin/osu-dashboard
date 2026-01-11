@@ -2,7 +2,7 @@ package userhandlers
 
 import (
 	"net/http"
-	"osu-dashboard/internal/app/handlerutils"
+	handlerutils2 "osu-dashboard/internal/app/http/handlerutils"
 	"osu-dashboard/internal/database/repository/model"
 	"osu-dashboard/internal/dto"
 	userprovide "osu-dashboard/internal/usecase/user/provide"
@@ -11,31 +11,31 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (s *Handlers) Create(c echo.Context) error {
+func (h *Handlers) Create(c echo.Context) error {
 	user := new(dto.User)
 	if err := c.Bind(user); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	if err := s.userCreator.Create(c.Request().Context(), user); err != nil {
-		return handlerutils.EchoInternalError(err)
+	if err := h.userCreator.Create(c.Request().Context(), user); err != nil {
+		return handlerutils2.EchoInternalError(err)
 	}
 	return c.JSON(http.StatusCreated, user)
 }
 
-func (s *Handlers) Update(c echo.Context) error {
+func (h *Handlers) Update(c echo.Context) error {
 	user := new(model.User)
 	if err := c.Bind(user); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	if err := s.userUpdater.Update(c.Request().Context(), user); err != nil {
-		return handlerutils.EchoInternalError(err)
+	if err := h.userUpdater.Update(c.Request().Context(), user); err != nil {
+		return handlerutils2.EchoInternalError(err)
 	}
 	return c.JSON(http.StatusAccepted, user)
 }
 
-func (s *Handlers) Get(c echo.Context) error {
+func (h *Handlers) Get(c echo.Context) error {
 	id := c.Param("id")
 	if id == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, "empty user id")
@@ -45,26 +45,26 @@ func (s *Handlers) Get(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	user, err := s.userProvider.Get(c.Request().Context(), idInt)
+	user, err := h.userProvider.Get(c.Request().Context(), idInt)
 	if err != nil {
-		return handlerutils.EchoInternalError(err)
+		return handlerutils2.EchoInternalError(err)
 	}
 
 	return c.JSON(http.StatusOK, user)
 }
 
-func (s *Handlers) GetByName(c echo.Context) error {
+func (h *Handlers) GetByName(c echo.Context) error {
 	name := c.Param("name")
-	user, err := s.userProvider.GetByName(c.Request().Context(), name)
+	user, err := h.userProvider.GetByName(c.Request().Context(), name)
 	if err != nil {
-		return handlerutils.EchoInternalError(err)
+		return handlerutils2.EchoInternalError(err)
 	}
 
 	return c.JSON(http.StatusOK, user)
 }
 
-func (s *Handlers) List(c echo.Context) error {
-	pageInt, err := handlerutils.GetPageQueryParam(c)
+func (h *Handlers) List(c echo.Context) error {
+	pageInt, err := handlerutils2.GetPageQueryParam(c)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -78,13 +78,13 @@ func (s *Handlers) List(c echo.Context) error {
 		c.QueryParam("search"),
 	)
 
-	users, err := s.userProvider.List(c.Request().Context(), &userprovide.ListIn{
+	users, err := h.userProvider.List(c.Request().Context(), &userprovide.ListIn{
 		Page:   pageInt,
 		Sort:   userSort,
 		Filter: userFilter,
 	})
 	if err != nil {
-		return handlerutils.EchoInternalError(err)
+		return handlerutils2.EchoInternalError(err)
 	}
 
 	return c.JSON(http.StatusOK, users)

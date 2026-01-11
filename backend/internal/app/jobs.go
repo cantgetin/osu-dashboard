@@ -3,9 +3,9 @@ package app
 import (
 	"context"
 	"fmt"
-	jobcleandb "osu-dashboard/internal/app/jobdbcleaner"
-	jobenrich "osu-dashboard/internal/app/jobenrichdata"
-	jobtrack "osu-dashboard/internal/app/jobtrackingworker"
+	jobcleandb "osu-dashboard/internal/app/jobs/jobdbcleaner"
+	jobenrich "osu-dashboard/internal/app/jobs/jobenrichdata"
+	jobtrack "osu-dashboard/internal/app/jobs/jobtrackingworker"
 	"osu-dashboard/internal/bootstrap"
 	"osu-dashboard/internal/config"
 	repositoryfactory "osu-dashboard/internal/database/repository/factory"
@@ -30,7 +30,7 @@ func RunJobs(ctx context.Context, cfg *config.Config, lg *log.Logger) error {
 		return fmt.Errorf("failed to apply migrations: %w", err)
 	}
 
-	txm := bootstrap.ConnectTxManager("osu-dashboard-jobs", db, lg)
+	txm := bootstrap.ConnectTxManager(db, lg)
 
 	// init repos
 	repoFactory := repositoryfactory.New(cfg, lg)

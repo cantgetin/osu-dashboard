@@ -2,13 +2,13 @@ package statistichandlers
 
 import (
 	"net/http"
-	"osu-dashboard/internal/app/handlerutils"
+	"osu-dashboard/internal/app/http/handlerutils"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
 
-func (s *Handlers) GetUserMapStatistics(c echo.Context) error {
+func (h *Handlers) GetUserMapStatistics(c echo.Context) error {
 	userID := c.Param("id")
 	if userID == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, "empty user id")
@@ -18,7 +18,7 @@ func (s *Handlers) GetUserMapStatistics(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	userStatistics, err := s.statisticProvider.GetForUser(c.Request().Context(), idInt)
+	userStatistics, err := h.statisticProvider.GetForUser(c.Request().Context(), idInt)
 	if err != nil {
 		return handlerutils.EchoInternalError(err)
 	}
@@ -26,8 +26,8 @@ func (s *Handlers) GetUserMapStatistics(c echo.Context) error {
 	return c.JSON(http.StatusOK, userStatistics)
 }
 
-func (s *Handlers) GetSystemStatistics(c echo.Context) error {
-	systemStats, err := s.statisticProvider.GetForSystem(c.Request().Context())
+func (h *Handlers) GetSystemStatistics(c echo.Context) error {
+	systemStats, err := h.statisticProvider.GetForSystem(c.Request().Context())
 	if err != nil {
 		return handlerutils.EchoInternalError(err)
 	}
