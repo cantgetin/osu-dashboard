@@ -46,6 +46,7 @@ func (uc *UseCase) Search(ctx context.Context, query string) (result []*dto.Sear
 	// fill search results
 	for _, user := range users {
 		result = append(result, &dto.SearchResult{
+			ID:         user.ID,
 			Title:      user.Username,
 			PictureURL: user.AvatarURL,
 			Type:       dto.UserResult,
@@ -53,11 +54,12 @@ func (uc *UseCase) Search(ctx context.Context, query string) (result []*dto.Sear
 	}
 	for _, mapset := range mapsets {
 		result = append(result, &dto.SearchResult{
+			ID:         mapset.ID,
 			Title:      fmt.Sprintf("%s - %s", mapset.Artist, mapset.Title),
 			PictureURL: mapset.PreviewURL,
 			Type:       dto.MapsetResult,
 		})
 	}
-	
+
 	return result, nil
 }

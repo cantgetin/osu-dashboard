@@ -8,6 +8,7 @@ const (
 )
 
 type SearchResult struct {
+	ID         int              `json:"id"`
 	Title      string           `json:"title"`
 	PictureURL string           `json:"picture_url"`
 	Type       SearchResultType `json:"type"`
