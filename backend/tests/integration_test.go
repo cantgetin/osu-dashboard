@@ -64,7 +64,7 @@ func (s *IntegrationSuite) SetupSuite() {
 	lg := log.New()
 
 	go func() {
-		if err := app.Run(s.ctx, s.cfg, lg); err != nil {
+		if err := app.RunBFF(s.ctx, s.cfg, lg); err != nil {
 			s.T().Logf("application has exited %v", err)
 		}
 	}()

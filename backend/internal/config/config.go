@@ -38,6 +38,9 @@ type Config struct {
 	OsuAPIHost   string `env:"OSU_API_HOST" envDefault:"https://osu.ppy.sh/api/v2"`
 	OsuOAuthHost string `env:"OSU_OAUTH_HOST" envDefault:"https://osu.ppy.sh/oauth/token"`
 
+	HTTPRateLimitRequestsPerSecond int `env:"HTTP_RATE_LIMIT_REQUESTS_PER_SECOND" envDefault:"100"`
+	HTTPRateLimitBurstSize         int `env:"HTTP_RATE_LIMIT_BURST_SIZE" envDefault:"100"`
+
 	RunIntegrationTest bool `env:"RUN_INTEGRATION_TEST" envDefault:"false"`
 
 	IntegrationTestPgDSN  string `env:"INTEGRATION_TEST_PG_DSN" envDefault:"postgresql://db:5467/db?user=db&password=db"`

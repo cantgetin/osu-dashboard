@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	osuapimodels "osu-dashboard/internal/service/osuapi/models"
 )
 
-func (s *Service) GetUser(ctx context.Context, userID string) (*User, error) {
+func (s *Service) GetUser(ctx context.Context, userID string) (*osuapimodels.User, error) {
 	token, err := s.tokenProvider.GetToken(ctx)
 	if err != nil {
 		return nil, err
@@ -35,7 +36,7 @@ func (s *Service) GetUser(ctx context.Context, userID string) (*User, error) {
 	}
 	defer resp.Body.Close()
 
-	var user *User
+	var user *osuapimodels.User
 	err = json.NewDecoder(resp.Body).Decode(&user)
 	if err != nil {
 		return nil, fmt.Errorf("failed to decode response body: %w", err)

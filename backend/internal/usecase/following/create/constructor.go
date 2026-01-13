@@ -6,6 +6,7 @@ import (
 	"osu-dashboard/internal/database/repository/model"
 	"osu-dashboard/internal/database/txmanager"
 	"osu-dashboard/internal/service/osuapi"
+	osuapimodels "osu-dashboard/internal/service/osuapi/models"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -25,8 +26,8 @@ type (
 	}
 
 	osuAPI interface {
-		GetUserInfoByHisToken(ctx context.Context, accessToken string) (*osuapi.UserResponse, error)
-		ExchangeCodeForToken(ctx context.Context, code string) (*osuapi.TokenResponse, error)
+		GetUserInfoByHisToken(ctx context.Context, accessToken string) (*osuapimodels.User, error)
+		ExchangeCodeForToken(ctx context.Context, code string) (*osuapimodels.TokenResponse, error)
 		GetTransportStats() osuapi.TransportStats
 		ResetStats()
 	}

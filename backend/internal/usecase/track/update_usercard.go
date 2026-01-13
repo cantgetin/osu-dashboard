@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"osu-dashboard/internal/database/repository/model"
 	"osu-dashboard/internal/database/txmanager"
-	"osu-dashboard/internal/service/osuapi"
+	osuapimodels "osu-dashboard/internal/service/osuapi/models"
 	"osu-dashboard/internal/usecase/command"
 	"osu-dashboard/internal/usecase/mappers"
 	"time"
@@ -14,8 +14,8 @@ import (
 func (uc *UseCase) createOrUpdateData(
 	ctx context.Context,
 	following *model.Following,
-	user *osuapi.User,
-	userMapsets []*osuapi.MapsetExtended,
+	user *osuapimodels.User,
+	userMapsets []*osuapimodels.MapsetExtended,
 ) error {
 	// create/update data in db
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
@@ -55,8 +55,8 @@ func (uc *UseCase) createOrUpdateData(
 func (uc *UseCase) updateUserCard(
 	ctx context.Context,
 	tx txmanager.Tx,
-	user *osuapi.User,
-	userMapsets []*osuapi.MapsetExtended,
+	user *osuapimodels.User,
+	userMapsets []*osuapimodels.MapsetExtended,
 ) error {
 	// create cmd
 	cmd := &command.UpdateUserCardCommand{

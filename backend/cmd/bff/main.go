@@ -18,7 +18,7 @@ func main() {
 
 	ctx := context.Background()
 
-	if err := app.Run(ctx, cfg, lg); err != nil {
-		log.Fatalf("failed to start app, %v", err)
+	if err = app.RunBFF(ctx, cfg, lg); err != nil {
+		log.Fatalf("failed while running bff app, %v", err)
 	}
 }

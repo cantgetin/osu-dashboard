@@ -2,18 +2,19 @@ package osuapi
 
 import (
 	"context"
+	osuapimodels "osu-dashboard/internal/service/osuapi/models"
 	"strconv"
 	"sync"
 
 	"golang.org/x/sync/errgroup"
 )
 
-func (s *Service) GetUserWithMapsets(ctx context.Context, userID string) (*User, []*MapsetExtended, error) {
+func (s *Service) GetUserWithMapsets(ctx context.Context, userID string) (*osuapimodels.User, []*osuapimodels.MapsetExtended, error) {
 	eg, egCtx := errgroup.WithContext(ctx)
 
 	var (
-		user    *User
-		mapsets []*Mapset
+		user    *osuapimodels.User
+		mapsets []*osuapimodels.Mapset
 	)
 
 	eg.Go(func() (errG error) {
@@ -43,13 +44,15 @@ func (s *Service) GetUserWithMapsets(ctx context.Context, userID string) (*User,
 	return user, mapsetsExtended, nil
 }
 
-func (s *Service) getMapsetsWithComments(ctx context.Context, mapsets []*Mapset) ([]*MapsetExtended, error) {
+func (s *Service) getMapsetsWithComments(
+	ctx context.Context, mapsets []*osuapimodels.Mapset,
+) ([]*osuapimodels.MapsetExtended, error) {
 	eg, egCtx := errgroup.WithContext(ctx)
 	eg.SetLimit(s.cfg.TrackingMaxParallelMapsetCalls)
 
 	var (
 		mu              = sync.Mutex{}
-		mapsetsExtended []*MapsetExtended
+		mapsetsExtended []*osuapimodels.MapsetExtended
 	)
 
 	for _, mapset := range mapsets {
@@ -61,7 +64,7 @@ func (s *Service) getMapsetsWithComments(ctx context.Context, mapsets []*Mapset)
 
 			mu.Lock()
 			defer mu.Unlock()
-			mapsetsExtended = append(mapsetsExtended, &MapsetExtended{
+			mapsetsExtended = append(mapsetsExtended, &osuapimodels.MapsetExtended{
 				Mapset:        mapset,
 				CommentsCount: commentCount,
 			})

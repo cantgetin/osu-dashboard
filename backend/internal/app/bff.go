@@ -19,7 +19,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
+func RunBFF(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 	ctx, cancel := context.WithCancel(baseCtx)
 	defer cancel()
 
@@ -35,35 +35,29 @@ func Run(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 
 	txm := bootstrap.ConnectTxManager(db, lg)
 
-	// init repos
-	repoFactory := repositoryfactory.New(cfg, lg)
-	userRepo := repoFactory.NewUserRepository()
-	mapsetRepo := repoFactory.NewMapsetRepository()
-	beatmapRepo := repoFactory.NewBeatmapRepository()
-	followingRepo := repoFactory.NewFollowingsRepository()
-	trackRepo := repoFactory.NewTrackRepository()
-	logRepo := repoFactory.NewLogsRepository()
-
 	// init api
 	httpClient := bootstrap.NewHTTPClient()
 	osuTokenProvider := osuapitokenprovider.New(cfg, httpClient)
 	osuAPI := osuapi.New(cfg, osuTokenProvider, httpClient)
 
-	// usecase factory
-	f := factory.New(cfg, lg, txm, osuAPI, &factory.Repositories{
-		UserRepo:      userRepo,
-		BeatmapRepo:   beatmapRepo,
-		MapsetRepo:    mapsetRepo,
-		FollowingRepo: followingRepo,
-		TrackRepo:     trackRepo,
-		LogRepo:       logRepo,
+	// init repos, usecases
+	repoFactory := repositoryfactory.New(cfg, lg)
+	useCaseFactory := factory.New(cfg, lg, txm, osuAPI, &factory.Repositories{
+		UserRepo:      repoFactory.NewUserRepository(),
+		BeatmapRepo:   repoFactory.NewBeatmapRepository(),
+		MapsetRepo:    repoFactory.NewMapsetRepository(),
+		FollowingRepo: repoFactory.NewFollowingsRepository(),
+		TrackRepo:     repoFactory.NewTrackRepository(),
+		LogRepo:       repoFactory.NewLogsRepository(),
+		CleanRepo:     repoFactory.NewCleansRepository(),
+		EnrichesRepo:  repoFactory.NewEnrichesRepository(),
 	})
 
 	// setup http routes
-	httpServer := http.New(cfg, lg, f)
+	httpServer := http.New(cfg, lg, useCaseFactory)
 	httpServer.Start()
 
-	// TODO: setup grpc and gql
+	// TODO: setup gql
 
 	gracefulShutDown(ctx, cancel)
 	return nil

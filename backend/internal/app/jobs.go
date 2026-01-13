@@ -32,32 +32,22 @@ func RunJobs(ctx context.Context, cfg *config.Config, lg *log.Logger) error {
 
 	txm := bootstrap.ConnectTxManager(db, lg)
 
-	// init repos
-	repoFactory := repositoryfactory.New(cfg, lg)
-	userRepo := repoFactory.NewUserRepository()
-	mapsetRepo := repoFactory.NewMapsetRepository()
-	beatmapRepo := repoFactory.NewBeatmapRepository()
-	followingRepo := repoFactory.NewFollowingsRepository()
-	trackRepo := repoFactory.NewTrackRepository()
-	logRepo := repoFactory.NewLogsRepository()
-	cleanerRepo := repoFactory.NewCleansRepository()
-	enrichesRepo := repoFactory.NewEnrichesRepository()
-
 	// init api
 	httpClient := bootstrap.NewHTTPClient()
 	osuTokenProvider := osuapitokenprovider.New(cfg, httpClient)
 	osuAPI := osuapi.New(cfg, osuTokenProvider, httpClient)
 
-	// init usecases
+	// init repos, usecases
+	repoFactory := repositoryfactory.New(cfg, lg)
 	useCaseFactory := factory.New(cfg, lg, txm, osuAPI, &factory.Repositories{
-		UserRepo:      userRepo,
-		BeatmapRepo:   beatmapRepo,
-		MapsetRepo:    mapsetRepo,
-		FollowingRepo: followingRepo,
-		TrackRepo:     trackRepo,
-		LogRepo:       logRepo,
-		CleanRepo:     cleanerRepo,
-		EnrichesRepo:  enrichesRepo,
+		UserRepo:      repoFactory.NewUserRepository(),
+		BeatmapRepo:   repoFactory.NewBeatmapRepository(),
+		MapsetRepo:    repoFactory.NewMapsetRepository(),
+		FollowingRepo: repoFactory.NewFollowingsRepository(),
+		TrackRepo:     repoFactory.NewTrackRepository(),
+		LogRepo:       repoFactory.NewLogsRepository(),
+		CleanRepo:     repoFactory.NewCleansRepository(),
+		EnrichesRepo:  repoFactory.NewEnrichesRepository(),
 	})
 	cleanerUC := useCaseFactory.MakeCleanerUseCase()
 	enricherUC := useCaseFactory.MakeEnricherUseCase()

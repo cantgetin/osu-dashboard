@@ -2,11 +2,11 @@ package userprovide
 
 import (
 	"osu-dashboard/internal/dto"
-	"osu-dashboard/internal/service/osuapi"
+	osuapimodels "osu-dashboard/internal/service/osuapi/models"
 	"time"
 )
 
-func MapOsuApiUserToUserDTO(osuUser *osuapi.User) (*dto.User, error) {
+func MapOsuApiUserToUserDTO(osuUser *osuapimodels.User) (*dto.User, error) {
 	return &dto.User{
 		ID:            osuUser.ID,
 		AvatarURL:     osuUser.AvatarURL,

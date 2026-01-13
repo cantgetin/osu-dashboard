@@ -19,11 +19,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-const (
-	RateLimitRequestsPerSecond = 200
-	RateLimitBurstSize         = 200
-)
-
 type (
 	Server struct {
 		cfg      *config.Config
@@ -47,30 +42,24 @@ func New(cfg *config.Config, lg *log.Logger, f *factory.UseCaseFactory) *Server 
 	server := echo.New()
 	server.HideBanner = true
 	server.HidePort = true
-	server.Use(RateLimitMiddleware(rate.Limit(RateLimitRequestsPerSecond), RateLimitBurstSize))
+	server.Use(RateLimitMiddleware(rate.Limit(cfg.HTTPRateLimitRequestsPerSecond), cfg.HTTPRateLimitBurstSize))
 	server.Use(middleware.CORS())
 
-	ping := pinghandlers.New(lg)
-	user := userhandlers.New(lg, f.MakeCreateUserUseCase(), f.MakeProvideUserUseCase(), f.MakeUpdateUserUseCase())
-	following := followinghandlers.New(lg, f.MakeCreateFollowingUseCase(), f.MakeProvideFollowingUseCase())
-	mapset := mapsethandlers.New(lg, f.MakeProvideMapsetUseCase(), f.MakeCreateMapsetUseCase())
-	statistic := statistichandlers.New(lg, f.MakeProvideStatisticUseCase())
-	logs := loghandlers.New(lg, f.MakeProvideLogsUseCase())
-	search := searchhandlers.New(lg, f.MakeSearchUseCase())
+	h := handlers{
+		ping:      pinghandlers.New(lg),
+		user:      userhandlers.New(lg, f.MakeCreateUserUseCase(), f.MakeProvideUserUseCase(), f.MakeUpdateUserUseCase()),
+		following: followinghandlers.New(lg, f.MakeCreateFollowingUseCase(), f.MakeProvideFollowingUseCase()),
+		mapset:    mapsethandlers.New(lg, f.MakeProvideMapsetUseCase(), f.MakeCreateMapsetUseCase()),
+		statistic: statistichandlers.New(lg, f.MakeProvideStatisticUseCase()),
+		logs:      loghandlers.New(lg, f.MakeProvideLogsUseCase()),
+		search:    searchhandlers.New(lg, f.MakeSearchUseCase()),
+	}
 
 	return &Server{
-		cfg:    cfg,
-		server: server,
-		lg:     lg,
-		handlers: handlers{
-			ping:      ping,
-			user:      user,
-			following: following,
-			mapset:    mapset,
-			statistic: statistic,
-			logs:      logs,
-			search:    search,
-		},
+		cfg:      cfg,
+		server:   server,
+		lg:       lg,
+		handlers: h,
 	}
 }
 

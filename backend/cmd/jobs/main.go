@@ -18,7 +18,7 @@ func main() {
 
 	ctx := context.Background()
 
-	if err := app.RunJobs(ctx, cfg, lg); err != nil {
-		log.Fatalf("failed to start jobs app, %v", err)
+	if err = app.RunJobs(ctx, cfg, lg); err != nil {
+		log.Fatalf("failed while running jobs app, %v", err)
 	}
 }

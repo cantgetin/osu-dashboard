@@ -7,10 +7,11 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	osuapimodels "osu-dashboard/internal/service/osuapi/models"
 	"strings"
 )
 
-func (s *Service) GetUserInfoByHisToken(ctx context.Context, accessToken string) (*UserResponse, error) {
+func (s *Service) GetUserInfoByHisToken(ctx context.Context, accessToken string) (*osuapimodels.User, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", "https://osu.ppy.sh/api/v2/me", http.NoBody)
 	if err != nil {
 		return nil, err
@@ -30,7 +31,7 @@ func (s *Service) GetUserInfoByHisToken(ctx context.Context, accessToken string)
 		return nil, fmt.Errorf("api server returned %d: %s", resp.StatusCode, body)
 	}
 
-	var user UserResponse
+	var user osuapimodels.User
 	if err = json.NewDecoder(resp.Body).Decode(&user); err != nil {
 		return nil, err
 	}
@@ -39,7 +40,7 @@ func (s *Service) GetUserInfoByHisToken(ctx context.Context, accessToken string)
 }
 
 // ExchangeCodeForToken using this method instead of tokenprovider cause it exchanges user code for token
-func (s *Service) ExchangeCodeForToken(ctx context.Context, code string) (*TokenResponse, error) {
+func (s *Service) ExchangeCodeForToken(ctx context.Context, code string) (*osuapimodels.TokenResponse, error) {
 	data := url.Values{}
 	data.Set("client_id", s.cfg.OsuAPIClientID)
 	data.Set("client_secret", s.cfg.OsuAPIClientSecret)
@@ -66,7 +67,7 @@ func (s *Service) ExchangeCodeForToken(ctx context.Context, code string) (*Token
 		return nil, fmt.Errorf("oauth server returned %d: %s", resp.StatusCode, body)
 	}
 
-	var token TokenResponse
+	var token osuapimodels.TokenResponse
 	if err = json.NewDecoder(resp.Body).Decode(&token); err != nil {
 		return nil, err
 	}

@@ -1,13 +1,13 @@
 package track
 
 import (
-	"osu-dashboard/internal/service/osuapi"
+	osuapimodels "osu-dashboard/internal/service/osuapi/models"
 	"osu-dashboard/internal/usecase/command"
 )
 
 // create
 
-func mapOsuApiUserToCreateUserCommand(user *osuapi.User) *command.CreateUserCommand {
+func mapOsuApiUserToCreateUserCommand(user *osuapimodels.User) *command.CreateUserCommand {
 	return &command.CreateUserCommand{
 		ID:        user.ID,
 		Username:  user.Username,
@@ -15,7 +15,7 @@ func mapOsuApiUserToCreateUserCommand(user *osuapi.User) *command.CreateUserComm
 	}
 }
 
-func mapOsuApiMapsetsToCreateMapsetCommands(mapsets []*osuapi.MapsetExtended) []*command.CreateMapsetCommand {
+func mapOsuApiMapsetsToCreateMapsetCommands(mapsets []*osuapimodels.MapsetExtended) []*command.CreateMapsetCommand {
 	var cmds []*command.CreateMapsetCommand
 	for _, m := range mapsets {
 		cmds = append(cmds, &command.CreateMapsetCommand{
@@ -41,7 +41,7 @@ func mapOsuApiMapsetsToCreateMapsetCommands(mapsets []*osuapi.MapsetExtended) []
 	return cmds
 }
 
-func mapOsuApiBeatmapsToCreateBeatmapCommands(beatmaps []*osuapi.Beatmap) []*command.CreateBeatmapCommand {
+func mapOsuApiBeatmapsToCreateBeatmapCommands(beatmaps []*osuapimodels.Beatmap) []*command.CreateBeatmapCommand {
 	var cmds []*command.CreateBeatmapCommand
 	for _, b := range beatmaps {
 		cmds = append(cmds, &command.CreateBeatmapCommand{
@@ -67,7 +67,7 @@ func mapOsuApiBeatmapsToCreateBeatmapCommands(beatmaps []*osuapi.Beatmap) []*com
 
 // update
 
-func mapOsuApiUserToUpdateUserCommand(user *osuapi.User) *command.UpdateUserCommand {
+func mapOsuApiUserToUpdateUserCommand(user *osuapimodels.User) *command.UpdateUserCommand {
 	return &command.UpdateUserCommand{
 		ID:        user.ID,
 		Username:  user.Username,
@@ -75,7 +75,7 @@ func mapOsuApiUserToUpdateUserCommand(user *osuapi.User) *command.UpdateUserComm
 	}
 }
 
-func mapOsuApiMapsetsToUpdateMapsetCommands(mapsets []*osuapi.MapsetExtended) []*command.UpdateMapsetCommand {
+func mapOsuApiMapsetsToUpdateMapsetCommands(mapsets []*osuapimodels.MapsetExtended) []*command.UpdateMapsetCommand {
 	var cmds []*command.UpdateMapsetCommand
 	for _, m := range mapsets {
 		cmds = append(cmds, &command.UpdateMapsetCommand{
@@ -101,7 +101,7 @@ func mapOsuApiMapsetsToUpdateMapsetCommands(mapsets []*osuapi.MapsetExtended) []
 	return cmds
 }
 
-func mapOsuApiBeatmapsToUpdateBeatmapCommands(beatmaps []*osuapi.Beatmap) []*command.UpdateBeatmapCommand {
+func mapOsuApiBeatmapsToUpdateBeatmapCommands(beatmaps []*osuapimodels.Beatmap) []*command.UpdateBeatmapCommand {
 	var cmds []*command.UpdateBeatmapCommand
 	for _, b := range beatmaps {
 		cmds = append(cmds, &command.UpdateBeatmapCommand{

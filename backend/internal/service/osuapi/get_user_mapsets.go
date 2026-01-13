@@ -5,14 +5,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	osuapimodels "osu-dashboard/internal/service/osuapi/models"
 	"strconv"
 	"sync"
 
 	"golang.org/x/sync/errgroup"
 )
 
-func (s *Service) GetUserMapsets(ctx context.Context, userID string) ([]*Mapset, error) {
-	var mapsetTypes = []MapsetStatusAPIOption{Graveyard, Loved, Pending, Ranked}
+func (s *Service) GetUserMapsets(ctx context.Context, userID string) ([]*osuapimodels.Mapset, error) {
+	var mapsetTypes = []osuapimodels.MapsetStatusAPIOption{
+		osuapimodels.Graveyard, osuapimodels.Loved, osuapimodels.Pending, osuapimodels.Ranked,
+	}
 
 	token, err := s.tokenProvider.GetToken(ctx)
 	if err != nil {
@@ -27,14 +30,14 @@ func (s *Service) GetUserMapsets(ctx context.Context, userID string) ([]*Mapset,
 
 	var (
 		mu             sync.Mutex
-		allBeatmapsets []*Mapset
+		allBeatmapsets []*osuapimodels.Mapset
 	)
 
 	eg, egCtx := errgroup.WithContext(ctx)
 
 	for _, mapsetType := range mapsetTypes {
 		eg.Go(func() error {
-			var beatmapsets []*Mapset
+			var beatmapsets []*osuapimodels.Mapset
 			beatmapsets, err = s.fetchBeatmapsets(egCtx, userID, string(mapsetType), 0, headers)
 			if err != nil {
 				return fmt.Errorf("failed to fetch %s beatmapsets: %w", mapsetType, err)
@@ -61,7 +64,7 @@ func (s *Service) fetchBeatmapsets(
 	mapsetType string,
 	offset int,
 	headers map[string]string,
-) ([]*Mapset, error) {
+) ([]*osuapimodels.Mapset, error) {
 	fetchURL := s.cfg.OsuAPIHost + "/users/" + userID + "/beatmapsets/" + mapsetType + "?limit=100&offset=" + strconv.Itoa(offset)
 	req, err := http.NewRequestWithContext(ctx, "GET", fetchURL, http.NoBody)
 	if err != nil {
@@ -78,7 +81,7 @@ func (s *Service) fetchBeatmapsets(
 	}
 	defer res.Body.Close()
 
-	var maps []*Mapset
+	var maps []*osuapimodels.Mapset
 	err = json.NewDecoder(res.Body).Decode(&maps)
 	if err != nil {
 		return nil, fmt.Errorf("failed to decode response body: %w", err)
@@ -95,7 +98,7 @@ func (s *Service) fetchBeatmapsets(
 	return maps, nil
 }
 
-func (s *Service) GetMapsetExtended(ctx context.Context, mapsetID string) (*MapsetLangGenre, error) {
+func (s *Service) GetMapsetExtended(ctx context.Context, mapsetID string) (*osuapimodels.MapsetLangGenre, error) {
 	token, err := s.tokenProvider.GetToken(ctx)
 	if err != nil {
 		return nil, err
@@ -123,7 +126,7 @@ func (s *Service) GetMapsetExtended(ctx context.Context, mapsetID string) (*Maps
 	}
 	defer resp.Body.Close()
 
-	var mapsetExt *MapsetLangGenre
+	var mapsetExt *osuapimodels.MapsetLangGenre
 	err = json.NewDecoder(resp.Body).Decode(&mapsetExt)
 	if err != nil {
 		return nil, fmt.Errorf("failed to decode response body: %w", err)
@@ -163,7 +166,7 @@ func (s *Service) GetMapsetCommentsCount(ctx context.Context, mapsetID string) (
 	defer resp.Body.Close()
 
 	// Parsing JSON response
-	var comments *Comments
+	var comments *osuapimodels.Comments
 	err = json.NewDecoder(resp.Body).Decode(&comments)
 	if err != nil {
 		return 0, fmt.Errorf("failed to decode response body: %w", err)
