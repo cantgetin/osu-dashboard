@@ -17,6 +17,7 @@ const Search = () => {
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
     const containerRef = useRef<HTMLDivElement>(null);
+    const dropdownRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
 
@@ -62,7 +63,11 @@ const Search = () => {
     // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+            const target = event.target as Node;
+            const isInsideContainer = containerRef.current?.contains(target);
+            const isInsideDropdown = dropdownRef.current?.contains(target);
+            
+            if (!isInsideContainer && !isInsideDropdown) {
                 setIsOpen(false);
                 setSelectedIndex(-1);
             }
@@ -111,8 +116,9 @@ const Search = () => {
 
     const dropdown = (
         <div
+            ref={dropdownRef}
             style={{ top: dropdownPosition.top, left: dropdownPosition.left }}
-            className="fixed w-80 bg-zinc-900 border border-zinc-700 rounded-lg shadow-2xl overflow-hidden"
+            className="fixed w-80 bg-zinc-900 rounded-lg shadow-2xl shadow-black overflow-hidden"
         >
             <div className="max-h-96 overflow-y-auto">
                 {results.map((result, index) => (

@@ -38,13 +38,13 @@ const UserSearch = (props: UserSearchProps) => {
         <div className="flex flex-col md:flex-row gap-2 items-center text-lg rounded-lg w-full z-1">
             <input
                 onChange={(e) => setSearch(e.target.value)}
-                className="px-4 py-2 bg-zinc-800 bg-opacity-80 rounded-lg w-full md:min-w-[400px] border border-zinc-900"
-                placeholder="Search users"
+                className="px-4 py-2 bg-zinc-800/80 placeholder:text-zinc-500 rounded-lg w-full md:min-w-[400px] border border-zinc-900"
+                placeholder="Search users..."
             />
             <div className="flex flex-row gap-2 w-full md:w-auto items-center">
-                <h1 className="text-md hidden md:block">Sort:</h1>
+                <h1 className="text-md hidden md:block text-zinc-200">Sort:</h1>
                 <select
-                    className="px-2 py-2 rounded-lg bg-zinc-800 bg-opacity-80 text-white border border-zinc-900 w-full md:w-auto"
+                    className="px-2 py-2 rounded-lg bg-zinc-800/80 text-zinc-200 text-white border border-zinc-900 w-full md:w-auto"
                     value={sort}
                     onChange={(e) => setSort(e.target.value)}
                 >
