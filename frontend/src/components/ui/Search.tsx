@@ -162,7 +162,7 @@ const Search = () => {
     const noResultsDropdown = (
         <div
             style={{ top: dropdownPosition.top, left: dropdownPosition.left }}
-            className="fixed w-80 bg-zinc-900 border border-zinc-700 rounded-lg shadow-2xl p-5"
+            className="fixed w-80 bg-zinc-900 rounded-lg shadow-black shadow-2xl p-5"
         >
             <p className="text-base text-zinc-400 text-center">No results found</p>
         </div>
