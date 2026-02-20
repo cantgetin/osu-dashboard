@@ -83,3 +83,32 @@ func Test_KeepLastNKeyValuesFromStats(t *testing.T) {
 	KeepLastNKeyValuesFromStats(data, 7)
 	assert.Len(t, data, 7)
 }
+
+func TestGetMapsetCover(t *testing.T) {
+	type args struct {
+		mapset   *model.Mapset
+		coverKey string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "success",
+			args: args{
+				mapset: &model.Mapset{
+					Covers: []byte(`{"card":"https://assets.ppy.sh/beatmaps/2509233/covers/list.jpg?1771254436"}`),
+				},
+				coverKey: "card",
+			},
+			want: "https://assets.ppy.sh/beatmaps/2509233/covers/list.jpg?1771254436",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, GetMapsetCover(tt.args.mapset, tt.args.coverKey),
+				"GetMapsetCover(%v, %v)", tt.args.mapset, tt.args.coverKey)
+		})
+	}
+}

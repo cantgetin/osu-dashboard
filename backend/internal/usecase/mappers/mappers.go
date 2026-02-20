@@ -536,6 +536,14 @@ func MapUserCountsJSONToUserDTOCounts(countsJSON repository.JSON) (*dto.UserMapC
 	}, nil
 }
 
+func GetMapsetCover(mapset *model.Mapset, coverKey string) string {
+	covers, err := MapCoversJSONToMapsetCovers(mapset.Covers)
+	if err != nil {
+		return ""
+	}
+	return covers[coverKey]
+}
+
 func MapUserMapsetsToUserCountsJSON(statuses []string) (repository.JSON, error) {
 	counts := model.MapCounts{}
 

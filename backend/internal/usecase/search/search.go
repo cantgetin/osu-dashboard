@@ -6,9 +6,13 @@ import (
 	"osu-dashboard/internal/database/repository/model"
 	"osu-dashboard/internal/database/txmanager"
 	"osu-dashboard/internal/dto"
+	"osu-dashboard/internal/usecase/mappers"
 )
 
-const searchItemLimit = 3
+const (
+	searchItemLimit = 3
+	coverKey        = "card"
+)
 
 func (uc *UseCase) Search(ctx context.Context, query string) (result []*dto.SearchResult, err error) {
 	result = make([]*dto.SearchResult, 0)
@@ -56,7 +60,7 @@ func (uc *UseCase) Search(ctx context.Context, query string) (result []*dto.Sear
 		result = append(result, &dto.SearchResult{
 			ID:         mapset.ID,
 			Title:      fmt.Sprintf("%s - %s", mapset.Artist, mapset.Title),
-			PictureURL: mapset.PreviewURL,
+			PictureURL: mappers.GetMapsetCover(mapset, coverKey),
 			Type:       dto.MapsetResult,
 		})
 	}
