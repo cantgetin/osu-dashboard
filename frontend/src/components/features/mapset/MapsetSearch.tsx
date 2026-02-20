@@ -36,7 +36,7 @@ const MapsetSearch = (props: MapsetSearchProps) => {
     }, [search, status, sort]);
 
     return (
-        <div className="flex flex-col md:flex-row gap-2 items-center text-lg rounded-lg w-full z-10">
+        <div className="flex flex-col md:flex-row gap-2 items-center text-lg rounded-lg w-full z-1">
             <input
                 onChange={(e) => setSearch(e.target.value)}
                 className="px-4 py-2 bg-zinc-800 bg-opacity-80 rounded-lg w-full md:min-w-[400px] border border-zinc-900"
