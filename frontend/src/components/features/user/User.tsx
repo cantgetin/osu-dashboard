@@ -13,13 +13,16 @@ interface UserProps {
 
 const User = (props: UserProps) => {
     return (
-        <div className={`md:w-full flex rounded-lg overflow-hidden max-h-64 ${props.className}`}>
-            <img
-                src={props.user.avatar_url}
-                className="w-16 h-16 md:w-64 md:h-64"
-                alt="user avatar"
-            />
-            <div className="py-4 pl-4 sm:px-4 md:flex flex-col h-full md:max-w-[450px] justify-between whitespace-nowrap">
+        <div className={`md:w-full flex rounded-lg overflow-hidden ${props.className}`}>
+            <div className="pl-4 pt-4 pb-4 min-w-64">
+                <img
+                    src={props.user.avatar_url}
+                    className="w-16 h-16 md:w-64 md:h-64 rounded-lg"
+                    alt="user avatar"
+                />
+            </div>
+            <div
+                className="py-4 pl-4 sm:px-4 md:flex flex-col h-full md:max-w-[450px] justify-between whitespace-nowrap">
                 <div>
                     <div className="flex gap-2 items-center">
                         <h1 className={`text-xl md:text-3xl ${props.nameOnClick != undefined ?

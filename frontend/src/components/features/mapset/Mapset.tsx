@@ -44,27 +44,36 @@ const Mapset = (props: MapCardProps) => {
                 <div
                     className={`flex flex-col sm:flex-row bg-zinc-800 bg-opacity-30 text-white w-full 
                 overflow-hidden rounded-lg ${props.className}`}>
-                    <div className="sm:w-64 sm:min-w-64 bg-zinc-700 flex items-center justify-center">
-                        {props.map.covers.card ? (
-                            <img
-                                src={props.map.covers.card}
-                                className='h-36 sm:h-full w-full sm:w-64 object-cover'
-                                alt={`${props.map.title} cover`}
-                                onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-                                    const imgElement = e.currentTarget;  // This is properly typed as HTMLImageElement
-                                    imgElement.style.display = 'none';
-
-                                    const fallbackElement = imgElement.nextElementSibling as HTMLElement | null;
-                                    if (fallbackElement) {
-                                        fallbackElement.style.display = 'flex';
-                                    }
-                                }}
-                            />
-                        ) : null}
-                        <div className="hidden flex-col items-center justify-center text-zinc-400 h-36 sm:h-full w-full sm:w-64">
-                            <FaFileExcel className="text-4xl" />
-                            <span className="mt-2 text-sm">No cover image</span>
-                        </div>
+                    <div className="sm:w-64 sm:min-w-64 flex justify-center">
+                        {props.map.covers?.card?.trim() ? (
+                            <div className="pl-4 pt-4 pb-4 relative w-full sm:w-64">
+                                <img
+                                    src={props.map.covers.card}
+                                    className='h-36 sm:h-full w-full sm:w-64 object-cover rounded-lg'
+                                    alt={`${props.map.title} cover`}
+                                    onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                                        const imgElement = e.currentTarget;
+                                        imgElement.style.display = 'none';
+                                        const fallbackElement = imgElement.nextElementSibling as HTMLElement | null;
+                                        if (fallbackElement) {
+                                            fallbackElement.style.display = 'flex';
+                                        }
+                                    }}
+                                />
+                                <div
+                                    aria-hidden
+                                    className="hidden absolute inset-0 mt-4 mb-4 ml-4 bg-zinc-700 flex flex-col items-center justify-center text-zinc-400 rounded-lg"
+                                >
+                                    <FaFileExcel className="text-4xl"/>
+                                    <span className="mt-2 text-sm">No cover image</span>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="pl-4 pt-4 pb-4 bg-zinc-700 flex flex-col items-center justify-center text-zinc-400 h-36 sm:min-h-64 w-full sm:w-64 rounded-lg p-4">
+                                <FaFileExcel className="text-4xl flex-shrink-0"/>
+                                <span className="mt-2 text-sm">No cover image</span>
+                            </div>
+                        )}
                     </div>
                     <div className="flex flex-col p-4 w-full gap-1">
                         <a className="hover:text-amber-200" href={`/beatmapset/${props.map.id}`}>
