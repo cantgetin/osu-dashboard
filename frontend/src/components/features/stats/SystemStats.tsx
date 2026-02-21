@@ -26,7 +26,7 @@ const SystemStats = () => {
                             Stats
                         </h1>
                         <div
-                            className="grid grid-cols-2 md:flex justify-between bg-zinc-900
+                            className="grid grid-cols-2 md:flex md:flex-wrap justify-between bg-zinc-900
                             py-4 md:py-8 px-4 md:px-16 rounded-lg gap-4 md:gap-0">
                             <div className="flex flex-col items-center">
                                 <span className="text-3xl md:text-5xl font-bold">{systemStats.stats!.users}</span>
@@ -43,6 +43,18 @@ const SystemStats = () => {
                             <div className="flex flex-col items-center">
                                 <span className="text-3xl md:text-5xl font-bold">{systemStats.stats!.tracks}</span>
                                 <span className="text-gray-400 text-sm md:text-base">Tracks</span>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <span className="text-3xl md:text-5xl font-bold">{(systemStats.stats!.plays ?? 0).toLocaleString()}</span>
+                                <span className="text-gray-400 text-sm md:text-base">Plays</span>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <span className="text-3xl md:text-5xl font-bold">{(systemStats.stats!.favourites ?? 0).toLocaleString()}</span>
+                                <span className="text-gray-400 text-sm md:text-base">Favourites</span>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <span className="text-3xl md:text-5xl font-bold">{(systemStats.stats!.comments ?? 0).toLocaleString()}</span>
+                                <span className="text-gray-400 text-sm md:text-base">Comments</span>
                             </div>
                         </div>
                     </div>

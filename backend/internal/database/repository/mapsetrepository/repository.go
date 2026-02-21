@@ -90,6 +90,33 @@ func (r *GormRepository) TotalCount(ctx context.Context, tx txmanager.Tx) (int, 
 	return int(count), nil
 }
 
+func (r *GormRepository) SumLatestStats(ctx context.Context, tx txmanager.Tx) (plays, favs, comms int, err error) {
+	var totalPlays int64
+	err = tx.DB().
+		WithContext(ctx).
+		Table(mapsetsTableName).
+		Select("COALESCE(SUM(last_playcount), 0)").
+		Scan(&totalPlays).Error
+	if err != nil {
+		return 0, 0, 0, fmt.Errorf("failed to sum last_playcount: %w", err)
+	}
+
+	var result struct {
+		TotalFavourites int64 `gorm:"column:total_favourites"`
+		TotalComments   int64 `gorm:"column:total_comments"`
+	}
+	err = tx.DB().WithContext(ctx).Raw(`
+		SELECT
+			COALESCE(SUM((mapset_stats->(SELECT MAX(k) FROM jsonb_object_keys(COALESCE(mapset_stats, '{}'::jsonb)) AS k)->>'favorite_count')::int), 0) AS total_favourites,
+			COALESCE(SUM((mapset_stats->(SELECT MAX(k) FROM jsonb_object_keys(COALESCE(mapset_stats, '{}'::jsonb)) AS k)->>'comments_count')::int), 0) AS total_comments
+		FROM ` + mapsetsTableName).Scan(&result).Error
+	if err != nil {
+		return 0, 0, 0, fmt.Errorf("failed to sum latest mapset_stats: %w", err)
+	}
+
+	return int(totalPlays), int(result.TotalFavourites), int(result.TotalComments), nil
+}
+
 func (r *GormRepository) UpdateGenreLanguage(
 	ctx context.Context, tx txmanager.Tx, id int, newGenre string, newLanguage string,
 ) error {

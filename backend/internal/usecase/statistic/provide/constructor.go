@@ -19,6 +19,7 @@ type (
 	mapsetStore interface {
 		ListForUser(ctx context.Context, tx txmanager.Tx, userId int) ([]*model.Mapset, error)
 		TotalCount(ctx context.Context, tx txmanager.Tx) (int, error)
+		SumLatestStats(ctx context.Context, tx txmanager.Tx) (playCount, favouriteCount, commentsCount int, err error)
 	}
 
 	userStore interface {

@@ -10,8 +10,11 @@ type UserMapStatistics struct {
 }
 
 type SystemStatistics struct {
-	Users    int `json:"users"`
-	Mapsets  int `json:"mapsets"`
-	Beatmaps int `json:"beatmaps"`
-	Tracks   int `json:"tracks"`
+	Users       int `json:"users"`
+	Mapsets     int `json:"mapsets"`
+	Beatmaps    int `json:"beatmaps"`
+	Tracks      int `json:"tracks"`
+	Plays       int `json:"plays"`
+	Favourites  int `json:"favourites"`
+	Comments    int `json:"comments"`
 }

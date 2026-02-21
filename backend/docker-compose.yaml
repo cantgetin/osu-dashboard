@@ -1,5 +1,3 @@
-version: "3.8"
-
 networks:
   osu-dashboard-network:
     external: false
