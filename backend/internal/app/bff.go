@@ -47,10 +47,8 @@ func RunBFF(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 		BeatmapRepo:   repoFactory.NewBeatmapRepository(),
 		MapsetRepo:    repoFactory.NewMapsetRepository(),
 		FollowingRepo: repoFactory.NewFollowingsRepository(),
-		TrackRepo:     repoFactory.NewTrackRepository(),
 		LogRepo:       repoFactory.NewLogsRepository(),
-		CleanRepo:     repoFactory.NewCleansRepository(),
-		EnrichesRepo:  repoFactory.NewEnrichesRepository(),
+		JobRepo:       repoFactory.NewJobRepository(),
 	})
 
 	// setup http routes

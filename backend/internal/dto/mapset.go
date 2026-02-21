@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/model"
 	"time"
 )
 

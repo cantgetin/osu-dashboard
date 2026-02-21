@@ -2,14 +2,12 @@ package repositoryfactory
 
 import (
 	"osu-dashboard/internal/config"
-	"osu-dashboard/internal/database/repository/beatmaprepository"
-	"osu-dashboard/internal/database/repository/cleanrepository"
-	"osu-dashboard/internal/database/repository/enrichesrepository"
-	"osu-dashboard/internal/database/repository/followingrepository"
-	"osu-dashboard/internal/database/repository/logrepository"
-	"osu-dashboard/internal/database/repository/mapsetrepository"
-	"osu-dashboard/internal/database/repository/trackrepository"
-	"osu-dashboard/internal/database/repository/userrepository"
+	"osu-dashboard/internal/database/repository/beatmap"
+	"osu-dashboard/internal/database/repository/following"
+	"osu-dashboard/internal/database/repository/job"
+	"osu-dashboard/internal/database/repository/log"
+	"osu-dashboard/internal/database/repository/mapset"
+	"osu-dashboard/internal/database/repository/user"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -30,14 +28,6 @@ func (f *Factory) NewBeatmapRepository() *beatmaprepository.GormRepository {
 	return beatmaprepository.New(f.cfg, f.lg)
 }
 
-func (f *Factory) NewCleansRepository() *cleanrepository.GormRepository {
-	return cleanrepository.New(f.cfg, f.lg)
-}
-
-func (f *Factory) NewEnrichesRepository() *enrichesrepository.GormRepository {
-	return enrichesrepository.New(f.cfg, f.lg)
-}
-
 func (f *Factory) NewFollowingsRepository() *followingrepository.GormRepository {
 	return followingrepository.New(f.cfg, f.lg)
 }
@@ -50,10 +40,10 @@ func (f *Factory) NewMapsetRepository() *mapsetrepository.GormRepository {
 	return mapsetrepository.New(f.cfg, f.lg)
 }
 
-func (f *Factory) NewTrackRepository() *trackrepository.GormRepository {
-	return trackrepository.New(f.cfg, f.lg)
-}
-
 func (f *Factory) NewUserRepository() *userrepository.GormRepository {
 	return userrepository.New(f.cfg, f.lg)
+}
+
+func (f *Factory) NewJobRepository() *jobrepository.GormRepository {
+	return jobrepository.New(f.cfg, f.lg)
 }

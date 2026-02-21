@@ -2,7 +2,7 @@ package mapsetprovide
 
 import (
 	"context"
-	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
 	"osu-dashboard/internal/dto"
 	"osu-dashboard/internal/usecase/mappers"

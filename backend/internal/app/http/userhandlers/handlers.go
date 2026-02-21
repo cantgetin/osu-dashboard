@@ -3,7 +3,7 @@ package userhandlers
 import (
 	"net/http"
 	handlerutils2 "osu-dashboard/internal/app/http/handlerutils"
-	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/dto"
 	userprovide "osu-dashboard/internal/usecase/user/provide"
 	"strconv"

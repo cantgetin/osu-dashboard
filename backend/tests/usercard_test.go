@@ -6,8 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"osu-dashboard/internal/database/repository"
-	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/dto"
 	"osu-dashboard/internal/usecase/command"
 	"osu-dashboard/tests/integration"
@@ -143,7 +142,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 						ID:        123,
 						Username:  "username1",
 						AvatarURL: "avararurl.com",
-						UserStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":52,"favorite_count":2, "map_count":3}}`),
+						UserStats: json.RawMessage(`{"2023-12-24T12:00:00Z":{"play_count":52,"favorite_count":2, "map_count":3}}`),
 						CreatedAt: time.Now().UTC(),
 						UpdatedAt: time.Now().UTC(),
 					},
@@ -152,7 +151,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 							ID:          123,
 							Artist:      "artist",
 							Title:       "title",
-							Covers:      repository.JSON(`{"cover1":"cover1","cover2":"cover2"}`),
+							Covers:      json.RawMessage(`{"cover1":"cover1","cover2":"cover2"}`),
 							Status:      "graveyard",
 							LastUpdated: time.Now().UTC(),
 							UserID:      123,
@@ -160,7 +159,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 							PreviewURL:  "avararurl.com",
 							Tags:        "tags tags",
 							BPM:         150,
-							MapsetStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":52,"favorite_count":2}}`),
+							MapsetStats: json.RawMessage(`{"2023-12-24T12:00:00Z":{"play_count":52,"favorite_count":2}}`),
 							CreatedAt:   time.Now().UTC(),
 							UpdatedAt:   time.Now().UTC(),
 						},
@@ -180,7 +179,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 							TotalLength:      23,
 							UserID:           123,
 							LastUpdated:      time.Now().UTC(),
-							BeatmapStats:     repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":25,"pass_count":23}}`),
+							BeatmapStats:     json.RawMessage(`{"2023-12-24T12:00:00Z":{"play_count":25,"pass_count":23}}`),
 							CreatedAt:        time.Now().UTC(),
 							UpdatedAt:        time.Now().UTC(),
 						},
@@ -198,7 +197,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 							TotalLength:      24,
 							UserID:           123,
 							LastUpdated:      time.Now().UTC(),
-							BeatmapStats:     repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":27,"pass_count":24}}`),
+							BeatmapStats:     json.RawMessage(`{"2023-12-24T12:00:00Z":{"play_count":27,"pass_count":24}}`),
 							CreatedAt:        time.Now().UTC(),
 							UpdatedAt:        time.Now().UTC(),
 						},
@@ -333,7 +332,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 							ID:          123,
 							Artist:      "artistchanged",
 							Title:       "titlechanged",
-							Covers:      repository.JSON(`{"cover1changed":"cover1changed","cover2changed":"cover2changed"}`),
+							Covers:      json.RawMessage(`{"cover1changed":"cover1changed","cover2changed":"cover2changed"}`),
 							Status:      "statuschanged",
 							LastUpdated: time.Now().UTC(),
 							UserID:      123,
@@ -346,7 +345,7 @@ func (s *IntegrationSuite) Test_UpdateUserCard() {
 							ID:          345,
 							Artist:      "artist",
 							Title:       "title",
-							Covers:      repository.JSON(`{"cover1changed":"cover1changed","cover2changed":"cover2changed"}`),
+							Covers:      json.RawMessage(`{"cover1changed":"cover1changed","cover2changed":"cover2changed"}`),
 							Status:      "graveyard",
 							LastUpdated: time.Now().UTC(),
 							UserID:      123,
@@ -581,14 +580,14 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 						ID:        1,
 						AvatarURL: "avatarurl.com",
 						Username:  "username",
-						UserStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favorite_count":2, "map_count":1}}`),
+						UserStats: json.RawMessage(`{"2023-12-24T12:00:00Z":{"play_count":100,"favorite_count":2, "map_count":1}}`),
 					},
 					Mapsets: []*model.Mapset{
 						{
 							ID:          1,
 							Artist:      "artist",
 							Title:       "title",
-							Covers:      repository.JSON(`{"cover1": "cover1", "cover2": "cover2"}`),
+							Covers:      json.RawMessage(`{"cover1": "cover1", "cover2": "cover2"}`),
 							Status:      "graveyard",
 							LastUpdated: time.Now().UTC(),
 							UserID:      1,
@@ -596,7 +595,7 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 							PreviewURL:  "previewurl.com",
 							Tags:        "tags shmags",
 							BPM:         210,
-							MapsetStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favorite_count":2}}`),
+							MapsetStats: json.RawMessage(`{"2023-12-24T12:00:00Z":{"play_count":100,"favorite_count":2}}`),
 						},
 					},
 					Beatmaps: []*model.Beatmap{
@@ -613,7 +612,7 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 							URL:              "url.com",
 							TotalLength:      100,
 							UserID:           1,
-							BeatmapStats:     repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":52,"pass_count":2}}`),
+							BeatmapStats:     json.RawMessage(`{"2023-12-24T12:00:00Z":{"play_count":52,"pass_count":2}}`),
 						},
 						{
 							ID:               2,
@@ -628,7 +627,7 @@ func (s *IntegrationSuite) Test_ProvideUserCard() {
 							URL:              "url2.com",
 							TotalLength:      102,
 							UserID:           1,
-							BeatmapStats:     repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":13,"pass_count":2}}`),
+							BeatmapStats:     json.RawMessage(`{"2023-12-24T12:00:00Z":{"play_count":13,"pass_count":2}}`),
 						},
 					},
 				},

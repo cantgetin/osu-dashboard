@@ -2,8 +2,7 @@ package mappers
 
 import (
 	"encoding/json"
-	"osu-dashboard/internal/database/repository"
-	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/model"
 	"testing"
 	"time"
 
@@ -59,7 +58,7 @@ func Test_AppendNewMapsetStats(t *testing.T) {
 		t.Error(err)
 	}
 
-	expectedMergedJSON := repository.JSON(expectedMergedJSONBytes)
+	expectedMergedJSON := json.RawMessage(expectedMergedJSONBytes)
 
 	mergedJSON, err := AppendNewMapsetStats(json1, json2)
 	if err != nil {

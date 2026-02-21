@@ -2,7 +2,7 @@ package usercardcreate
 
 import (
 	"context"
-	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
 	"osu-dashboard/internal/usecase/command"
 	"osu-dashboard/internal/usecase/mappers"

@@ -93,11 +93,6 @@ func (uc *UseCase) GetForSystem(ctx context.Context) (*dto.SystemStatistics, err
 			return err
 		}
 
-		res.Tracks, err = uc.track.TotalCount(ctx, tx)
-		if err != nil {
-			return err
-		}
-
 		res.Plays, res.Favourites, res.Comments, err = uc.mapset.SumLatestStats(ctx, tx)
 		if err != nil {
 			return err

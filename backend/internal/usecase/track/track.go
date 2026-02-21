@@ -3,7 +3,7 @@ package track
 import (
 	"context"
 	"fmt"
-	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
 	"strconv"
 	"time"
@@ -11,11 +11,9 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-func (uc *UseCase) TrackAllFollowings(
-	ctx context.Context,
-	startTime time.Time,
-	timeSinceLast time.Duration,
-) error {
+func (uc *UseCase) Execute(ctx context.Context) error {
+	startTime := time.Now()
+
 	// get all following IDs from db and get updated data from api, update data in db
 	var follows []*model.Following
 	if err := uc.txm.ReadOnly(ctx, func(ctx context.Context, tx txmanager.Tx) error {
@@ -54,7 +52,7 @@ func (uc *UseCase) TrackAllFollowings(
 	}
 
 	defer uc.osuApi.ResetStats()
-	return uc.CreateTrackAndLogRecords(ctx, startTime, timeSinceLast)
+	return uc.CreateTrackAndLogRecords(ctx, startTime, time.Since(startTime))
 }
 
 func (uc *UseCase) TrackSingleFollowing(ctx context.Context, following *model.Following) error {

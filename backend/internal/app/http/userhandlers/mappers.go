@@ -1,6 +1,8 @@
 package userhandlers
 
-import "osu-dashboard/internal/database/repository/model"
+import (
+	"osu-dashboard/internal/database/model"
+)
 
 func mapSortQueryParamsToUserSort(fieldParam, directionParam string) model.UserSort {
 	var res model.UserSort

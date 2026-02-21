@@ -3,7 +3,7 @@ package followingcreate
 import (
 	"context"
 	"fmt"
-	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
 	"time"
 )

@@ -3,7 +3,7 @@ package track
 import (
 	"context"
 	"fmt"
-	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
 	"time"
 )
@@ -19,10 +19,6 @@ func (uc *UseCase) CreateTrackAndLogRecords(ctx context.Context, startTime time.
 
 	uc.lg.Infof("Sent %v requests to api in %v minutes", reqs, elapsed.Minutes())
 	uc.lg.Infof("Average requests per minute: %f", avgReqsPerMin)
-
-	if err := uc.CreateTrackRecord(ctx); err != nil {
-		return fmt.Errorf("failed to create track record: %w", err)
-	}
 
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
 		if err := uc.log.Create(ctx, tx, &model.Log{

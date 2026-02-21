@@ -2,11 +2,11 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"os"
 	"osu-dashboard/internal/bootstrap"
 	"osu-dashboard/internal/config"
-	"osu-dashboard/internal/database/repository"
-	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/model"
 	"path/filepath"
 	"time"
 
@@ -43,7 +43,7 @@ func addSampleData(ctx context.Context, cfg *config.Config) error {
 		ID:        7192129,
 		Username:  "Gasha",
 		AvatarURL: "https://a.ppy.sh/7192129?1602378137.jpeg",
-		UserStats: repository.JSON(`
+		UserStats: json.RawMessage(`
 {"2023-12-24T12:00:00Z":{"play_count":11000,"favorite_count":2, "map_count":3}, 
 "2023-12-25T12:00:00Z":{"play_count":11090,"favorite_count":3, "map_count":4},
 "2023-12-26T12:00:00Z":{"play_count":11200,"favorite_count":4, "map_count":5},
@@ -56,7 +56,7 @@ func addSampleData(ctx context.Context, cfg *config.Config) error {
 		ID:     2015413,
 		Artist: "Rizza",
 		Title:  "bizarre",
-		Covers: repository.JSON(`
+		Covers: json.RawMessage(`
 {"cover": "https://assets.ppy.sh/beatmaps/2015413/covers/cover.jpg?1690122670",
 "cover@2x": "https://assets.ppy.sh/beatmaps/2015413/covers/cover@2x.jpg?1690122670",
 "card": "https://assets.ppy.sh/beatmaps/2015413/covers/card.jpg?1690122670",
@@ -72,7 +72,7 @@ func addSampleData(ctx context.Context, cfg *config.Config) error {
 		PreviewURL:  "//b.ppy.sh/preview/2015413.mp3",
 		Tags:        "rap trap hyperpop synthwave chill girl rizza sqwore",
 		BPM:         150,
-		MapsetStats: repository.JSON(`
+		MapsetStats: json.RawMessage(`
 {"2023-12-24T12:00:00Z":{"play_count":654,"favorite_count":2},
 "2023-12-25T12:00:00Z":{"play_count":800,"favorite_count":3},
 "2023-12-26T12:00:00Z":{"play_count":2000,"favorite_count":4},
@@ -96,7 +96,7 @@ func addSampleData(ctx context.Context, cfg *config.Config) error {
 			TotalLength:      114,
 			UserID:           7192129,
 			LastUpdated:      time.Now().UTC(),
-			BeatmapStats: repository.JSON(`
+			BeatmapStats: json.RawMessage(`
 {"2023-12-24T12:00:00Z":{"play_count":10,"pass_count":5},
 "2023-12-25T12:00:00Z":{"play_count":20,"pass_count":10},
 "2023-12-26T12:00:00Z":{"play_count":100,"pass_count":15},
@@ -118,7 +118,7 @@ func addSampleData(ctx context.Context, cfg *config.Config) error {
 			TotalLength:      115,
 			UserID:           7192129,
 			LastUpdated:      time.Now().UTC(),
-			BeatmapStats: repository.JSON(`
+			BeatmapStats: json.RawMessage(`
 {"2023-12-24T12:00:00Z":{"play_count":10,"pass_count":5},
 "2023-12-25T12:00:00Z":{"play_count":20,"pass_count":10},
 "2023-12-26T12:00:00Z":{"play_count":90,"pass_count":15},

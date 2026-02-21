@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"osu-dashboard/internal/database/repository"
-	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/dto"
 	"osu-dashboard/tests/integration"
 	"time"
@@ -33,14 +32,14 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 						ID:        1,
 						AvatarURL: "avatarurl.com",
 						Username:  "username",
-						UserStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favorite_count":2, "map_count":1}}`),
+						UserStats: json.RawMessage(`{"2023-12-24T12:00:00Z":{"play_count":100,"favorite_count":2, "map_count":1}}`),
 					},
 					Mapsets: []*model.Mapset{
 						{
 							ID:          1,
 							Artist:      "artist",
 							Title:       "title",
-							Covers:      repository.JSON(`{"cover1": "cover1", "cover2": "cover2"}`),
+							Covers:      json.RawMessage(`{"cover1": "cover1", "cover2": "cover2"}`),
 							Status:      "graveyard",
 							LastUpdated: time.Now().UTC(),
 							UserID:      1,
@@ -48,13 +47,13 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 							PreviewURL:  "previewurl.com",
 							Tags:        "tags shmags",
 							BPM:         210,
-							MapsetStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favorite_count":2}}`),
+							MapsetStats: json.RawMessage(`{"2023-12-24T12:00:00Z":{"play_count":100,"favorite_count":2}}`),
 						},
 						{
 							ID:          2,
 							Artist:      "artist2",
 							Title:       "title2",
-							Covers:      repository.JSON(`{"cover1": "cover1", "cover2": "cover2"}`),
+							Covers:      json.RawMessage(`{"cover1": "cover1", "cover2": "cover2"}`),
 							Status:      "graveyard",
 							LastUpdated: time.Now().UTC(),
 							UserID:      1,
@@ -62,7 +61,7 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 							PreviewURL:  "previewurl.com",
 							Tags:        "tags shmags",
 							BPM:         220,
-							MapsetStats: repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":100,"favorite_count":2}}`),
+							MapsetStats: json.RawMessage(`{"2023-12-24T12:00:00Z":{"play_count":100,"favorite_count":2}}`),
 						},
 					},
 					Beatmaps: []*model.Beatmap{
@@ -79,7 +78,7 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 							URL:              "url.com",
 							TotalLength:      100,
 							UserID:           1,
-							BeatmapStats:     repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":52,"pass_count":2}}`),
+							BeatmapStats:     json.RawMessage(`{"2023-12-24T12:00:00Z":{"play_count":52,"pass_count":2}}`),
 						},
 						{
 							ID:               2,
@@ -94,7 +93,7 @@ func (s *IntegrationSuite) Test_ListMapsets() {
 							URL:              "url2.com",
 							TotalLength:      102,
 							UserID:           1,
-							BeatmapStats:     repository.JSON(`{"2023-12-24T12:00:00Z":{"play_count":13,"pass_count":2}}`),
+							BeatmapStats:     json.RawMessage(`{"2023-12-24T12:00:00Z":{"play_count":13,"pass_count":2}}`),
 						},
 					},
 				},

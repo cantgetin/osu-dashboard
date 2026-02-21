@@ -3,7 +3,7 @@ package track
 import (
 	"context"
 	"fmt"
-	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
 	osuapimodels "osu-dashboard/internal/service/osuapi/models"
 	"osu-dashboard/internal/usecase/command"

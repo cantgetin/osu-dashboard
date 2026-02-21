@@ -2,7 +2,7 @@ package userhandlers
 
 import (
 	"context"
-	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/dto"
 	userprovide "osu-dashboard/internal/usecase/user/provide"
 

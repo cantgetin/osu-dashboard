@@ -3,7 +3,7 @@ package track
 import (
 	"context"
 	"osu-dashboard/internal/config"
-	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
 	"osu-dashboard/internal/service/osuapi"
 	"time"
@@ -40,12 +40,6 @@ type (
 		SetLastFetchedForUser(ctx context.Context, tx txmanager.Tx, username string, lastFetched time.Time) error
 	}
 
-	trackStore interface {
-		Create(ctx context.Context, tx txmanager.Tx, track *model.Track) error
-		GetLastTrack(ctx context.Context, tx txmanager.Tx) (*model.Track, error)
-		List(ctx context.Context, tx txmanager.Tx) ([]*model.Track, error)
-	}
-
 	LogSource interface {
 		Create(ctx context.Context, tx txmanager.Tx, log *model.Log) error
 	}
@@ -59,7 +53,6 @@ type (
 		mapset    mapsetStore
 		beatmap   beatmapStore
 		following followingStore
-		track     trackStore
 		log       LogSource
 	}
 )
@@ -73,7 +66,6 @@ func New(
 	mapset mapsetStore,
 	beatmap beatmapStore,
 	following followingStore,
-	track trackStore,
 	log LogSource,
 ) *UseCase {
 	return &UseCase{
@@ -85,7 +77,6 @@ func New(
 		mapset:    mapset,
 		beatmap:   beatmap,
 		following: following,
-		track:     track,
 		log:       log,
 	}
 }

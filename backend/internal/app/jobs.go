@@ -3,9 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
-	jobcleandb "osu-dashboard/internal/app/jobs/jobdbcleaner"
-	jobenrich "osu-dashboard/internal/app/jobs/jobenrichdata"
-	jobtrack "osu-dashboard/internal/app/jobs/jobtrackingworker"
+	job "osu-dashboard/internal/app/jobs"
 	"osu-dashboard/internal/bootstrap"
 	"osu-dashboard/internal/config"
 	repositoryfactory "osu-dashboard/internal/database/repository/factory"
@@ -14,6 +12,12 @@ import (
 	"osu-dashboard/internal/usecase/factory"
 
 	log "github.com/sirupsen/logrus"
+)
+
+const (
+	JobNameCleanStats = "clean stats"
+	JobNameTrackUsers = "track users"
+	JobNameEnrichData = "enrich data"
 )
 
 func RunJobs(ctx context.Context, cfg *config.Config, lg *log.Logger) error {
@@ -44,24 +48,43 @@ func RunJobs(ctx context.Context, cfg *config.Config, lg *log.Logger) error {
 		BeatmapRepo:   repoFactory.NewBeatmapRepository(),
 		MapsetRepo:    repoFactory.NewMapsetRepository(),
 		FollowingRepo: repoFactory.NewFollowingsRepository(),
-		TrackRepo:     repoFactory.NewTrackRepository(),
 		LogRepo:       repoFactory.NewLogsRepository(),
-		CleanRepo:     repoFactory.NewCleansRepository(),
-		EnrichesRepo:  repoFactory.NewEnrichesRepository(),
+		JobRepo:       repoFactory.NewJobRepository(),
 	})
-	cleanerUC := useCaseFactory.MakeCleanerUseCase()
-	enricherUC := useCaseFactory.MakeEnricherUseCase()
-	trackUC := useCaseFactory.MakeTrackUseCase()
+	cleanUseCase := useCaseFactory.MakeCleanerUseCase()
+	enrichUseCase := useCaseFactory.MakeEnricherUseCase()
+	trackUseCase := useCaseFactory.MakeTrackUseCase()
 
 	// init jobs
-	tracker := jobtrack.New(cfg, lg, trackUC)
-	cleaner := jobcleandb.New(cfg, lg, cleanerUC)
-	enricher := jobenrich.New(cfg, lg, enricherUC)
+	cleanStatsJob := job.NewPeriodic(
+		lg,
+		JobNameCleanStats,
+		cfg.CleaningInterval,
+		cfg.CleaningTimeout,
+		useCaseFactory.MakeCleanRecorderUseCase(),
+		cleanUseCase,
+	)
+	trackUsersJob := job.NewPeriodic(
+		lg,
+		JobNameTrackUsers,
+		cfg.TrackingInterval,
+		cfg.TrackingTimeout,
+		useCaseFactory.MakeTrackRecorderUseCase(),
+		trackUseCase,
+	)
+	enrichDataJob := job.NewPeriodic(
+		lg,
+		JobNameEnrichData,
+		cfg.EnrichingInterval,
+		cfg.EnrichingTimeout,
+		useCaseFactory.MakeEnrichRecorderUseCase(),
+		enrichUseCase,
+	)
 
 	// start parallel job workers
-	go tracker.Start(ctx)
-	go cleaner.Start(ctx)
-	go enricher.Start(ctx)
+	go cleanStatsJob.Start(ctx)
+	go trackUsersJob.Start(ctx)
+	go enrichDataJob.Start(ctx)
 
 	gracefulShutDown(ctx, cancel)
 	return nil

@@ -3,8 +3,7 @@ package mappers
 import (
 	"encoding/json"
 	"fmt"
-	"osu-dashboard/internal/database/repository"
-	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/dto"
 	"osu-dashboard/internal/usecase/command"
 	"reflect"
@@ -319,7 +318,7 @@ func MapBeatmapModelToBeatmapDTO(beatmap *model.Beatmap) (*dto.Beatmap, error) {
 
 // covers
 
-func MapMapsetCoversToCoversJSON(m map[string]string) (repository.JSON, error) {
+func MapMapsetCoversToCoversJSON(m map[string]string) (json.RawMessage, error) {
 	coversJson, err := json.Marshal(m)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal mapset covers to json: %w", err)
@@ -328,7 +327,7 @@ func MapMapsetCoversToCoversJSON(m map[string]string) (repository.JSON, error) {
 	return coversJson, nil
 }
 
-func MapCoversJSONToMapsetCovers(covers repository.JSON) (map[string]string, error) {
+func MapCoversJSONToMapsetCovers(covers json.RawMessage) (map[string]string, error) {
 	mapsetCovers := make(map[string]string)
 	if err := json.Unmarshal(covers, &mapsetCovers); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal mapset covers: %w", err)
@@ -339,7 +338,7 @@ func MapCoversJSONToMapsetCovers(covers repository.JSON) (map[string]string, err
 
 // stats -> JSON
 
-func mapUserInfoToStatsJSON(playcount, favorites, mapcount, comments int) (repository.JSON, error) {
+func mapUserInfoToStatsJSON(playcount, favorites, mapcount, comments int) (json.RawMessage, error) {
 	var stats = make(model.UserStats)
 	stats[time.Now().UTC()] = &model.UserStatsModel{
 		PlayCount: playcount,
@@ -356,7 +355,7 @@ func mapUserInfoToStatsJSON(playcount, favorites, mapcount, comments int) (repos
 	return statsJson, nil
 }
 
-func MapBeatmapInfoToStatsJSON(playcount, passcount int) (repository.JSON, error) {
+func MapBeatmapInfoToStatsJSON(playcount, passcount int) (json.RawMessage, error) {
 	var stats = make(model.BeatmapStats)
 	stats[time.Now().UTC()] = &model.BeatmapStatsModel{
 		Playcount: playcount,
@@ -371,7 +370,7 @@ func MapBeatmapInfoToStatsJSON(playcount, passcount int) (repository.JSON, error
 	return statsJson, nil
 }
 
-func MapMapsetInfoToStatsJSON(playcount, favorites, comments int) (repository.JSON, error) {
+func MapMapsetInfoToStatsJSON(playcount, favorites, comments int) (json.RawMessage, error) {
 	var stats = make(model.MapsetStats)
 	stats[time.Now().UTC()] = &model.MapsetStatsModel{
 		Playcount: playcount,
@@ -390,7 +389,7 @@ func MapMapsetInfoToStatsJSON(playcount, favorites, comments int) (repository.JS
 // JSON -> stats
 // todo: generic
 
-func MapStatsJSONToUserStats(j repository.JSON) (model.UserStats, error) {
+func MapStatsJSONToUserStats(j json.RawMessage) (model.UserStats, error) {
 	userStats := make(model.UserStats)
 	if err := json.Unmarshal(j, &userStats); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal user stats: %w", err)
@@ -399,7 +398,7 @@ func MapStatsJSONToUserStats(j repository.JSON) (model.UserStats, error) {
 	return userStats, nil
 }
 
-func MapStatsJSONToBeatmapStats(j repository.JSON) (model.BeatmapStats, error) {
+func MapStatsJSONToBeatmapStats(j json.RawMessage) (model.BeatmapStats, error) {
 	beatmapStats := make(model.BeatmapStats)
 	if err := json.Unmarshal(j, &beatmapStats); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal beatmap stats: %w", err)
@@ -408,7 +407,7 @@ func MapStatsJSONToBeatmapStats(j repository.JSON) (model.BeatmapStats, error) {
 	return beatmapStats, nil
 }
 
-func MapStatsJSONToMapsetStats(j repository.JSON) (model.MapsetStats, error) {
+func MapStatsJSONToMapsetStats(j json.RawMessage) (model.MapsetStats, error) {
 	mapsetStats := make(model.MapsetStats)
 	if err := json.Unmarshal(j, &mapsetStats); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal mapset stats: %w", err)
@@ -441,17 +440,17 @@ func KeepLastNKeyValuesFromStats(m any, n int) {
 // JSON -> JSON append
 // todo: generic
 
-func AppendNewUserStats(json1, json2 repository.JSON) (repository.JSON, error) {
+func AppendNewUserStats(json1, json2 json.RawMessage) (json.RawMessage, error) {
 	// merge two JSONs that are map[time.Time]model.UserStatsModel
 	map1 := make(model.UserStats)
 	map2 := make(model.UserStats)
 
 	if err := json.Unmarshal(json1, &map1); err != nil {
-		return repository.JSON{}, err
+		return json.RawMessage{}, err
 	}
 
 	if err := json.Unmarshal(json2, &map2); err != nil {
-		return repository.JSON{}, err
+		return json.RawMessage{}, err
 	}
 
 	for key, value := range map2 {
@@ -460,23 +459,23 @@ func AppendNewUserStats(json1, json2 repository.JSON) (repository.JSON, error) {
 
 	mergedJSON, err := json.Marshal(map1)
 	if err != nil {
-		return repository.JSON{}, err
+		return json.RawMessage{}, err
 	}
 
 	return mergedJSON, nil
 }
 
-func AppendNewMapsetStats(json1, json2 repository.JSON) (repository.JSON, error) {
+func AppendNewMapsetStats(json1, json2 json.RawMessage) (json.RawMessage, error) {
 	// merge two JSONs that are map[time.Time]model.MapsetStatsModel
 	map1 := make(model.MapsetStats)
 	map2 := make(model.MapsetStats)
 
 	if err := json.Unmarshal(json1, &map1); err != nil {
-		return repository.JSON{}, err
+		return json.RawMessage{}, err
 	}
 
 	if err := json.Unmarshal(json2, &map2); err != nil {
-		return repository.JSON{}, err
+		return json.RawMessage{}, err
 	}
 
 	for key, value := range map2 {
@@ -485,23 +484,23 @@ func AppendNewMapsetStats(json1, json2 repository.JSON) (repository.JSON, error)
 
 	mergedJSON, err := json.Marshal(map1)
 	if err != nil {
-		return repository.JSON{}, err
+		return json.RawMessage{}, err
 	}
 
 	return mergedJSON, nil
 }
 
-func AppendNewBeatmapStats(json1, json2 repository.JSON) (repository.JSON, error) {
+func AppendNewBeatmapStats(json1, json2 json.RawMessage) (json.RawMessage, error) {
 	// merge two JSONs that are map[time.Time]model.BeatmapStatsModel
 	map1 := make(model.BeatmapStats)
 	map2 := make(model.BeatmapStats)
 
 	if err := json.Unmarshal(json1, &map1); err != nil {
-		return repository.JSON{}, err
+		return json.RawMessage{}, err
 	}
 
 	if err := json.Unmarshal(json2, &map2); err != nil {
-		return repository.JSON{}, err
+		return json.RawMessage{}, err
 	}
 
 	for key, value := range map2 {
@@ -510,7 +509,7 @@ func AppendNewBeatmapStats(json1, json2 repository.JSON) (repository.JSON, error
 
 	mergedJSON, err := json.Marshal(map1)
 	if err != nil {
-		return repository.JSON{}, err
+		return json.RawMessage{}, err
 	}
 
 	return mergedJSON, nil
@@ -518,7 +517,7 @@ func AppendNewBeatmapStats(json1, json2 repository.JSON) (repository.JSON, error
 
 // other
 
-func MapUserCountsJSONToUserDTOCounts(countsJSON repository.JSON) (*dto.UserMapCounts, error) {
+func MapUserCountsJSONToUserDTOCounts(countsJSON json.RawMessage) (*dto.UserMapCounts, error) {
 	var counts *model.MapCounts
 	err := json.Unmarshal(countsJSON, &counts)
 	if err != nil {
@@ -544,7 +543,7 @@ func GetMapsetCover(mapset *model.Mapset, coverKey string) string {
 	return covers[coverKey]
 }
 
-func MapUserMapsetsToUserCountsJSON(statuses []string) (repository.JSON, error) {
+func MapUserMapsetsToUserCountsJSON(statuses []string) (json.RawMessage, error) {
 	counts := model.MapCounts{}
 
 	for _, status := range statuses {

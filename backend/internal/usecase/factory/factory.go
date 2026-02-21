@@ -2,20 +2,19 @@ package factory
 
 import (
 	"osu-dashboard/internal/config"
-	"osu-dashboard/internal/database/repository/beatmaprepository"
-	"osu-dashboard/internal/database/repository/cleanrepository"
-	"osu-dashboard/internal/database/repository/enrichesrepository"
-	"osu-dashboard/internal/database/repository/followingrepository"
-	"osu-dashboard/internal/database/repository/logrepository"
-	"osu-dashboard/internal/database/repository/mapsetrepository"
-	"osu-dashboard/internal/database/repository/trackrepository"
-	"osu-dashboard/internal/database/repository/userrepository"
+	"osu-dashboard/internal/database/repository/beatmap"
+	"osu-dashboard/internal/database/repository/following"
+	jobrepository "osu-dashboard/internal/database/repository/job"
+	"osu-dashboard/internal/database/repository/log"
+	"osu-dashboard/internal/database/repository/mapset"
+	"osu-dashboard/internal/database/repository/user"
 	"osu-dashboard/internal/database/txmanager"
 	"osu-dashboard/internal/service/osuapi"
-	cleanerUseCase "osu-dashboard/internal/usecase/cleaner"
-	enricherusecase "osu-dashboard/internal/usecase/enricher"
+	"osu-dashboard/internal/usecase/clean"
+	enricherusecase "osu-dashboard/internal/usecase/enrich"
 	followingcreate "osu-dashboard/internal/usecase/following/create"
 	followingprovide "osu-dashboard/internal/usecase/following/provide"
+	jobrecordusecase "osu-dashboard/internal/usecase/jobrecord"
 	logcreate "osu-dashboard/internal/usecase/log/create"
 	logprovide "osu-dashboard/internal/usecase/log/provide"
 	mapsetcreate "osu-dashboard/internal/usecase/mapset/create"
@@ -46,10 +45,8 @@ type Repositories struct {
 	BeatmapRepo   beatmaprepository.Interface
 	MapsetRepo    mapsetrepository.Interface
 	FollowingRepo followingrepository.Interface
-	EnrichesRepo  enrichesrepository.Interface
-	TrackRepo     trackrepository.Interface
 	LogRepo       logrepository.Interface
-	CleanRepo     cleanrepository.Interface
+	JobRepo       jobrepository.Interface
 }
 
 func New(
@@ -163,7 +160,6 @@ func (f *UseCaseFactory) MakeTrackUseCase() *track.UseCase {
 		f.repos.MapsetRepo,
 		f.repos.BeatmapRepo,
 		f.repos.FollowingRepo,
-		f.repos.TrackRepo,
 		f.repos.LogRepo,
 	)
 }
@@ -197,7 +193,6 @@ func (f *UseCaseFactory) MakeProvideStatisticUseCase() *statisticprovide.UseCase
 		f.repos.BeatmapRepo,
 		f.repos.MapsetRepo,
 		f.repos.UserRepo,
-		f.repos.TrackRepo,
 	)
 }
 
@@ -208,8 +203,8 @@ func (f *UseCaseFactory) MakeProvideLogsUseCase() *logprovide.UseCase {
 	)
 }
 
-func (f *UseCaseFactory) MakeCleanerUseCase() *cleanerUseCase.UseCase {
-	return cleanerUseCase.New(
+func (f *UseCaseFactory) MakeCleanerUseCase() *clean.UseCase {
+	return clean.New(
 		f.cfg,
 		f.lg,
 		f.txManager,
@@ -217,7 +212,7 @@ func (f *UseCaseFactory) MakeCleanerUseCase() *cleanerUseCase.UseCase {
 		f.repos.MapsetRepo,
 		f.repos.BeatmapRepo,
 		f.repos.LogRepo,
-		f.repos.CleanRepo)
+	)
 }
 
 func (f *UseCaseFactory) MakeEnricherUseCase() *enricherusecase.UseCase {
@@ -228,7 +223,6 @@ func (f *UseCaseFactory) MakeEnricherUseCase() *enricherusecase.UseCase {
 		f.osuApi,
 		f.repos.MapsetRepo,
 		f.repos.FollowingRepo,
-		f.repos.EnrichesRepo,
 		f.repos.LogRepo,
 	)
 }
@@ -238,5 +232,27 @@ func (f *UseCaseFactory) MakeSearchUseCase() *searchusecase.UseCase {
 		f.txManager,
 		f.repos.UserRepo,
 		f.repos.MapsetRepo,
+	)
+}
+
+func (f *UseCaseFactory) MakeCleanRecorderUseCase() *jobrecordusecase.UseCase {
+	return f.makeRecorderUseCase(jobrecordusecase.JobTypeCleanStats)
+}
+
+func (f *UseCaseFactory) MakeTrackRecorderUseCase() *jobrecordusecase.UseCase {
+	return f.makeRecorderUseCase(jobrecordusecase.JobTypeTrackUsers)
+}
+
+func (f *UseCaseFactory) MakeEnrichRecorderUseCase() *jobrecordusecase.UseCase {
+	return f.makeRecorderUseCase(jobrecordusecase.JobTypeEnrichData)
+}
+
+func (f *UseCaseFactory) makeRecorderUseCase(jobType jobrecordusecase.JobType) *jobrecordusecase.UseCase {
+	return jobrecordusecase.New(
+		f.cfg,
+		f.lg,
+		jobType,
+		f.txManager,
+		f.repos.JobRepo,
 	)
 }

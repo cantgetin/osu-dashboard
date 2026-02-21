@@ -3,7 +3,7 @@ package usercreate
 import (
 	"context"
 	"osu-dashboard/internal/config"
-	"osu-dashboard/internal/database/repository/model"
+	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
 
 	log "github.com/sirupsen/logrus"
