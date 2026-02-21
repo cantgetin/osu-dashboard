@@ -7,6 +7,7 @@ import {
     selectSystemStatsState,
     SystemStatsState
 } from "../../../store/systemStats.ts";
+import aveta from "aveta";
 
 const SystemStats = () => {
     const dispatch = useAppDispatch();
@@ -26,34 +27,30 @@ const SystemStats = () => {
                             Stats
                         </h1>
                         <div
-                            className="grid grid-cols-2 md:flex md:flex-wrap justify-between bg-zinc-900
-                            py-4 md:py-8 px-4 md:px-16 rounded-lg gap-4 md:gap-0">
+                            className="rounded-lg grid grid-cols-3 gap-y-7 grid-rows-2 justify-center items-center p-5 gap-5 bg-zinc-900"
+                        >
                             <div className="flex flex-col items-center">
-                                <span className="text-3xl md:text-5xl font-bold">{systemStats.stats!.users}</span>
+                                <span className="text-3xl md:text-5xl font-bold">{aveta(systemStats.stats!.users)}</span>
                                 <span className="text-gray-400 text-sm md:text-base">Users</span>
                             </div>
                             <div className="flex flex-col items-center">
-                                <span className="text-3xl md:text-5xl font-bold">{systemStats.stats!.mapsets}</span>
+                                <span className="text-3xl md:text-5xl font-bold">{aveta(systemStats.stats!.mapsets)}</span>
                                 <span className="text-gray-400 text-sm md:text-base">Mapsets</span>
                             </div>
                             <div className="flex flex-col items-center">
-                                <span className="text-3xl md:text-5xl font-bold">{systemStats.stats!.beatmaps}</span>
+                                <span className="text-3xl md:text-5xl font-bold">{aveta(systemStats.stats!.beatmaps)}</span>
                                 <span className="text-gray-400 text-sm md:text-base">Beatmaps</span>
                             </div>
                             <div className="flex flex-col items-center">
-                                <span className="text-3xl md:text-5xl font-bold">{systemStats.stats!.tracks}</span>
-                                <span className="text-gray-400 text-sm md:text-base">Tracks</span>
-                            </div>
-                            <div className="flex flex-col items-center">
-                                <span className="text-3xl md:text-5xl font-bold">{(systemStats.stats!.plays ?? 0).toLocaleString()}</span>
+                                <span className="text-3xl md:text-5xl font-bold">{aveta(systemStats.stats!.plays)}</span>
                                 <span className="text-gray-400 text-sm md:text-base">Plays</span>
                             </div>
                             <div className="flex flex-col items-center">
-                                <span className="text-3xl md:text-5xl font-bold">{(systemStats.stats!.favourites ?? 0).toLocaleString()}</span>
+                                <span className="text-3xl md:text-5xl font-bold">{aveta(systemStats.stats!.favourites)}</span>
                                 <span className="text-gray-400 text-sm md:text-base">Favourites</span>
                             </div>
                             <div className="flex flex-col items-center">
-                                <span className="text-3xl md:text-5xl font-bold">{(systemStats.stats!.comments ?? 0).toLocaleString()}</span>
+                                <span className="text-3xl md:text-5xl font-bold">{aveta(systemStats.stats!.comments)}</span>
                                 <span className="text-gray-400 text-sm md:text-base">Comments</span>
                             </div>
                         </div>
