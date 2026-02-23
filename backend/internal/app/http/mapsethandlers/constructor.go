@@ -17,7 +17,7 @@ type (
 	mapsetProvider interface {
 		Get(ctx context.Context, id int) (*dto.Mapset, error)
 		List(ctx context.Context, cmd *mapsetprovide.ListCommand) (*dto.MapsetsPaged, error)
-		ListForUser(ctx context.Context, userID int, cmd *mapsetprovide.ListCommand) (*dto.MapsetsPaged, error)
+		ListForUserPaged(ctx context.Context, userID int, cmd *mapsetprovide.ListCommand) (*dto.MapsetsPaged, error)
 	}
 
 	Handlers struct {

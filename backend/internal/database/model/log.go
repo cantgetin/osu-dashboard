@@ -28,8 +28,9 @@ type Log struct {
 type LogMessage string
 
 const (
-	LogMessageDailyTrack   LogMessage = "Adding new statistic for all added users: tracking playcount, comment, favorite increases, new mapsets, beatmaps, tags, avatars etc."
-	LogMessageDailyClean   LogMessage = "Cleaning old statistic records for all added users: clean stats records of mapsets, beatmaps, users, only keep records for last two weeks."
-	LogMessageInitialTrack LogMessage = "Adding initial statistic for user that joined: tracking plays, comments, favorites, mapsets, beatmaps, tags, avatar etc."
-	LogMessageDailyEnrich  LogMessage = "Enriching existing mapsets with additional info, genre, language, descriptions changes."
+	LogMessageDailyTrack     LogMessage = "Adding new statistic for all added users: tracking playcount, comment, favorite increases, new mapsets, beatmaps, tags, avatars etc."
+	LogMessageDailyClean     LogMessage = "Cleaning old statistic records for all added users: clean stats records of mapsets, beatmaps, users, only keep records for last two weeks."
+	LogMessageInitialTrack   LogMessage = "Adding initial statistic for user that joined: tracking plays, comments, favorites, mapsets, beatmaps, tags, avatar etc."
+	LogMessageDailyEnrich    LogMessage = "Enriching existing mapsets with additional info, genre, language, descriptions changes."
+	LogMessageDailyUserClean LogMessage = "Cleaning users that have 0 mapsets"
 )

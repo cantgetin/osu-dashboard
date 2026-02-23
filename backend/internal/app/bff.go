@@ -42,14 +42,7 @@ func RunBFF(baseCtx context.Context, cfg *config.Config, lg *log.Logger) error {
 
 	// init repos, usecases
 	repoFactory := repositoryfactory.New(cfg, lg)
-	useCaseFactory := factory.New(cfg, lg, txm, osuAPI, &factory.Repositories{
-		UserRepo:      repoFactory.NewUserRepository(),
-		BeatmapRepo:   repoFactory.NewBeatmapRepository(),
-		MapsetRepo:    repoFactory.NewMapsetRepository(),
-		FollowingRepo: repoFactory.NewFollowingsRepository(),
-		LogRepo:       repoFactory.NewLogsRepository(),
-		JobRepo:       repoFactory.NewJobRepository(),
-	})
+	useCaseFactory := factory.New(cfg, lg, txm, osuAPI, repoFactory)
 
 	// setup http routes
 	httpServer := http.New(cfg, lg, useCaseFactory)

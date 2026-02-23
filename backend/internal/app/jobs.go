@@ -16,6 +16,7 @@ import (
 
 const (
 	JobNameCleanStats = "clean stats"
+	JobNameCleanUsers = "clean users"
 	JobNameTrackUsers = "track users"
 	JobNameEnrichData = "enrich data"
 )
@@ -41,19 +42,9 @@ func RunJobs(ctx context.Context, cfg *config.Config, lg *log.Logger) error {
 	osuTokenProvider := osuapitokenprovider.New(cfg, httpClient)
 	osuAPI := osuapi.New(cfg, osuTokenProvider, httpClient)
 
-	// init repos, usecases
+	// init repo, usecase factories
 	repoFactory := repositoryfactory.New(cfg, lg)
-	useCaseFactory := factory.New(cfg, lg, txm, osuAPI, &factory.Repositories{
-		UserRepo:      repoFactory.NewUserRepository(),
-		BeatmapRepo:   repoFactory.NewBeatmapRepository(),
-		MapsetRepo:    repoFactory.NewMapsetRepository(),
-		FollowingRepo: repoFactory.NewFollowingsRepository(),
-		LogRepo:       repoFactory.NewLogsRepository(),
-		JobRepo:       repoFactory.NewJobRepository(),
-	})
-	cleanUseCase := useCaseFactory.MakeCleanerUseCase()
-	enrichUseCase := useCaseFactory.MakeEnricherUseCase()
-	trackUseCase := useCaseFactory.MakeTrackUseCase()
+	useCaseFactory := factory.New(cfg, lg, txm, osuAPI, repoFactory)
 
 	// init jobs
 	cleanStatsJob := job.NewPeriodic(
@@ -61,8 +52,16 @@ func RunJobs(ctx context.Context, cfg *config.Config, lg *log.Logger) error {
 		JobNameCleanStats,
 		cfg.CleaningInterval,
 		cfg.CleaningTimeout,
-		useCaseFactory.MakeCleanRecorderUseCase(),
-		cleanUseCase,
+		useCaseFactory.MakeCleanStatsRecorderUseCase(),
+		useCaseFactory.MakeCleanStatsUseCase(),
+	)
+	cleanUsersJob := job.NewPeriodic(
+		lg,
+		JobNameCleanUsers,
+		cfg.CleaningInterval,
+		cfg.CleaningTimeout,
+		useCaseFactory.MakeCleanUsersRecorderUseCase(),
+		useCaseFactory.MakeCleanUsersUseCase(),
 	)
 	trackUsersJob := job.NewPeriodic(
 		lg,
@@ -70,7 +69,7 @@ func RunJobs(ctx context.Context, cfg *config.Config, lg *log.Logger) error {
 		cfg.TrackingInterval,
 		cfg.TrackingTimeout,
 		useCaseFactory.MakeTrackRecorderUseCase(),
-		trackUseCase,
+		useCaseFactory.MakeTrackUseCase(),
 	)
 	enrichDataJob := job.NewPeriodic(
 		lg,
@@ -78,11 +77,12 @@ func RunJobs(ctx context.Context, cfg *config.Config, lg *log.Logger) error {
 		cfg.EnrichingInterval,
 		cfg.EnrichingTimeout,
 		useCaseFactory.MakeEnrichRecorderUseCase(),
-		enrichUseCase,
+		useCaseFactory.MakeEnricherUseCase(),
 	)
 
 	// start parallel job workers
 	go cleanStatsJob.Start(ctx)
+	go cleanUsersJob.Start(ctx)
 	go trackUsersJob.Start(ctx)
 	go enrichDataJob.Start(ctx)
 

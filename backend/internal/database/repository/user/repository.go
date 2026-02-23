@@ -31,6 +31,15 @@ func (r *GormRepository) Get(ctx context.Context, tx txmanager.Tx, id int) (*mod
 	return user, nil
 }
 
+func (r *GormRepository) Delete(ctx context.Context, tx txmanager.Tx, id int) error {
+	err := tx.DB().WithContext(ctx).Table(usersTableName).Delete(&model.User{}, id).Error
+	if err != nil {
+		return fmt.Errorf("failed to delete user with id %v: %v", id, err)
+	}
+
+	return nil
+}
+
 func (r *GormRepository) Exists(ctx context.Context, tx txmanager.Tx, id int) (bool, error) {
 	var count int64
 	err := tx.DB().WithContext(ctx).Table(usersTableName).Where("id = ?", id).Count(&count).Error

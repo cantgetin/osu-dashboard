@@ -3,6 +3,7 @@ package factory
 import (
 	"osu-dashboard/internal/config"
 	"osu-dashboard/internal/database/repository/beatmap"
+	repositoryfactory "osu-dashboard/internal/database/repository/factory"
 	"osu-dashboard/internal/database/repository/following"
 	jobrepository "osu-dashboard/internal/database/repository/job"
 	"osu-dashboard/internal/database/repository/log"
@@ -10,7 +11,8 @@ import (
 	"osu-dashboard/internal/database/repository/user"
 	"osu-dashboard/internal/database/txmanager"
 	"osu-dashboard/internal/service/osuapi"
-	"osu-dashboard/internal/usecase/clean"
+	"osu-dashboard/internal/usecase/cleanstats"
+	"osu-dashboard/internal/usecase/cleanusers"
 	enricherusecase "osu-dashboard/internal/usecase/enrich"
 	followingcreate "osu-dashboard/internal/usecase/following/create"
 	followingprovide "osu-dashboard/internal/usecase/following/provide"
@@ -54,8 +56,17 @@ func New(
 	lg *log.Logger,
 	txManager txmanager.TxManager,
 	osuApi *osuapi.Service,
-	repos *Repositories,
+	repoFactory *repositoryfactory.Factory,
 ) *UseCaseFactory {
+	repos := &Repositories{
+		UserRepo:      repoFactory.NewUserRepository(),
+		BeatmapRepo:   repoFactory.NewBeatmapRepository(),
+		MapsetRepo:    repoFactory.NewMapsetRepository(),
+		FollowingRepo: repoFactory.NewFollowingsRepository(),
+		LogRepo:       repoFactory.NewLogsRepository(),
+		JobRepo:       repoFactory.NewJobRepository(),
+	}
+
 	return &UseCaseFactory{
 		cfg:       cfg,
 		lg:        lg,
@@ -203,14 +214,25 @@ func (f *UseCaseFactory) MakeProvideLogsUseCase() *logprovide.UseCase {
 	)
 }
 
-func (f *UseCaseFactory) MakeCleanerUseCase() *clean.UseCase {
-	return clean.New(
+func (f *UseCaseFactory) MakeCleanStatsUseCase() *cleanstats.UseCase {
+	return cleanstats.New(
 		f.cfg,
 		f.lg,
 		f.txManager,
 		f.repos.UserRepo,
 		f.repos.MapsetRepo,
 		f.repos.BeatmapRepo,
+		f.repos.LogRepo,
+	)
+}
+
+func (f *UseCaseFactory) MakeCleanUsersUseCase() *cleanusers.UseCase {
+	return cleanusers.New(
+		f.cfg,
+		f.lg,
+		f.txManager,
+		f.repos.UserRepo,
+		f.repos.MapsetRepo,
 		f.repos.LogRepo,
 	)
 }
@@ -235,8 +257,12 @@ func (f *UseCaseFactory) MakeSearchUseCase() *searchusecase.UseCase {
 	)
 }
 
-func (f *UseCaseFactory) MakeCleanRecorderUseCase() *jobrecordusecase.UseCase {
+func (f *UseCaseFactory) MakeCleanStatsRecorderUseCase() *jobrecordusecase.UseCase {
 	return f.makeRecorderUseCase(jobrecordusecase.JobTypeCleanStats)
+}
+
+func (f *UseCaseFactory) MakeCleanUsersRecorderUseCase() *jobrecordusecase.UseCase {
+	return f.makeRecorderUseCase(jobrecordusecase.JobTypeCleanUsers)
 }
 
 func (f *UseCaseFactory) MakeTrackRecorderUseCase() *jobrecordusecase.UseCase {

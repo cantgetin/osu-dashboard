@@ -71,7 +71,7 @@ func (uc *UseCase) List(ctx context.Context, cmd *ListCommand) (*dto.MapsetsPage
 	}, nil
 }
 
-func (uc *UseCase) ListForUser(ctx context.Context, userID int, cmd *ListCommand) (*dto.MapsetsPaged, error) {
+func (uc *UseCase) ListForUserPaged(ctx context.Context, userID int, cmd *ListCommand) (*dto.MapsetsPaged, error) {
 	var dtoMapsets []*dto.Mapset
 	var count int
 

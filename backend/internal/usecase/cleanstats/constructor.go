@@ -1,4 +1,4 @@
-package clean
+package cleanstats
 
 import (
 	"context"

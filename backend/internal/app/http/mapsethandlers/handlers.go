@@ -94,7 +94,7 @@ func (h *Handlers) ListForUser(c echo.Context) error {
 		c.QueryParam("status"),
 	)
 
-	listResp, err := h.mapsetProvider.ListForUser(
+	listResp, err := h.mapsetProvider.ListForUserPaged(
 		c.Request().Context(),
 		idInt,
 		&mapsetprovide.ListCommand{

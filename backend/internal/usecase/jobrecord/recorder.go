@@ -17,6 +17,7 @@ type JobType string
 const (
 	JobTypeTrackUsers JobType = "track_users"
 	JobTypeCleanStats JobType = "clean_stats"
+	JobTypeCleanUsers JobType = "clean_users"
 	JobTypeEnrichData JobType = "enrich_data"
 )
 
