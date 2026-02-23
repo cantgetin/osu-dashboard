@@ -43,6 +43,7 @@ func New(cfg *config.Config, lg *log.Logger, f *factory.UseCaseFactory) *Server 
 	server.HideBanner = true
 	server.HidePort = true
 	server.Use(RateLimitMiddleware(rate.Limit(cfg.HTTPRateLimitRequestsPerSecond), cfg.HTTPRateLimitBurstSize))
+	server.Use(middleware.Logger())
 	server.Use(middleware.CORS())
 
 	h := handlers{

@@ -3,17 +3,12 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"os"
 	"osu-dashboard/internal/bootstrap"
 	"osu-dashboard/internal/config"
 	"osu-dashboard/internal/database/model"
-	"path/filepath"
 	"time"
 
-	"github.com/caarlos0/env"
-	migrate "github.com/rubenv/sql-migrate"
 	log "github.com/sirupsen/logrus"
-	"gorm.io/gorm"
 )
 
 type ContextKey string
@@ -21,9 +16,9 @@ type ContextKey string
 const EnvKey ContextKey = "environment"
 
 func main() {
-	cfg := &config.Config{}
-	if err := env.Parse(cfg); err != nil {
-		log.Fatalf("failed to parse cfg, %v", err)
+	cfg, err := config.LoadConfig(".env")
+	if err != nil {
+		panic("load config")
 	}
 
 	ctx := context.WithValue(context.Background(), EnvKey, "integration-test")
@@ -34,7 +29,7 @@ func main() {
 }
 
 func addSampleData(ctx context.Context, cfg *config.Config) error {
-	gdb, err := initDB(cfg)
+	gdb, err := bootstrap.InitDB(cfg)
 	if err != nil {
 		return err
 	}
@@ -156,58 +151,4 @@ func addSampleData(ctx context.Context, cfg *config.Config) error {
 
 	log.Infof("sample data added")
 	return nil
-}
-
-func initDB(cfg *config.Config) (*gorm.DB, error) {
-	cfg.PgDSN = "postgresql://localhost:5432/db?user=db&password=db&sslmode=disable"
-	var gdb *gorm.DB
-
-	var err error
-	gdb, err = bootstrap.InitDB(cfg)
-	if err != nil {
-		return nil, err
-	}
-	if _, err = gdb.DB(); err != nil {
-		return nil, err
-	}
-
-	db, err := gdb.DB()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	dir, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	migrations := &migrate.FileMigrationSource{
-		Dir: filepath.Join(dir, "./", "migrations"),
-	}
-
-	migrationsCount, err := countMigrations("./migrations")
-	if err != nil {
-		log.Fatalf("Error counting migrations: %v", err)
-	}
-
-	n, err := migrate.Exec(db, "postgres", migrations, migrate.Up)
-	if err != nil {
-		log.Infof("executed %d migrations", n)
-		log.Fatalf("Could not run the 'UP' migrations: %v", err)
-	} else {
-		if n < migrationsCount {
-			log.Fatalf("should be at least %v migrations", migrationsCount)
-		}
-		log.Infof("executed %d migrations", n)
-	}
-
-	return gdb, nil
-}
-
-func countMigrations(folderPath string) (int, error) {
-	files, err := filepath.Glob(filepath.Join(folderPath, "*"))
-	if err != nil {
-		return 0, err
-	}
-	return len(files), nil
 }
