@@ -41,6 +41,11 @@ func (uc *UseCase) Execute(ctx context.Context) error {
 				return fmt.Errorf("failed to delete user with id %v, err: %v", user.ID, err)
 			}
 
+			err = uc.following.Delete(ctx, tx, user.ID)
+			if err != nil {
+				return fmt.Errorf("failed to delete following with id %v, err: %v", user.ID, err)
+			}
+
 			return nil
 		})
 		if txErr != nil {

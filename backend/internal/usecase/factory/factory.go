@@ -234,6 +234,7 @@ func (f *UseCaseFactory) MakeCleanUsersUseCase() *cleanusers.UseCase {
 		f.repos.UserRepo,
 		f.repos.MapsetRepo,
 		f.repos.LogRepo,
+		f.repos.FollowingRepo,
 	)
 }
 

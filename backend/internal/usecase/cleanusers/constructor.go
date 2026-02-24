@@ -15,12 +15,26 @@ type (
 		Delete(ctx context.Context, tx txmanager.Tx, id int) error
 	}
 
+	followingStore interface {
+		Delete(ctx context.Context, tx txmanager.Tx, id int) error
+	}
+
 	mapsetStore interface {
 		ListForUser(ctx context.Context, tx txmanager.Tx, userId int) ([]*model.Mapset, error)
 	}
 
 	logSource interface {
 		Create(ctx context.Context, tx txmanager.Tx, log *model.Log) error
+	}
+
+	UseCase struct {
+		cfg       *config.Config
+		lg        *log.Logger
+		txm       txmanager.TxManager
+		user      userStore
+		mapset    mapsetStore
+		log       logSource
+		following followingStore
 	}
 )
 
@@ -31,22 +45,15 @@ func New(
 	user userStore,
 	mapset mapsetStore,
 	log logSource,
+	following followingStore,
 ) *UseCase {
 	return &UseCase{
-		cfg:    cfg,
-		lg:     lg,
-		txm:    txm,
-		log:    log,
-		user:   user,
-		mapset: mapset,
+		cfg:       cfg,
+		lg:        lg,
+		txm:       txm,
+		log:       log,
+		user:      user,
+		mapset:    mapset,
+		following: following,
 	}
-}
-
-type UseCase struct {
-	cfg    *config.Config
-	lg     *log.Logger
-	txm    txmanager.TxManager
-	user   userStore
-	mapset mapsetStore
-	log    logSource
 }
