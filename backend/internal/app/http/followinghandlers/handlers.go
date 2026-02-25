@@ -3,6 +3,7 @@ package followinghandlers
 import (
 	"net/http"
 	"osu-dashboard/internal/app/http/handlerutils"
+	"osu-dashboard/internal/dto"
 
 	"github.com/labstack/echo/v4"
 )
@@ -13,12 +14,13 @@ func (h *Handlers) Create(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "empty code")
 	}
 
-	err := h.followingCreator.Create(c.Request().Context(), code)
+	var user *dto.User
+	user, err := h.followingCreator.Create(c.Request().Context(), code)
 	if err != nil {
 		return handlerutils.EchoInternalError(err)
 	}
 
-	return c.NoContent(http.StatusCreated)
+	return c.JSON(http.StatusCreated, user)
 }
 
 func (h *Handlers) List(c echo.Context) error {

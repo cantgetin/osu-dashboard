@@ -9,7 +9,7 @@ import (
 
 type (
 	followingCreator interface {
-		Create(ctx context.Context, code string) error
+		Create(ctx context.Context, code string) (*dto.User, error)
 	}
 
 	followingProvider interface {

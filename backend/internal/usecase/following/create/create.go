@@ -5,18 +5,25 @@ import (
 	"fmt"
 	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
+	"osu-dashboard/internal/dto"
+	userprovide "osu-dashboard/internal/usecase/user/provide"
 	"time"
 )
 
-func (uc *UseCase) Create(ctx context.Context, code string) error {
+func (uc *UseCase) Create(ctx context.Context, code string) (*dto.User, error) {
 	token, err := uc.osuAPI.ExchangeCodeForToken(ctx, code)
 	if err != nil {
-		return fmt.Errorf("failed to exchange code for access token: %w", err)
+		return nil, fmt.Errorf("failed to exchange code for access token: %w", err)
 	}
 
 	user, err := uc.osuAPI.GetUserInfoByHisToken(ctx, token.AccessToken)
 	if err != nil {
-		return fmt.Errorf("failed to get user info: %w", err)
+		return nil, fmt.Errorf("failed to get user info: %w", err)
+	}
+
+	userDTO, err := userprovide.MapOsuApiUserToUserDTO(user)
+	if err != nil {
+		return nil, fmt.Errorf("failed to map osu user dto: %w", err)
 	}
 
 	following := &model.Following{
@@ -26,7 +33,7 @@ func (uc *UseCase) Create(ctx context.Context, code string) error {
 		LastFetched: time.Now().Add(time.Hour * -25), // hack
 	}
 	if following.ID <= 0 || following.Username == "" {
-		return fmt.Errorf("user id or username is empty: %w", err)
+		return nil, fmt.Errorf("user id or username is empty: %w", err)
 	}
 
 	txErr := uc.txm.ReadWrite(ctx, func(ctx context.Context, tx txmanager.Tx) error {
@@ -44,7 +51,7 @@ func (uc *UseCase) Create(ctx context.Context, code string) error {
 		return nil
 	})
 	if txErr != nil {
-		return txErr
+		return nil, txErr
 	}
 
 	// start tracking background process
@@ -55,7 +62,7 @@ func (uc *UseCase) Create(ctx context.Context, code string) error {
 		}
 	}()
 
-	return nil
+	return userDTO, nil
 }
 
 func (uc *UseCase) trackAndCreateRecord(ctx context.Context, following *model.Following) error {
