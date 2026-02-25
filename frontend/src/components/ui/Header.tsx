@@ -1,5 +1,5 @@
 import HeaderLink from "./HeaderLink.tsx";
-import Search from "./Search.tsx";
+import GlobalSearch from "./GlobalSearch .tsx";
 
 const Header = () => {
     return (
@@ -15,7 +15,7 @@ const Header = () => {
                         <HeaderLink to="/logs">Logs</HeaderLink>
                     </div>
                     {/* Search */}
-                    <Search />
+                    <GlobalSearch />
                 </div>
             </div>
         </div>

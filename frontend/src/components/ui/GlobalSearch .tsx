@@ -9,7 +9,7 @@ interface SearchResult {
     picture_url: string;
 }
 
-const Search = () => {
+const GlobalSearch = () => {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<SearchResult[]>([]);
     const [isOpen, setIsOpen] = useState(false);
@@ -197,4 +197,4 @@ const Search = () => {
     );
 };
 
-export default Search;
+export default GlobalSearch;
