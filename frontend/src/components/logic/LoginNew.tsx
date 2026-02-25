@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Button} from "@/components/ui/button";
-import {ChevronDown, LogOut, User, Settings} from "lucide-react";
+import {ChevronDown, LogOut, User} from "lucide-react";
 import {cn} from "@/lib/utils";
 import {useNavigate} from "react-router-dom";
 
@@ -46,6 +46,7 @@ const UserLogin: React.FC<UserLoginProps> = ({
     };
 
     const handleFeedbackClick = () => {
+        // placeholder, not used in current dropdown
         navigate('/settings');
     };
 
@@ -138,16 +139,6 @@ const UserLogin: React.FC<UserLoginProps> = ({
                         <User className="mr-2 h-4 w-4 text-zinc-400"/>
                         <span>Profile</span>
                     </DropdownMenuItem>
-
-                    <DropdownMenuItem
-                        onClick={handleFeedbackClick}
-                        className="focus:bg-zinc-800 focus:text-zinc-100 cursor-pointer"
-                    >
-                        <Settings className="mr-2 h-4 w-4 text-zinc-400"/>
-                        <span>Settings</span>
-                    </DropdownMenuItem>
-
-                    <DropdownMenuSeparator className="bg-zinc-700"/>
 
                     <DropdownMenuItem
                         onClick={onLogout}

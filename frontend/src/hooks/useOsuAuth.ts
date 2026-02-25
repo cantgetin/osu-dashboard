@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 import queryString from "query-string";
-import { handleOsuSiteRedirect, redirectToAuthorize } from "../utils/utils";
+import {handleOsuSiteRedirect, redirectToAuthorize} from "../utils/utils";
+import {useAppDispatch} from "../store/hooks";
+import {setUser} from "../store/authSlice";
 
 const useOsuAuth = () => {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const [isSuccess, setIsSuccess] = useState(false);
 
     const authorize = async () => {
@@ -22,7 +25,12 @@ const useOsuAuth = () => {
 
         if (code?.toString() && state?.toString()) {
             handleOsuSiteRedirect(state.toString(), code.toString())
-                .then(() => setIsSuccess(true))
+                .then((user) => {
+                    if (user) {
+                        dispatch(setUser(user));
+                    }
+                    setIsSuccess(true);
+                })
                 .catch(error => {
                     console.error("Authorization failed:", error);
                     navigate("/");

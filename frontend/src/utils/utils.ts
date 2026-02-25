@@ -65,7 +65,12 @@ export async function handleOsuSiteRedirect(state: string, code: string) {
         localStorage.setItem('code', code?.toString())
         console.log('set the code to local storage, now exchange code for token')
 
-        await axios.post(`/api/following/create/${code}`);
+        const response = await axios.post(`/api/following/create/${code}`);
+        const user = response.data;
+        if (user) {
+            localStorage.setItem('osu_dashboard_user', JSON.stringify(user));
+        }
+        return user;
     }
 }
 

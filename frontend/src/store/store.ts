@@ -6,6 +6,7 @@ import usersSlice from "./usersSlice.ts";
 import mapsetSlice from "./mapsetSlice.ts";
 import systemStatsSlice from "./systemStats.ts";
 import userStatsSlice from "./userStatsSlice.ts"
+import authReducer from "./authSlice";
 import logsSlice from "./logsSlice.ts";
 
 export const store = configureStore({
@@ -18,6 +19,7 @@ export const store = configureStore({
         systemStatsSlice: systemStatsSlice,
         userStatsSlice: userStatsSlice,
         logsSlice: logsSlice,
+        auth: authReducer,
     },
 });
 
