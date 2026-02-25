@@ -45,11 +45,6 @@ const UserLogin: React.FC<UserLoginProps> = ({
         navigate(`/user/${user!.id!}`);
     };
 
-    const handleFeedbackClick = () => {
-        // placeholder, not used in current dropdown
-        navigate('/settings');
-    };
-
     if (!user) {
         return (
             <Button onClick={onLogin} variant="default" size="sm"
