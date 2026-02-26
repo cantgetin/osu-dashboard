@@ -8,14 +8,6 @@ const HeroSection = () => {
     const navigate = useNavigate();
     const user = useAppSelector(selectAuthUser);
 
-    const handlePrimaryClick = () => {
-        if (user) {
-            navigate(`/user/${user.id}`);
-        } else {
-            navigate('/authorize');
-        }
-    };
-
     return (
         <div className="flex flex-col md:flex-row perspective-600 overflow-hidden">
             <div className="w-full md:w-3/5 h-auto md:h-[calc(87vh)] flex flex-col gap-5 md:gap-10 justify-center">
@@ -26,13 +18,23 @@ const HeroSection = () => {
                     See all your map statistics in dynamic, track your daily map plays, favourites, comments
                 </h1>
                 <div className="flex flex-col md:flex-row gap-3 md:gap-10">
-                    <MyButton
-                        onClick={handlePrimaryClick}
-                        className="text-lg md:text-xl rounded-md p-3 md:p-4 bg-green-800 w-full md:w-1/4 hover:bg-green-900"
-                        content={user ? "Go to my profile" : "Start for free"}
-                    />
+                    {
+                        user ?
+                            <MyButton
+                                onClick={() => {navigate(`/user/${user.id}`)}}
+                                className={"text-xl rounded-md p-3 md:p-4 bg-cyan-700 w-full md:w-1/4 hover:bg-cyan-800"}
+                                content={"View my stats"}
+                            />
+                            :
+                            <MyButton
+                                onClick={() => {navigate('/authorize')}}
+                                className={"text-xl rounded-md p-3 md:p-4 bg-green-800 w-full md:w-1/4 hover:bg-green-900"}
+                                content={"Start for free"}
+                            />
+                    }
+
                     <MyButton onClick={() => window.location.href = '#features'}
-                              className="text-lg md:text-xl rounded-md p-3 md:p-4 bg-zinc-700 w-full md:w-1/4 hover:bg-zinc-800"
+                              className="text-xl rounded-md p-3 md:p-4 bg-zinc-700 w-full md:w-1/4 hover:bg-zinc-800"
                               content="Learn more"
                     />
                 </div>
