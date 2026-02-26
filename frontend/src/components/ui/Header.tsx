@@ -40,14 +40,14 @@ const Header = () => {
             <div className="max-w-[1152px] w-full sm:px-0 h-14 flex items-center justify-between overflow-x-auto">
                 <div className="flex px-10 items-center justify-between w-full">
                     {/* Navigation Links - Left Side */}
-                    <div className="flex items-center flex-nowrap">
+                    <div className="flex items-center flex-nowrap gap-1">
                         <HeaderLink to="/">Home</HeaderLink>
                         <HeaderLink to="/users">Users</HeaderLink>
                         <HeaderLink to="/beatmapsets">Beatmaps</HeaderLink>
                         <HeaderLink to="/logs">Logs</HeaderLink>
                     </div>
                     {/* Search + Auth */}
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
                         <GlobalSearch/>
                         <UserLogin
                             user={user ? {
