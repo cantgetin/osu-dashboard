@@ -3,12 +3,13 @@ package mappers
 import (
 	"encoding/json"
 	"fmt"
-	"osu-dashboard/internal/database/model"
-	"osu-dashboard/internal/dto"
-	"osu-dashboard/internal/usecase/command"
 	"reflect"
 	"sort"
 	"time"
+
+	"osu-dashboard/internal/database/model"
+	"osu-dashboard/internal/dto"
+	"osu-dashboard/internal/usecase/command"
 )
 
 // command -> model

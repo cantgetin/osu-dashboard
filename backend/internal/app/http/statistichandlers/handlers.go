@@ -2,8 +2,9 @@ package statistichandlers
 
 import (
 	"net/http"
-	"osu-dashboard/internal/app/http/handlerutils"
 	"strconv"
+
+	"osu-dashboard/internal/app/http/handlerutils"
 
 	"github.com/labstack/echo/v4"
 )

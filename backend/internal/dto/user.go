@@ -1,8 +1,9 @@
 package dto
 
 import (
-	"osu-dashboard/internal/database/model"
 	"time"
+
+	"osu-dashboard/internal/database/model"
 )
 
 type User struct {

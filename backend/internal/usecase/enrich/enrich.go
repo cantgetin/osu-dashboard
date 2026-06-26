@@ -3,10 +3,11 @@ package enricherusecase
 import (
 	"context"
 	"fmt"
-	"osu-dashboard/internal/database/model"
-	"osu-dashboard/internal/database/txmanager"
 	"strconv"
 	"time"
+
+	"osu-dashboard/internal/database/model"
+	"osu-dashboard/internal/database/txmanager"
 )
 
 func (uc *UseCase) Execute(ctx context.Context) error {

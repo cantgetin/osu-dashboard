@@ -2,7 +2,9 @@ package cleanusers
 
 import (
 	"context"
+
 	log "github.com/sirupsen/logrus"
+
 	"osu-dashboard/internal/config"
 	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"

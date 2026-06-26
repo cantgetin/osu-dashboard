@@ -2,10 +2,11 @@ package integration
 
 import (
 	"os"
-	"osu-dashboard/internal/bootstrap"
-	"osu-dashboard/internal/config"
 	"path/filepath"
 	"testing"
+
+	"osu-dashboard/internal/bootstrap"
+	"osu-dashboard/internal/config"
 
 	_ "github.com/lib/pq"
 	"github.com/ory/dockertest/v3"

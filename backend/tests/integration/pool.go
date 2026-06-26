@@ -2,8 +2,9 @@ package integration
 
 import (
 	"fmt"
-	"osu-dashboard/internal/config"
 	"testing"
+
+	"osu-dashboard/internal/config"
 
 	"github.com/ory/dockertest/v3"
 	dc "github.com/ory/dockertest/v3/docker"

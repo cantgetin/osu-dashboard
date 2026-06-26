@@ -3,7 +3,8 @@ package app
 import (
 	"context"
 	"fmt"
-	job "osu-dashboard/internal/app/jobs"
+
+	"osu-dashboard/internal/app/job"
 	"osu-dashboard/internal/bootstrap"
 	"osu-dashboard/internal/config"
 	repositoryfactory "osu-dashboard/internal/database/repository/factory"

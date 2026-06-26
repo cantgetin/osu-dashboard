@@ -2,11 +2,12 @@ package usercardupdate
 
 import (
 	"context"
+	"time"
+
 	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
 	"osu-dashboard/internal/usecase/command"
 	"osu-dashboard/internal/usecase/mappers"
-	"time"
 )
 
 func (uc *UseCase) Update(ctx context.Context, cmd *command.UpdateUserCardCommand) error {

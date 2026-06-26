@@ -3,10 +3,11 @@ package usercreate
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
 	"osu-dashboard/internal/dto"
-	"time"
 )
 
 func (uc *UseCase) Create(ctx context.Context, dto *dto.User) error {

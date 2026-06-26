@@ -2,7 +2,9 @@ package searchhandlers
 
 import (
 	"context"
+
 	log "github.com/sirupsen/logrus"
+
 	"osu-dashboard/internal/dto"
 )
 

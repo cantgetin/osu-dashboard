@@ -2,9 +2,10 @@ package followingrepository
 
 import (
 	"context"
+	"time"
+
 	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
-	"time"
 )
 
 type Interface interface {

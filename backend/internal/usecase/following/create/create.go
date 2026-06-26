@@ -3,11 +3,12 @@ package followingcreate
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
 	"osu-dashboard/internal/dto"
 	userprovide "osu-dashboard/internal/usecase/user/provide"
-	"time"
 )
 
 func (uc *UseCase) Create(ctx context.Context, code string) (*dto.User, error) {

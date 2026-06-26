@@ -3,9 +3,10 @@ package userrepository
 import (
 	"context"
 	"fmt"
+	"strings"
+
 	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
-	"strings"
 
 	"gorm.io/gorm"
 )

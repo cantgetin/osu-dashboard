@@ -3,10 +3,11 @@ package mapsetrepository
 import (
 	"context"
 	"fmt"
-	"osu-dashboard/internal/database/model"
-	"osu-dashboard/internal/database/txmanager"
 	gosort "sort"
 	"strings"
+
+	"osu-dashboard/internal/database/model"
+	"osu-dashboard/internal/database/txmanager"
 
 	"gorm.io/gorm"
 )

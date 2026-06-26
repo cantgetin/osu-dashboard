@@ -2,8 +2,9 @@ package mapsethandlers
 
 import (
 	"errors"
-	"osu-dashboard/internal/database/model"
 	"strconv"
+
+	"osu-dashboard/internal/database/model"
 
 	"github.com/labstack/echo/v4"
 )

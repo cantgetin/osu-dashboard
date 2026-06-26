@@ -2,11 +2,12 @@ package track
 
 import (
 	"context"
+	"time"
+
 	"osu-dashboard/internal/config"
 	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
 	"osu-dashboard/internal/service/osuapi"
-	"time"
 
 	log "github.com/sirupsen/logrus"
 )

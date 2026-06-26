@@ -2,9 +2,10 @@ package osuapi
 
 import (
 	"context"
-	osuapimodels "osu-dashboard/internal/service/osuapi/models"
 	"strconv"
 	"sync"
+
+	osuapimodels "osu-dashboard/internal/service/osuapi/models"
 
 	"golang.org/x/sync/errgroup"
 )

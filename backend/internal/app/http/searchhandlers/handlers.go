@@ -2,6 +2,7 @@ package searchhandlers
 
 import (
 	"net/http"
+
 	"osu-dashboard/internal/app/http/handlerutils"
 
 	"github.com/labstack/echo/v4"

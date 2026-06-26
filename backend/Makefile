@@ -46,3 +46,5 @@ lint:
 add-sample-data:
 	go run tests/data/add_sample_data.go
 
+imports:
+	find . -name "*.go" -not -path "./vendor/*" | xargs goimports -e -l -local $$(go list -m) -w

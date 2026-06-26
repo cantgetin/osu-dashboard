@@ -1,9 +1,10 @@
 package http
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	"golang.org/x/time/rate"
-	"net/http"
 )
 
 func RateLimitMiddleware(r rate.Limit, b int) echo.MiddlewareFunc {

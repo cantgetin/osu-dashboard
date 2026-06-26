@@ -1,9 +1,10 @@
 package userprovide
 
 import (
+	"time"
+
 	"osu-dashboard/internal/dto"
 	osuapimodels "osu-dashboard/internal/service/osuapi/models"
-	"time"
 )
 
 func MapOsuApiUserToUserDTO(osuUser *osuapimodels.User) (*dto.User, error) {

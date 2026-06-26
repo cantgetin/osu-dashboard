@@ -2,9 +2,10 @@ package usercardhandlers
 
 import (
 	"net/http"
+	"strconv"
+
 	handlerutils2 "osu-dashboard/internal/app/http/handlerutils"
 	"osu-dashboard/internal/usecase/command"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )

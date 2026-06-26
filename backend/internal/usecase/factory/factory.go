@@ -2,13 +2,13 @@ package factory
 
 import (
 	"osu-dashboard/internal/config"
-	"osu-dashboard/internal/database/repository/beatmap"
+	beatmaprepository "osu-dashboard/internal/database/repository/beatmap"
 	repositoryfactory "osu-dashboard/internal/database/repository/factory"
-	"osu-dashboard/internal/database/repository/following"
+	followingrepository "osu-dashboard/internal/database/repository/following"
 	jobrepository "osu-dashboard/internal/database/repository/job"
-	"osu-dashboard/internal/database/repository/log"
-	"osu-dashboard/internal/database/repository/mapset"
-	"osu-dashboard/internal/database/repository/user"
+	logrepository "osu-dashboard/internal/database/repository/log"
+	mapsetrepository "osu-dashboard/internal/database/repository/mapset"
+	userrepository "osu-dashboard/internal/database/repository/user"
 	"osu-dashboard/internal/database/txmanager"
 	"osu-dashboard/internal/service/osuapi"
 	"osu-dashboard/internal/usecase/cleanstats"

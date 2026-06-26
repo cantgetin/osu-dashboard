@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"time"
+
 	"osu-dashboard/internal/bootstrap"
 	"osu-dashboard/internal/config"
 	"osu-dashboard/internal/database/model"
-	"time"
 
 	log "github.com/sirupsen/logrus"
 )

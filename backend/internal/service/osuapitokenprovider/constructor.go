@@ -2,10 +2,11 @@ package osuapitokenprovider
 
 import (
 	"context"
-	"osu-dashboard/internal/bootstrap"
-	"osu-dashboard/internal/config"
 	"sync"
 	"time"
+
+	"osu-dashboard/internal/bootstrap"
+	"osu-dashboard/internal/config"
 )
 
 type (

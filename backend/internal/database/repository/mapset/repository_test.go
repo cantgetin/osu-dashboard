@@ -1,8 +1,9 @@
 package mapsetrepository
 
 import (
-	"osu-dashboard/internal/database/model"
 	"testing"
+
+	"osu-dashboard/internal/database/model"
 
 	"github.com/stretchr/testify/assert"
 )

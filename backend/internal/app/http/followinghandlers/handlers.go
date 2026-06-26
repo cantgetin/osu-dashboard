@@ -2,6 +2,7 @@ package followinghandlers
 
 import (
 	"net/http"
+
 	"osu-dashboard/internal/app/http/handlerutils"
 	"osu-dashboard/internal/dto"
 

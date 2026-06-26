@@ -5,9 +5,10 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	log "github.com/sirupsen/logrus"
 	"runtime/debug"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 
 	"gorm.io/gorm"
 )

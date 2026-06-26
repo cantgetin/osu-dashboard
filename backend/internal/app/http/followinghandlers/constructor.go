@@ -2,6 +2,7 @@ package followinghandlers
 
 import (
 	"context"
+
 	"osu-dashboard/internal/dto"
 
 	log "github.com/sirupsen/logrus"

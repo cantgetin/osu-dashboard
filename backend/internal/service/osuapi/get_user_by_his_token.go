@@ -7,8 +7,9 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	osuapimodels "osu-dashboard/internal/service/osuapi/models"
 	"strings"
+
+	osuapimodels "osu-dashboard/internal/service/osuapi/models"
 )
 
 func (s *Service) GetUserInfoByHisToken(ctx context.Context, accessToken string) (*osuapimodels.User, error) {

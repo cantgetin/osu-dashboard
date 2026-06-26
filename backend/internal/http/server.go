@@ -2,7 +2,9 @@ package http
 
 import (
 	"context"
+
 	"golang.org/x/time/rate"
+
 	"osu-dashboard/internal/app/http/followinghandlers"
 	"osu-dashboard/internal/app/http/loghandlers"
 	"osu-dashboard/internal/app/http/mapsethandlers"

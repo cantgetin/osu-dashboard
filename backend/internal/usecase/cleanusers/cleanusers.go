@@ -3,9 +3,10 @@ package cleanusers
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
-	"time"
 )
 
 func (uc *UseCase) Execute(ctx context.Context) error {

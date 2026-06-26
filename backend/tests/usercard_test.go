@@ -6,11 +6,12 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
+
 	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/dto"
 	"osu-dashboard/internal/usecase/command"
 	"osu-dashboard/tests/integration"
-	"time"
 )
 
 func (s *IntegrationSuite) Test_CreateUseCard() {

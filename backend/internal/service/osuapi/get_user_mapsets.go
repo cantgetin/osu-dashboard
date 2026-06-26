@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	osuapimodels "osu-dashboard/internal/service/osuapi/models"
 	"strconv"
 	"sync"
+
+	osuapimodels "osu-dashboard/internal/service/osuapi/models"
 
 	"golang.org/x/sync/errgroup"
 )

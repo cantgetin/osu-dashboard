@@ -2,12 +2,13 @@ package bootstrap
 
 import (
 	"fmt"
-	"osu-dashboard/internal/config"
-	"osu-dashboard/internal/database/txmanager"
 	"path/filepath"
 	"runtime"
 	"strings"
 	"time"
+
+	"osu-dashboard/internal/config"
+	"osu-dashboard/internal/database/txmanager"
 
 	"github.com/ds248a/closer"
 	migrate "github.com/rubenv/sql-migrate"

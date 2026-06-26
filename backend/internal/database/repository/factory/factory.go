@@ -2,12 +2,12 @@ package repositoryfactory
 
 import (
 	"osu-dashboard/internal/config"
-	"osu-dashboard/internal/database/repository/beatmap"
-	"osu-dashboard/internal/database/repository/following"
-	"osu-dashboard/internal/database/repository/job"
-	"osu-dashboard/internal/database/repository/log"
-	"osu-dashboard/internal/database/repository/mapset"
-	"osu-dashboard/internal/database/repository/user"
+	beatmaprepository "osu-dashboard/internal/database/repository/beatmap"
+	followingrepository "osu-dashboard/internal/database/repository/following"
+	jobrepository "osu-dashboard/internal/database/repository/job"
+	logrepository "osu-dashboard/internal/database/repository/log"
+	mapsetrepository "osu-dashboard/internal/database/repository/mapset"
+	userrepository "osu-dashboard/internal/database/repository/user"
 
 	log "github.com/sirupsen/logrus"
 )

@@ -3,12 +3,13 @@ package track
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
 	osuapimodels "osu-dashboard/internal/service/osuapi/models"
 	"osu-dashboard/internal/usecase/command"
 	"osu-dashboard/internal/usecase/mappers"
-	"time"
 )
 
 func (uc *UseCase) createUserCard(

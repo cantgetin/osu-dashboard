@@ -2,9 +2,10 @@ package mappers
 
 import (
 	"encoding/json"
-	"osu-dashboard/internal/database/model"
 	"testing"
 	"time"
+
+	"osu-dashboard/internal/database/model"
 
 	"github.com/stretchr/testify/assert"
 )

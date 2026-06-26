@@ -3,10 +3,11 @@ package track
 import (
 	"context"
 	"fmt"
-	"osu-dashboard/internal/database/model"
-	"osu-dashboard/internal/database/txmanager"
 	"strconv"
 	"time"
+
+	"osu-dashboard/internal/database/model"
+	"osu-dashboard/internal/database/txmanager"
 
 	"golang.org/x/sync/errgroup"
 )

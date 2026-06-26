@@ -2,11 +2,12 @@ package userprovide
 
 import (
 	"context"
+	"strconv"
+
 	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
 	"osu-dashboard/internal/dto"
 	"osu-dashboard/internal/usecase/mappers"
-	"strconv"
 )
 
 func (uc *UseCase) Get(ctx context.Context, id int) (*dto.User, error) {

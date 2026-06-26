@@ -3,9 +3,10 @@ package track
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/database/txmanager"
-	"time"
 )
 
 func (uc *UseCase) CreateTrackAndLogRecords(ctx context.Context, startTime time.Time, timeSinceLast time.Duration) error {

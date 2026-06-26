@@ -2,8 +2,9 @@ package job
 
 import (
 	"context"
-	log "github.com/sirupsen/logrus"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type (

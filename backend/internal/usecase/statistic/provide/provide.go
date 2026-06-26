@@ -2,10 +2,11 @@ package statisticprovide
 
 import (
 	"context"
-	"osu-dashboard/internal/database/txmanager"
-	"osu-dashboard/internal/dto"
 	"strconv"
 	"strings"
+
+	"osu-dashboard/internal/database/txmanager"
+	"osu-dashboard/internal/dto"
 )
 
 const ItemsCount = 5

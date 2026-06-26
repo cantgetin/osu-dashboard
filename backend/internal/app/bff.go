@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"syscall"
+	"time"
+
 	"osu-dashboard/internal/bootstrap"
 	"osu-dashboard/internal/config"
 	repositoryfactory "osu-dashboard/internal/database/repository/factory"
@@ -12,8 +15,6 @@ import (
 	"osu-dashboard/internal/service/osuapi"
 	"osu-dashboard/internal/service/osuapitokenprovider"
 	"osu-dashboard/internal/usecase/factory"
-	"syscall"
-	"time"
 
 	"github.com/ds248a/closer"
 	log "github.com/sirupsen/logrus"

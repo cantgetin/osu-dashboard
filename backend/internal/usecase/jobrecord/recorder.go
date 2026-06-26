@@ -4,12 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
+
 	log "github.com/sirupsen/logrus"
+
 	"osu-dashboard/internal/config"
 	"osu-dashboard/internal/database/model"
 	jobrepository "osu-dashboard/internal/database/repository/job"
 	"osu-dashboard/internal/database/txmanager"
-	"time"
 )
 
 type JobType string
