@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	handlerutils2 "osu-dashboard/internal/app/http/handlerutils"
+	"osu-dashboard/internal/app/http/handlerutils"
 	"osu-dashboard/internal/usecase/command"
 
 	"github.com/labstack/echo/v4"
@@ -17,7 +17,7 @@ func (h *Handlers) Create(c echo.Context) error {
 	}
 
 	if err := h.userCardCreator.Create(c.Request().Context(), userCard); err != nil {
-		return handlerutils2.EchoInternalError(err)
+		return handlerutils.EchoInternalError(err)
 	}
 
 	return c.JSON(http.StatusCreated, userCard)
@@ -33,14 +33,14 @@ func (h *Handlers) Get(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	page, err := handlerutils2.GetPageQueryParam(c)
+	page, err := handlerutils.GetPageQueryParam(c)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	userCard, err := h.userCardProvider.Get(c.Request().Context(), idInt, page)
 	if err != nil {
-		return handlerutils2.EchoInternalError(err)
+		return handlerutils.EchoInternalError(err)
 	}
 
 	return c.JSON(http.StatusOK, userCard)
@@ -53,7 +53,7 @@ func (h *Handlers) Update(c echo.Context) error {
 	}
 
 	if err := h.userCardUpdater.Update(c.Request().Context(), userCard); err != nil {
-		return handlerutils2.EchoInternalError(err)
+		return handlerutils.EchoInternalError(err)
 	}
 
 	return c.JSON(http.StatusAccepted, userCard)

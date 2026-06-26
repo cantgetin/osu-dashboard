@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	handlerutils2 "osu-dashboard/internal/app/http/handlerutils"
+	"osu-dashboard/internal/app/http/handlerutils"
 	"osu-dashboard/internal/database/model"
 	"osu-dashboard/internal/dto"
 	userprovide "osu-dashboard/internal/usecase/user/provide"
@@ -19,7 +19,7 @@ func (h *Handlers) Create(c echo.Context) error {
 	}
 
 	if err := h.userCreator.Create(c.Request().Context(), user); err != nil {
-		return handlerutils2.EchoInternalError(err)
+		return handlerutils.EchoInternalError(err)
 	}
 	return c.JSON(http.StatusCreated, user)
 }
@@ -31,7 +31,7 @@ func (h *Handlers) Update(c echo.Context) error {
 	}
 
 	if err := h.userUpdater.Update(c.Request().Context(), user); err != nil {
-		return handlerutils2.EchoInternalError(err)
+		return handlerutils.EchoInternalError(err)
 	}
 	return c.JSON(http.StatusAccepted, user)
 }
@@ -48,7 +48,7 @@ func (h *Handlers) Get(c echo.Context) error {
 
 	user, err := h.userProvider.Get(c.Request().Context(), idInt)
 	if err != nil {
-		return handlerutils2.EchoInternalError(err)
+		return handlerutils.EchoInternalError(err)
 	}
 
 	return c.JSON(http.StatusOK, user)
@@ -58,14 +58,14 @@ func (h *Handlers) GetByName(c echo.Context) error {
 	name := c.Param("name")
 	user, err := h.userProvider.GetByName(c.Request().Context(), name)
 	if err != nil {
-		return handlerutils2.EchoInternalError(err)
+		return handlerutils.EchoInternalError(err)
 	}
 
 	return c.JSON(http.StatusOK, user)
 }
 
 func (h *Handlers) List(c echo.Context) error {
-	pageInt, err := handlerutils2.GetPageQueryParam(c)
+	pageInt, err := handlerutils.GetPageQueryParam(c)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -85,7 +85,7 @@ func (h *Handlers) List(c echo.Context) error {
 		Filter: userFilter,
 	})
 	if err != nil {
-		return handlerutils2.EchoInternalError(err)
+		return handlerutils.EchoInternalError(err)
 	}
 
 	return c.JSON(http.StatusOK, users)

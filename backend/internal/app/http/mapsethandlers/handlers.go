@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	handlerutils2 "osu-dashboard/internal/app/http/handlerutils"
+	"osu-dashboard/internal/app/http/handlerutils"
 	"osu-dashboard/internal/usecase/command"
 	mapsetprovide "osu-dashboard/internal/usecase/mapset/provide"
 
@@ -18,7 +18,7 @@ func (h *Handlers) Create(c echo.Context) error {
 	}
 
 	if err := h.mapsetCreator.Create(c.Request().Context(), mapset); err != nil {
-		return handlerutils2.EchoInternalError(err)
+		return handlerutils.EchoInternalError(err)
 	}
 
 	return c.JSON(http.StatusCreated, mapset)
@@ -37,14 +37,14 @@ func (h *Handlers) Get(c echo.Context) error {
 
 	mapset, err := h.mapsetProvider.Get(c.Request().Context(), idInt)
 	if err != nil {
-		return handlerutils2.EchoInternalError(err)
+		return handlerutils.EchoInternalError(err)
 	}
 
 	return c.JSON(http.StatusOK, mapset)
 }
 
 func (h *Handlers) List(c echo.Context) error {
-	pageInt, err := handlerutils2.GetPageQueryParam(c)
+	pageInt, err := handlerutils.GetPageQueryParam(c)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -68,7 +68,7 @@ func (h *Handlers) List(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return handlerutils2.EchoInternalError(err)
+		return handlerutils.EchoInternalError(err)
 	}
 
 	return c.JSON(http.StatusOK, listResp)
@@ -80,7 +80,7 @@ func (h *Handlers) ListForUser(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	pageInt, err := handlerutils2.GetPageQueryParam(c)
+	pageInt, err := handlerutils.GetPageQueryParam(c)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -105,7 +105,7 @@ func (h *Handlers) ListForUser(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return handlerutils2.EchoInternalError(err)
+		return handlerutils.EchoInternalError(err)
 	}
 
 	return c.JSON(http.StatusOK, listResp)
