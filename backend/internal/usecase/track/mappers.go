@@ -9,9 +9,10 @@ import (
 
 func mapOsuApiUserToCreateUserCommand(user *osuapimodels.User) *command.CreateUserCommand {
 	return &command.CreateUserCommand{
-		ID:        user.ID,
-		Username:  user.Username,
-		AvatarURL: user.AvatarURL,
+		ID:          user.ID,
+		Username:    user.Username,
+		AvatarURL:   user.AvatarURL,
+		CountryCode: user.CountryCode,
 	}
 }
 
@@ -69,9 +70,10 @@ func mapOsuApiBeatmapsToCreateBeatmapCommands(beatmaps []*osuapimodels.Beatmap) 
 
 func mapOsuApiUserToUpdateUserCommand(user *osuapimodels.User) *command.UpdateUserCommand {
 	return &command.UpdateUserCommand{
-		ID:        user.ID,
-		Username:  user.Username,
-		AvatarURL: user.AvatarURL,
+		ID:          user.ID,
+		Username:    user.Username,
+		AvatarURL:   user.AvatarURL,
+		CountryCode: user.CountryCode,
 	}
 }
 

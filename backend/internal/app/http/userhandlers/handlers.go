@@ -2,7 +2,6 @@ package userhandlers
 
 import (
 	"net/http"
-	"strconv"
 
 	"osu-dashboard/internal/app/http/handlerutils"
 	"osu-dashboard/internal/database/model"
@@ -37,16 +36,12 @@ func (h *Handlers) Update(c echo.Context) error {
 }
 
 func (h *Handlers) Get(c echo.Context) error {
-	id := c.Param("id")
-	if id == "" {
-		return echo.NewHTTPError(http.StatusBadRequest, "empty user id")
-	}
-	idInt, err := strconv.Atoi(id)
+	id, err := handlerutils.GetIdQueryParam(c)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return err
 	}
 
-	user, err := h.userProvider.Get(c.Request().Context(), idInt)
+	user, err := h.userProvider.Get(c.Request().Context(), id)
 	if err != nil {
 		return handlerutils.EchoInternalError(err)
 	}

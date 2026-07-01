@@ -11,16 +11,13 @@ TODO frontend
 TODO backend
 
 top priority
-* grafana
-* metrics
+* grafana, metrics
 * add graphql handlers
 * add grpc handlers that translate to http
-* country flags
 * compare handler - two user ids result in page with comparison
 * integration test existing routes
 * client-server oauth2 authorization 
 * add schedule backups every day
 * cicd
 * store map hypes (idk)
-* search endpoint
 * fix gitlab tests (annoying)

@@ -16,10 +16,7 @@ import (
 
 func MapCreateUserCardCommandToUserModel(cmd *command.CreateUserCardCommand) (*model.User, error) {
 	// get total playcount, favorites, map count
-	var playcount int
-	var favorites int
-	var mapCount int
-	var comments int
+	var playcount, favorites, mapCount, comments int
 
 	for _, ms := range cmd.Mapsets {
 		playcount += ms.PlayCount
@@ -44,13 +41,14 @@ func MapCreateUserCardCommandToUserModel(cmd *command.CreateUserCardCommand) (*m
 	}
 
 	return &model.User{
-		ID:        cmd.User.ID,
-		Username:  cmd.User.Username,
-		AvatarURL: cmd.User.AvatarURL,
-		UserStats: stats,
-		MapCounts: counts,
-		UpdatedAt: time.Now().UTC(),
-		CreatedAt: time.Now().UTC(),
+		ID:          cmd.User.ID,
+		Username:    cmd.User.Username,
+		AvatarURL:   cmd.User.AvatarURL,
+		CountryCode: cmd.User.CountryCode,
+		UserStats:   stats,
+		MapCounts:   counts,
+		UpdatedAt:   time.Now().UTC(),
+		CreatedAt:   time.Now().UTC(),
 	}, nil
 }
 
@@ -84,13 +82,14 @@ func MapUpdateUserCardCommandToUserModel(cmd *command.UpdateUserCardCommand) (*m
 	}
 
 	return &model.User{
-		ID:        cmd.User.ID,
-		Username:  cmd.User.Username,
-		AvatarURL: cmd.User.AvatarURL,
-		UserStats: stats,
-		MapCounts: counts,
-		CreatedAt: time.Time{},
-		UpdatedAt: time.Now().UTC(),
+		ID:          cmd.User.ID,
+		Username:    cmd.User.Username,
+		AvatarURL:   cmd.User.AvatarURL,
+		CountryCode: cmd.User.CountryCode,
+		UserStats:   stats,
+		MapCounts:   counts,
+		CreatedAt:   time.Time{},
+		UpdatedAt:   time.Now().UTC(),
 	}, nil
 }
 
@@ -239,6 +238,7 @@ func MapUserModelToUserDTO(user *model.User) (*dto.User, error) {
 		Username:      user.Username,
 		AvatarURL:     user.AvatarURL,
 		TrackingSince: user.CreatedAt,
+		CountryCode:   user.CountryCode,
 		UserStats:     stats,
 		UserMapCounts: counts,
 		Tracking:      true,

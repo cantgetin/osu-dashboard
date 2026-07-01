@@ -8,6 +8,9 @@ up-bff:
 up-jobs:
 	docker-compose up --build osu-dashboard-jobs -d
 
+up-adminer:
+	docker-compose up --build pmb-adminer -d
+
 run:
 	go run cmd/bff/main.go || exit 1
 

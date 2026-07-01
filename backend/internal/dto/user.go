@@ -11,6 +11,7 @@ type User struct {
 	AvatarURL     string          `json:"avatar_url"`
 	Username      string          `json:"username"`
 	Tracking      bool            `json:"tracking"`
+	CountryCode   string          `json:"country_code"`
 	TrackingSince time.Time       `json:"tracking_since"`
 	UserStats     model.UserStats `json:"user_stats"`
 	UserMapCounts *UserMapCounts  `json:"user_map_counts"`

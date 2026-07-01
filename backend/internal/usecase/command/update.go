@@ -8,9 +8,10 @@ type UpdateUserCardCommand struct {
 }
 
 type UpdateUserCommand struct {
-	ID        int    `json:"id"`
-	AvatarURL string `json:"avatar_url"`
-	Username  string `json:"username"`
+	ID          int    `json:"id"`
+	AvatarURL   string `json:"avatar_url"`
+	Username    string `json:"username"`
+	CountryCode string `json:"country_code"`
 }
 
 type UpdateMapsetCommand struct {

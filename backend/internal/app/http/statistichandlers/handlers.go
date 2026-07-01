@@ -2,7 +2,6 @@ package statistichandlers
 
 import (
 	"net/http"
-	"strconv"
 
 	"osu-dashboard/internal/app/http/handlerutils"
 
@@ -10,16 +9,12 @@ import (
 )
 
 func (h *Handlers) GetUserMapStatistics(c echo.Context) error {
-	userID := c.Param("id")
-	if userID == "" {
-		return echo.NewHTTPError(http.StatusBadRequest, "empty user id")
-	}
-	idInt, err := strconv.Atoi(userID)
+	id, err := handlerutils.GetIdQueryParam(c)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return err
 	}
 
-	userStatistics, err := h.statisticProvider.GetForUser(c.Request().Context(), idInt)
+	userStatistics, err := h.statisticProvider.GetForUser(c.Request().Context(), id)
 	if err != nil {
 		return handlerutils.EchoInternalError(err)
 	}

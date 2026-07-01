@@ -6,13 +6,14 @@ import (
 )
 
 type User struct {
-	ID        int
-	Username  string
-	AvatarURL string
-	UserStats json.RawMessage
-	MapCounts json.RawMessage
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID          int
+	Username    string
+	AvatarURL   string
+	CountryCode string
+	UserStats   json.RawMessage
+	MapCounts   json.RawMessage
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 type UserStats map[time.Time]*UserStatsModel
