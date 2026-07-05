@@ -2,6 +2,7 @@ interface User {
     id: number;
     avatar_url: string;
     username: string;
+    country_code: string;
     tracking_since: string;
     user_stats: UserStats;
     user_map_counts: UserMapCounts;

@@ -1,6 +1,7 @@
 import React from 'react';
 import {FaExternalLinkAlt} from "react-icons/fa";
 import MyButton from "../../ui/MyButton.tsx";
+import CountryFlag from "../../ui/CountryFlag.tsx";
 import {convertDateFormat} from "../../../utils/time.ts";
 
 interface UserProps {
@@ -36,6 +37,13 @@ const User = (props: UserProps) => {
                             onClick={() => props.externalLinkOnClick()}
                             className="bg-zinc-800 rounded-md p-1 h-6 hidden md:block"
                             content={<FaExternalLinkAlt className="h-3"/>}
+                        />
+                    </div>
+                    <div className="mt-2">
+                        <CountryFlag
+                            countryCode={props.user.country_code}
+                            showName
+                            nameClassName="text-sm md:text-base text-white"
                         />
                     </div>
                     <span className="text-sm hidden md:block text-zinc-400 px-1">
